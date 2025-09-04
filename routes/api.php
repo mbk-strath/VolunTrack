@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Middleware\RoleMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +19,29 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+/////////////////////////////////////////////////////////////////
+// Unprotected Unauthenticated Routes:
+Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register']);
+Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
+
+
+
+
+Route::middleware('auth:sanctum', 'role:admin')->group(function(){
+
+});
+
+Route::middleware('auth:sanctum', 'role:admin,organisation')->group(function(){
+
+});
+
+Route::middleware('auth:sanctum', 'role:admin,volunteer')->group(function(){
+
+});
+
+Route::middleware('auth:sanctum', 'role:admin,organisation,volunteer')->group(function(){
+    Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
+});
+

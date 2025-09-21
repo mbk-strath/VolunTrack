@@ -5,3 +5,7 @@ select {
 option {
   color: black;
 }
+
+.signupForm label {
+  margin-bottom: 10px;
+}

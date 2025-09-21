@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\OtpCode;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\VerificationEmail;
+use App\Mail\OtpEmail;
 
 class AuthController extends Controller
 {
@@ -57,12 +59,49 @@ class AuthController extends Controller
             Mail::to($email)->send(new VerificationEmail($link));
             return response()->json(['message' => 'Account is not verified. Please check your email for verification instructions.'], 403);
         }
+        // $token = $Userobj->createToken('auth_token')->plainTextToken;
+        // return response()->json([
+        //     'user' => $Userobj,
+        //     'token' => $token,
+        // ], 200);
+        $otp = rand(100000, 999999);
+        $OtpCode = OtpCode::create([
+            'user_id' => $Userobj->id,
+            'otp_code' => $otp,
+            'expires_at' => now()->addMinutes(5),
+        ]);
+        Mail::to($email)->send(new OtpEmail($otp));
+        return response()->json(['message' => 'OTP sent to your email. Please verify to proceed.'], 200);
+    }
+
+    function verifyOtp(Request $request){
+        $email = $request->email;
+        $otp = $request->otp;
+
+        $Userobj = User::where('email',$email)->first();
+        if(!$Userobj){
+            return response()->json(['message'=>'User not found'],404);
+        }
+
+        $OtpRecord = OtpCode::where('user_id', $Userobj->id)
+                            ->where('otp_code', $otp)
+                            ->where('is_used', false)
+                            ->where('expires_at', '>', now())
+                            ->first();
+
+        if(!$OtpRecord){
+            return response()->json(['message'=>'Invalid or expired OTP'],400);
+        }
+
+        // Mark OTP as used
+        $OtpRecord->is_used = true;
+        $OtpRecord->save();
+
         $token = $Userobj->createToken('auth_token')->plainTextToken;
         return response()->json([
             'user' => $Userobj,
             'token' => $token,
         ], 200);
-
     }
 
     function logout(Request $request){

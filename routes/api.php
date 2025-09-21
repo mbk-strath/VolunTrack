@@ -25,6 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Unprotected Unauthenticated Routes:
 Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register']);
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
+Route::get('/verify/{id}', [\App\Http\Controllers\AuthController::class, 'verify']);
 
 
 
@@ -43,5 +44,6 @@ Route::middleware('auth:sanctum', 'role:admin,volunteer')->group(function(){
 
 Route::middleware('auth:sanctum', 'role:admin,organisation,volunteer')->group(function(){
     Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
+    
 });
 

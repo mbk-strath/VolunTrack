@@ -17,7 +17,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('role')->default('volunteer'); // Added role column with default value 'user'
+            $table->string('role')->default('volunteer'); // Added role column with default value 'volunteer'
+            $table->integer('total_hours')->default(0);
+            $table->boolean('is_active')->default(true);
+            $table->boolean('is_verified')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

@@ -39,7 +39,7 @@ MAIL_ENCRYPTION=tls
 ### 3. Install Dependencies
 ```bash
 composer install
-php artisan optimise
+php artisan optimize
 php artisan key:generate
 php artisan migrate
 ```

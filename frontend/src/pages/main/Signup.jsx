@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "../assets/logo.png";
+import Logo from "../../assets/logo.png";
 import { FcGoogle } from "react-icons/fc";
-import "../styles/signup.css";
+import "../../styles/main/signup.css";
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -75,73 +75,76 @@ function Signup() {
 
   return (
     <div className="signupPage">
-      <img src={Logo} alt="logo" className="logo" />
+      <img src={Logo} alt="logo" className="logo-sign" />
       <form className="signupForm" onSubmit={handleSubmit}>
         <h2 className="title">Signup</h2>
 
         {errors.backend && <p className="errors">{errors.backend}</p>}
 
-        <label>
-          Full Name
-          <input
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Enter your name"
-          />
-          {errors.name && <p className="errors">{errors.name}</p>}
-        </label>
+        <div className="labels">
+          <div className="flex">
+            <label>
+              Full Name
+              <input
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your name"
+              />
+              {errors.name && <p className="errors">{errors.name}</p>}
+            </label>
 
-        <label>
-          Email
-          <input
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Enter your email"
-          />
-          {errors.email && <p className="errors">{errors.email}</p>}
-        </label>
+            <label>
+              Email
+              <input
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter your email"
+              />
+              {errors.email && <p className="errors">{errors.email}</p>}
+            </label>
+          </div>
+          <div className="flex">
+            <label>
+              Role
+              <select name="role" value={formData.role} onChange={handleChange}>
+                <option value="">Select Role</option>
+                <option value="volunteer">Volunteer</option>
+                <option value="organization">Organization</option>
+              </select>
+              {errors.role && <p className="errors">{errors.role}</p>}
+            </label>
 
-        <label>
-          Role
-          <select name="role" value={formData.role} onChange={handleChange}>
-            <option value="">Select Role</option>
-            <option value="volunteer">Volunteer</option>
-            <option value="organization">Organization</option>
-          </select>
-          {errors.role && <p className="errors">{errors.role}</p>}
-        </label>
+            <label>
+              Password
+              <input
+                name="password"
+                type="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Enter your password"
+              />
+              {errors.password && <p className="errors">{errors.password}</p>}
+            </label>
+          </div>
+          <button type="submit" className="loginBtn">
+            Signup
+          </button>
 
-        <label>
-          Password
-          <input
-            name="password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Enter your password"
-          />
-          {errors.password && <p className="errors">{errors.password}</p>}
-        </label>
+          {message && <p>{message}</p>}
 
-        <button type="submit" className="loginBtn">
-          Signup
-        </button>
+          <div className="or">
+            <hr />
+            <p>or</p>
+            <hr />
+          </div>
 
-        {message && <p>{message}</p>}
-
-        <div className="or">
-          <hr />
-          <p>or</p>
-          <hr />
+          <button type="button" className="googleBtn">
+            <FcGoogle />
+            Continue with Google
+          </button>
         </div>
-
-        <button type="button" className="googleBtn">
-          <FcGoogle />
-          Continue with Google
-        </button>
-
         <p className="noAccount">
           Have an Account? <Link to="/login">Login</Link>
         </p>

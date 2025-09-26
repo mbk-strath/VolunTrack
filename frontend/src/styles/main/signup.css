@@ -1,0 +1,47 @@
+.signupPage {
+  height: 110vh;
+}
+
+.signupForm select {
+  color: rgba(255, 255, 255, 0.367);
+  width: 110%;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.367);
+}
+.logo-sign {
+  width: 20%;
+}
+
+.signupForm .labels {
+  width: 100%;
+  padding: 10px;
+}
+
+.signupForm label {
+  text-align: left;
+  gap: 23px;
+}
+
+input,
+select {
+  margin-top: -10%;
+}
+
+select {
+  width: 105%;
+  display: block;
+  box-sizing: border-box;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: transparent;
+}
+
+option {
+  color: black;
+}
+
+.signupForm label {
+  margin-bottom: 10px;
+}

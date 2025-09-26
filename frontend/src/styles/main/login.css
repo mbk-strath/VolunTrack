@@ -1,7 +1,19 @@
-.labels {
+.loginPage {
+  height: 120vh;
+}
+
+.loginForm .labels {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 23px;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.logo-login {
+  width: 20%;
+  padding: 10px;
 }
 
 .or {
@@ -14,7 +26,7 @@
   flex: 1; /* makes the lines expand */
   border: none;
   height: 1px;
-  background-color: rgba(255, 255, 255, 0.462);
+  background-color: rgba(255, 255, 255, 0.129);
 }
 
 .or p {

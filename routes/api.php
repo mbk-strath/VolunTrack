@@ -27,9 +27,8 @@ Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
 Route::get('/verify/{id}', [\App\Http\Controllers\AuthController::class, 'verify']);
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
-
-
-
+Route::post('/reset-otp', [AuthController::class, 'passwordResetOtp']);
+Route::post('/reset-password', [AuthController::class, 'passwordReset']);
 
 Route::middleware('auth:sanctum', 'role:admin')->group(function(){
 

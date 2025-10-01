@@ -104,6 +104,53 @@ class AuthController extends Controller
         ], 200);
     }
 
+    function passwordResetOtp(Request $request){
+        $email = $request->email;
+        $Userobj = User::where('email',$email)->first();
+        if(!$Userobj){
+            return response()->json(['message'=>'User not found'],404);
+        }
+        $otp = rand(100000, 999999);
+        $OtpCode = OtpCode::create([
+            'user_id' => $Userobj->id,
+            'otp_code' => $otp,
+            'expires_at' => now()->addMinutes(5),
+        ]);
+        Mail::to($email)->send(new OtpEmail($otp));
+        return response()->json(['message' => 'OTP sent to your email. Please verify to proceed.'], 200);
+    }
+
+    function passwordReset(Request $request){
+        $otp = $request->otp;
+        $newPassword = $request->new_password;
+
+        $OTP_OBJ = OtpCode::where('otp_code', $otp)->first();
+        $Userobj = $OTP_OBJ ? User::find($OTP_OBJ->user_id) : null;
+        if(!$Userobj){
+            return response()->json(['message'=>'User not found'],404);
+        }
+
+        $OtpRecord = OtpCode::where('otp_code', $otp)
+                            ->where('is_used', false)
+                            ->first();
+                          
+
+
+        if(!$OtpRecord){
+            return response()->json(['message'=>'Invalid or expired OTP'],400);
+        }
+
+        // Mark OTP as used
+        $OtpRecord->is_used = true;
+        $OtpRecord->save();
+
+        // Update password
+        $Userobj->password = bcrypt($newPassword);
+        $Userobj->save();
+
+        return response()->json(['message'=>'Password reset successful'],200);
+    }
+
     function logout(Request $request){
         $request->user()->currentAccessToken()->delete();
         return response()->json(['message'=>'Logged out'],200);

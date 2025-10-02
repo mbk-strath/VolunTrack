@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "..assets/logo-dark.png";
+import Logo from "../../assets/logo-dark.png";
 import { IoApps } from "react-icons/io5";
 import { MdOutlineFindInPage } from "react-icons/md";
 import { FaFileAlt } from "react-icons/fa";

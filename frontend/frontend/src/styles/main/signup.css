@@ -1,5 +1,5 @@
 .signupPage {
-  height: 110vh;
+  height: 130vh;
 }
 
 .signupForm select {
@@ -21,12 +21,12 @@
   gap: 23px;
 }
 
-input,
-select {
+.signupForm input,
+.signupForm select {
   margin-top: -10%;
 }
 
-select {
+.signupForm select {
   width: 105%;
   display: block;
   box-sizing: border-box;

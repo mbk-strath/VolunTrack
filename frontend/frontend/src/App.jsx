@@ -10,6 +10,7 @@ import HomePage from "./pages/volunteer/HomePage";
 import SettingsVolPage from "./pages/volunteer/SettingsVolPage";
 import ProfilePage from "./pages/volunteer/ProfilePage";
 import AccountPage from "./pages/volunteer/AccountPage";
+import HistoryPage from "./pages/volunteer/HistoryPage";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           </Route>
           <Route path="/dashboard" element={<DashboardLayoutVol />}>
             <Route index element={<HomePage />} />
+            <Route path="history" element={<HistoryPage />} />
             <Route path="settings" element={<SettingsVolPage />}>
               <Route index element={<ProfilePage />} />
               <Route path="account" element={<AccountPage />} />

@@ -1,9 +1,10 @@
 .settingsPage {
-  padding: 30px;
   padding-left: 5%;
   display: flex;
   gap: 40px;
   align-items: start;
+  height: 100vh;
+  margin-top: 10%;
 }
 
 .settingVolNav {
@@ -47,4 +48,18 @@
   border-left: 3px solid #e09c6d;
 
   background-color: #e9ebf8;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+
+  justify-content: space-between;
+  width: 80%;
+}
+
+.profile button {
+  padding: 10px;
+  width: 25%;
+  border-radius: 10px;
 }

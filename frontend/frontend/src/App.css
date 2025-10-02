@@ -7,6 +7,10 @@ body,
   width: 100%;
 }
 
+#root {
+  overflow-x: hidden;
+}
+
 .logo {
   width: 10%;
 }

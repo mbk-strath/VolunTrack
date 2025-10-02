@@ -18,6 +18,10 @@ class AuthController extends Controller
         $password = $request->password;
         $role = $request->role;
 
+        if(User::where('email',$email)->exists()){
+            return response()->json(['message'=>'Email already exists'],409);
+        }
+
         $user = User::create([
             'name' => $name,
             'email' => $email,
@@ -75,10 +79,11 @@ class AuthController extends Controller
     }
 
     function verifyOtp(Request $request){
-        $email = $request->email;
         $otp = $request->otp;
+        $OtpObj = OtpCode::where('otp_code', $otp)->first();
 
-        $Userobj = User::where('email',$email)->first();
+
+        $Userobj = User::where('id',$OtpObj->user_id)->first();
         if(!$Userobj){
             return response()->json(['message'=>'User not found'],404);
         }

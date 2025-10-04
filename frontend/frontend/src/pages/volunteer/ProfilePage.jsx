@@ -10,6 +10,7 @@ function ProfilePage() {
     gender: "",
     country: "",
     bio: "",
+    avatar: "", // <-- add avatar field
   });
 
   useEffect(() => {
@@ -20,6 +21,11 @@ function ProfilePage() {
         ...prev,
         name: parsedUser.name || "",
         email: parsedUser.email || "",
+        phone: parsedUser.phone || "",
+        gender: parsedUser.gender || "",
+        country: parsedUser.country || "",
+        bio: parsedUser.bio || "",
+        avatar: parsedUser.avatar || "", // load saved avatar
       }));
     }
   }, []);
@@ -29,23 +35,61 @@ function ProfilePage() {
     setUser((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setUser((prev) => ({ ...prev, avatar: reader.result }));
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ ...user, avatar: reader.result })
+        );
+      };
+      reader.readAsDataURL(file); // convert image to base64 string
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Save changes (send to API or update localStorage)
     localStorage.setItem("user", JSON.stringify(user));
     alert("Profile updated!");
   };
 
   return (
-    <div>
+    <div className="profilePage">
       <div className="profile">
-        <UserProfile name={user.name} avatar="" className="prof" size={100} />
-        <button>Update Avatar</button>
-        <button>Delete Avatar</button>
+        <UserProfile
+          name={user.name}
+          avatar={user.avatar}
+          className="prof"
+          size={100}
+        />
+        <input
+          type="file"
+          id="avatarInput"
+          style={{ display: "none" }}
+          accept="image/*"
+          onChange={handleAvatarChange}
+        />
+        <button onClick={() => document.getElementById("avatarInput").click()}>
+          Update Avatar
+        </button>
+        <button
+          onClick={() => {
+            setUser((prev) => ({ ...prev, avatar: "" }));
+            localStorage.setItem(
+              "user",
+              JSON.stringify({ ...user, avatar: "" })
+            );
+          }}
+        >
+          Delete Avatar
+        </button>
       </div>
 
-      <div className="profilePage">
-        <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
+        <div className="fit">
           <div className="flex">
             <div className="left-content">
               <label>
@@ -75,6 +119,7 @@ function ProfilePage() {
                 <input
                   type="tel"
                   name="phone"
+                  placeholder="Enter your phone number"
                   value={user.phone}
                   onChange={handleChange}
                 />
@@ -101,26 +146,37 @@ function ProfilePage() {
                   type="text"
                   name="country"
                   value={user.country}
+                  placeholder="Enter your country"
                   onChange={handleChange}
                 />
               </label>
 
               <label>
-                Bio
-                <textarea
-                  name="bio"
-                  value={user.bio}
+                Date of Birth
+                <input
+                  type="date"
+                  name="date"
+                  value={user.date}
+                  placeholder="Enter your Date of Birth"
                   onChange={handleChange}
-                ></textarea>
+                />
               </label>
             </div>
           </div>
-
-          <button className="save" type="submit">
-            Save Changes
-          </button>
-        </form>
-      </div>
+          <label className="bio">
+            Bio
+            <textarea
+              name="bio"
+              value={user.bio}
+              placeholder=""
+              onChange={handleChange}
+            ></textarea>
+          </label>
+        </div>
+        <button className="save" type="submit">
+          Save Changes
+        </button>
+      </form>
     </div>
   );
 }

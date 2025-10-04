@@ -1,11 +1,29 @@
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.page-transition {
+  animation: fadeSlideIn 0.6s ease forwards;
+}
+
+/* ===========================
+   🖥️ DASHBOARD LAYOUT
+=========================== */
 .dashboard {
   display: flex;
-  background-color: #e9ebf8;
 }
 
 .dashboard-content {
   width: 100%;
   margin-left: 22.8%;
+  height: auto;
 }
 
 .rest {
@@ -13,15 +31,16 @@
   height: 120vh;
 }
 
+/* ===========================
+   🔝 TOPBAR
+=========================== */
 .Topbar {
-  background: #ffffff;
+  z-index: 1200;
+  background-color: #ffffff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  padding: 20px;
-  padding-left: 5%;
-  position: relative;
-  padding-right: 5%;
-  display: flex;
+  padding: 20px 5%;
   position: fixed;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   width: 70%;
@@ -43,7 +62,86 @@
 .search-bar {
   width: 50%;
 }
+
 .search {
   width: 50%;
   border: 1px solid rgba(0, 0, 0, 0.245);
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.dark-toggle {
+  display: flex;
+  align-items: center;
+}
+.icon {
+  font-size: 25px;
+  color: #e09c6d;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+  background-color: #0f0f0f;
+  color: #ffffff;
+}
+
+/* Adjust dashboard backgrounds in dark mode */
+body.dark-mode .dashboard,
+body.dark-mode .dashboard-content {
+  background-color: #191725;
+}
+
+body.dark-mode .Topbar {
+  background-color: #191725;
+  color: white;
+}
+
+body.dark-mode .sidebar {
+  background-color: #191725;
+}
+body.dark-mode .sidebar p {
+  color: white;
+}
+
+body.dark-mode .profilePage label,
+body.dark-mode .passwordReset label,
+body.dark-mode .passwordReset h2,
+body.dark-mode .delAcc h2,
+body.dark-mode .logAcc h2 {
+  color: rgba(255, 255, 255, 0.729);
+}
+
+body.dark-mode .profilePage input,
+body.dark-mode .passwordReset input,
+body.dark-mode .profilePage select,
+body.dark-mode .delAcc p,
+body.dark-mode .logAcc p {
+  color: rgb(121, 118, 118);
+}
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+  background-color: inherit;
+  border-top: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.458);
+}
+
+body.dark-mode .profilePage,
+body.dark-mode .passwordReset,
+body.dark-mode .delAcc,
+body.dark-mode .logAcc {
+  background-color: #252235;
+  border: 1px solid rgba(255, 255, 255, 0.634);
+}
+
+body.dark-mode .profilePage select {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.458);
+}
+
+/* Toggle button style */
+.dark-toggle {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
 }

@@ -3,8 +3,10 @@
   display: flex;
   gap: 40px;
   align-items: start;
-  height: 100vh;
+  height: auto;
+
   margin-top: 10%;
+  padding-bottom: 40px;
 }
 
 .settingVolNav {
@@ -62,4 +64,17 @@
   padding: 10px;
   width: 25%;
   border-radius: 10px;
+}
+
+@media screen and (max-width: 940px) {
+  .settingsPage {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .settingVolNav {
+    height: 50px;
+    flex-direction: row;
+    width: 90%;
+  }
 }

@@ -1,7 +1,8 @@
 .homeVolPage {
   margin-left: 5%;
-  height: 100vh;
+  height: auto;
   margin-top: 10%;
+  padding-bottom: 4%;
 }
 
 .homeVolPage .username {

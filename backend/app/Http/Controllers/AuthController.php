@@ -161,3 +161,29 @@ class AuthController extends Controller
         return response()->json(['message'=>'Logged out'],200);
     }
 }
+
+public function redirectToGoogle()
+{
+    return Socialite::driver('google')->stateless()->redirect();
+}
+
+public function handleGoogleCallback()
+{
+    $googleUser = Socialite::driver('google')->stateless()->user();
+
+    $user = User::firstOrCreate(
+        ['email' => $googleUser->getEmail()],
+        [
+            'name' => $googleUser->getName(),
+            'password' => bcrypt(Str::random(16)), // random password
+        ]
+    );
+
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'access_token' => $token,
+        'token_type' => 'Bearer',
+        'user' => $user,
+    ]);
+}git 

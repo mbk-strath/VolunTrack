@@ -47,3 +47,6 @@ Route::middleware('auth:sanctum', 'role:admin,organisation,volunteer')->group(fu
     
 });
 
+
+Route::get('/auth/google/redirect', [AuthController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);

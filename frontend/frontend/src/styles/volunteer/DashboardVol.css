@@ -138,6 +138,24 @@ body.dark-mode .profilePage select {
   border-bottom: 1px solid rgba(255, 255, 255, 0.458);
 }
 
+body.dark-mode .chat-app {
+  background-color: #252235;
+  border: 1px solid rgba(255, 255, 255, 0.593);
+}
+
+body.dark-mode .checkSystem {
+  background-color: #252235;
+}
+
+body.dark-mode .exact span,
+body.dark-mode .exact p,
+body.dark-mode .exact {
+  color: #b4adad;
+}
+
+body.dark-mode .username {
+  color: #ffffff;
+}
 /* Toggle button style */
 .dark-toggle {
   background: none;

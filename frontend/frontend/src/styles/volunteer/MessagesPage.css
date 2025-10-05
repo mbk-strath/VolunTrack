@@ -5,26 +5,31 @@
   height: 80vh;
   font-family: Arial, sans-serif;
   margin-top: 10%;
-  margin-left: 5%;
+  margin-left: 3%;
   background: #ffffff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   border-radius: 40px;
   padding-left: 3%;
   width: 80%;
+  margin-bottom: 3%;
 }
 
 .chat-app .side {
-  padding: %;
   border-right: 1px solid #ccc;
+  padding-right: 10px;
 }
 
 .side input {
   margin-top: 5%;
-  width: 80%;
+  width: 90%;
   margin-bottom: 10px;
   padding: 3%;
-  border-radius: 5px;
+  border-radius: 10px;
   border: 1px solid #ccc;
+}
+
+.contacts {
+  border-top: 1px solid #ccc;
 }
 
 .contact {
@@ -67,6 +72,9 @@
   padding: 10px;
   border-bottom: 1px solid #ccc;
   font-weight: bold;
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .chat-messages {
@@ -105,7 +113,7 @@
 
 .chat-input {
   display: flex;
-  padding: 10px;
+  padding: 20px;
   border-top: 1px solid #ccc;
   align-items: center;
   position: relative;
@@ -113,7 +121,7 @@
 
 .chat-input input {
   flex: 1;
-  padding: 8px;
+  padding: 10px;
   border-radius: 20px;
   border: 1px solid #ccc;
   outline: none;
@@ -122,10 +130,18 @@
 .chat-input button {
   margin-left: 8px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: none;
 }
 
 .emoji-picker {
   position: absolute;
   bottom: 60px;
-  right: 10px;
+  right: 45%;
+}
+
+.icon-msg {
+  font-size: 20px;
 }

@@ -38,7 +38,6 @@
 }
 .holder {
   text-align: center;
-  line-height: 0;
 }
 
 .holder h4 {
@@ -48,6 +47,7 @@
 .holder p {
   font-size: 30px;
   font-weight: bold;
+  margin-top: -15px;
 }
 
 .applications {
@@ -153,4 +153,36 @@
 
 .chart h2 {
   text-align: center;
+}
+@media screen and (max-width: 1024px) {
+  .homeVolPage {
+    margin-top: 15%;
+  }
+
+  .hours,
+  .applications,
+  .sessions {
+    flex-direction: column;
+  }
+
+  .icon {
+    width: 20%;
+    margin-bottom: -30px;
+    margin-top: 10px;
+  }
+}
+
+@media screen and (max-width: 840px) {
+  .section2 {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chart {
+    width: 100%;
+  }
+  .checkSystem {
+    width: 95%;
+  }
 }

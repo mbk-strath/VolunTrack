@@ -67,7 +67,7 @@ function Login() {
         sessionStorage.setItem("pending_user", JSON.stringify(data.user));
         sessionStorage.setItem("pending_token", data.token);
 
-        // ✅ Redirect to OTP page
+        //  Redirect to OTP page
         navigate("/two-factor", { state: { email: formData.email } });
       } catch (err) {
         console.error(err);
@@ -111,6 +111,10 @@ function Login() {
           <button type="submit" className="loginBtn" disabled={loading}>
             {loading ? "Logging in..." : "Login"}
           </button>
+          <div className="resetLinks">
+            <Link className="reset">Forgotten Password?</Link>
+            <Link className="show">Show Password</Link>
+          </div>
         </div>
 
         <div className="or">

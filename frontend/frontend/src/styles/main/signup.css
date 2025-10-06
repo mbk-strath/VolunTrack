@@ -45,3 +45,17 @@ option {
 .signupForm label {
   margin-bottom: 10px;
 }
+
+.signupForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex label {
+  width: 45%;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+}

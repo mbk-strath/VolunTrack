@@ -48,7 +48,22 @@
   text-decoration: none;
 }
 
-.link:hover {
+.link:hover,
+.reset:hover,
+.show:hover {
   color: #dfbf98;
   text-decoration: underline;
+}
+
+.resetLinks {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reset,
+.show {
+  color: rgba(255, 255, 255, 0.564);
+  text-decoration: none;
+  transition: all 0.3s ease;
 }

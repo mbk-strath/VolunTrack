@@ -106,7 +106,7 @@ function Signup() {
             </label>
           </div>
           <div className="flex">
-            <label>
+            <label className="role-label">
               Role
               <select name="role" value={formData.role} onChange={handleChange}>
                 <option value="">Select Role</option>

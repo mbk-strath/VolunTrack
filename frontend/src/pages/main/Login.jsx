@@ -112,7 +112,9 @@ function Login() {
             {loading ? "Logging in..." : "Login"}
           </button>
           <div className="resetLinks">
-            <Link className="reset">Forgotten Password?</Link>
+            <Link className="reset" to="/password-reset">
+              Forgotten Password?
+            </Link>
             <Link className="show">Show Password</Link>
           </div>
         </div>

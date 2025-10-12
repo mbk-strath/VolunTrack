@@ -14,6 +14,8 @@ import ProfilePage from "./pages/volunteer/ProfilePage";
 import AccountPage from "./pages/volunteer/AccountPage";
 import MessagesPage from "./pages/volunteer/MessagesPage";
 import HistoryPage from "./pages/volunteer/HistoryPage";
+import ForgotPassword from "./pages/main/ForgotPassword";
+import ResetPassword from "./pages/main/ResetPassword";
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/two-factor" element={<TwoFactorPage />} />
+            <Route path="/password-reset" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
           </Route>
           <Route path="/dashboard" element={<DashboardLayoutVol />}>
             <Route index element={<HomePage />} />

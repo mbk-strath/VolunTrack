@@ -30,6 +30,7 @@
 .profilePage form label {
   color: rgba(0, 0, 0, 0.604);
   padding: 20px;
+  width: 90%;
 }
 
 .profilePage form input,
@@ -75,7 +76,7 @@
 }
 
 label textarea {
-  width: 95%;
+  width: 110%;
   border-top: 0;
   border-right: 0;
   border-left: 0;

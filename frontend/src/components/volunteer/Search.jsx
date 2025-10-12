@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FaSearch, FaFilter } from "react-icons/fa";
-import React from "react";
 
 function Search({ onSearch, onFilter }) {
   const [query, setQuery] = useState("");

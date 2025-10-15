@@ -108,7 +108,11 @@ function Login() {
             disabled={loading}
           />
           {errors.password && <p className="errors">{errors.password}</p>}
-          <button type="submit" className="loginBtn" disabled={loading}>
+          <button
+            type="submit"
+            className="loginBtn loginBtnForm"
+            disabled={loading}
+          >
             {loading ? "Logging in..." : "Login"}
           </button>
           <div className="resetLinks">

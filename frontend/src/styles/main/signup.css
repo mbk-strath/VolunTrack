@@ -1,5 +1,6 @@
 .signupPage {
   height: 130vh;
+  overflow-y: scroll;
 }
 
 .signupForm select {

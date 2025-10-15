@@ -16,6 +16,7 @@ import MessagesPage from "./pages/volunteer/MessagesPage";
 import HistoryPage from "./pages/volunteer/HistoryPage";
 import ForgotPassword from "./pages/main/ForgotPassword";
 import ResetPassword from "./pages/main/ResetPassword";
+import ViewOpportunityPage from "./styles/volunteer/ViewOpportunityPage";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
             <Route index element={<HomePage />} />
             <Route path="history" element={<HistoryPage />} />
             <Route path="messages" element={<MessagesPage />} />
+            <Route path="opportunities" element={<ViewOpportunityPage />} />
             <Route path="settings" element={<SettingsVolPage />}>
               <Route index element={<ProfilePage />} />
               <Route path="account" element={<AccountPage />} />

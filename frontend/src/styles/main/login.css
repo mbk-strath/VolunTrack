@@ -2,6 +2,10 @@
   height: 120vh;
 }
 
+.loginForm {
+  margin-top: -10px;
+}
+
 .loginForm .labels {
   display: flex;
   flex-direction: column;
@@ -59,6 +63,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: -15px;
 }
 
 .reset,
@@ -66,4 +71,9 @@
   color: rgba(255, 255, 255, 0.564);
   text-decoration: none;
   transition: all 0.3s ease;
+  font-size: 13px;
+}
+
+.loginBtnForm {
+  margin-top: 0px;
 }

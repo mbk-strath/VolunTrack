@@ -10,7 +10,7 @@
   width: 20%;
 }
 
-h1 {
+.landingPage h1 {
   color: white;
   margin-top: 5%;
   font-size: 4rem;
@@ -64,4 +64,37 @@ h1 {
 }
 
 @media screen and (max-width: 1024px) {
+  .landingPage h1 {
+    margin-top: 10%;
+  }
+
+  .hero {
+    width: 45%;
+  }
+
+  .cta {
+    width: 70%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .landingPage h1 {
+    font-size: 40px;
+  }
+  .landingPage .logo {
+    width: 50%;
+    margin-left: -10%;
+  }
+  .cta {
+    width: 100%;
+  }
+
+  .hero {
+    width: 79%;
+    margin-bottom: 10%;
+  }
+
+  .cont-hero {
+    margin-top: 30%;
+  }
 }

@@ -1,6 +1,8 @@
 .signupPage {
-  height: 130vh;
+  height: 100vh;
   overflow-y: scroll;
+  display: flex;
+  align-items: center;
 }
 
 .signupForm select {

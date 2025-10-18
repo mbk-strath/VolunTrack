@@ -75,7 +75,6 @@ function Signup() {
 
   return (
     <div className="signupPage">
-      <img src={Logo} alt="logo" className="logo-sign" />
       <form className="signupForm" onSubmit={handleSubmit}>
         <h2 className="title">Signup</h2>
 
@@ -140,7 +139,7 @@ function Signup() {
             <hr />
           </div>
 
-          <button type="button" className="googleBtn">
+          <button type="button" className="googleBtn googleSignup">
             <FcGoogle />
             Continue with Google
           </button>

@@ -1,9 +1,11 @@
 .loginPage {
-  height: 120vh;
+  height: 100vh;
+  display: flex;
+  align-items: center;
 }
 
-.loginForm {
-  margin-top: -10px;
+.labels {
+  width: 100%;
 }
 
 .loginForm .labels {
@@ -12,16 +14,10 @@
   gap: 23px;
   width: 100%;
   max-width: 400px;
-  margin: 0 auto;
 }
 
 .labels label {
   color: rgba(255, 255, 255, 0.79);
-}
-
-.logo-login {
-  width: 20%;
-  padding: 10px;
 }
 
 .or {
@@ -76,4 +72,23 @@
 
 .loginBtnForm {
   margin-top: 0px;
+}
+
+.googlelogin {
+  width: 80%;
+}
+
+@media screen and (max-width: 1024px) {
+  .loginForm {
+    width: 70%;
+  }
+}
+@media screen and (max-width: 768px) {
+  .loginForm {
+    margin-top: 25px;
+    width: 100%;
+  }
+  .loginForm .googleBtn {
+    width: 88%;
+  }
 }

@@ -14,14 +14,12 @@ return new class extends Migration
         Schema::create('volunteers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('full_name');
-            $table->string('gender');
             $table->string('country');
-            $table->string('phone');
             $table->string('bio')->nullable();
-            $table->string('skills');
+            $table->string('skills')->nullable();
             $table->string('location');
             $table->string('profile_image')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

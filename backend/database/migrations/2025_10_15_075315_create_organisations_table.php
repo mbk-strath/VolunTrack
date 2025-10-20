@@ -26,8 +26,9 @@ return new class extends Migration
             $table->string('street_address');
             $table->string('operating_region');
             $table->string('mission_statement')->nullable();
-            $table->string('focus_area');
-            $table->string('target_beneficiary');
+            $table->string('focus_area')->nullable();
+            $table->string('target_beneficiary')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

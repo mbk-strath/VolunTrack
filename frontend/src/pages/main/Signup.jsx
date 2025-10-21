@@ -107,7 +107,12 @@ function Signup() {
           <div className="flex">
             <label className="role-label">
               Role
-              <select name="role" value={formData.role} onChange={handleChange}>
+              <select
+                name="role"
+                className="role"
+                value={formData.role}
+                onChange={handleChange}
+              >
                 <option value="">Select Role</option>
                 <option value="volunteer">Volunteer</option>
                 <option value="organization">Organization</option>
@@ -145,7 +150,10 @@ function Signup() {
           </button>
         </div>
         <p className="noAccount">
-          Have an Account? <Link to="/login">Login</Link>
+          Have an Account?{" "}
+          <Link to="/login" className="link">
+            Login
+          </Link>
         </p>
       </form>
     </div>

@@ -69,13 +69,20 @@ class MembershipController extends Controller
             return response()->json(['message' => 'Admin registration successful.'], 201);
         }
 
+        if ($request->hasFile('profile_image')) {
+            $ProfileImagePath = $request->file('profile_image')->store('profile_images', 'public');
+        }
+        if ($request->hasFile('logo')) {
+            $LogoImagePath = $request->file('logo')->store('organisation_logos', 'public');
+        }
+
         if ($role === 'organisation') {
             $org_name = $request->org_name;
             $org_type = $request->org_type;
             $registration_number = $request->registration_number;
             $phone = $request->phone;
             $website = $request->website ?? null;
-            $logo = $request->logo ?? null;
+            $logo = $LogoImagePath ? asset('storage/'.$LogoImagePath) : null;
             $country = $request->country;
             $city = $request->city;
             $street_address = $request->street_address;
@@ -114,7 +121,7 @@ class MembershipController extends Controller
                 'bio' => $bio,
                 'skills' => $skills,
                 'location' => $location,
-                'profile_image' => $profile_image,
+                'profile_image' => $ProfileImagePath ? asset('storage/'.$ProfileImagePath) : null,
             ]);
         }
         else{
@@ -227,9 +234,6 @@ class MembershipController extends Controller
         return response()->json($membership, 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id, string $type)
     {
         if ($type == 'user'){
@@ -245,7 +249,24 @@ class MembershipController extends Controller
             if (!$organisation) {
                 return response()->json(['message' => 'Organisation not found'], 404);
             }
-            $organisation->update($request->all());
+
+            // Handle logo upload
+            if ($request->hasFile('logo')) {
+                $request->validate([
+                    'logo' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                ]);
+
+                // Delete old logo if exists
+                if ($organisation->logo) {
+                    $oldPath = str_replace(asset('storage/'), '', $organisation->logo);
+                    \Storage::disk('public')->delete($oldPath);
+                }
+
+                $logoPath = $request->file('logo')->store('organisation_logos', 'public');
+                $organisation->logo = asset('storage/' . $logoPath);
+            }
+
+            $organisation->update($request->except('logo'));
             return response()->json($organisation, 200);
         }
         else if ($type == 'volunteer'){
@@ -253,7 +274,24 @@ class MembershipController extends Controller
             if (!$volunteer) {
                 return response()->json(['message' => 'Volunteer not found'], 404);
             }
-            $volunteer->update($request->all());
+
+            // Handle profile_image upload
+            if ($request->hasFile('profile_image')) {
+                $request->validate([
+                    'profile_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                ]);
+
+                // Delete old profile_image if exists
+                if ($volunteer->profile_image) {
+                    $oldPath = str_replace(asset('storage/'), '', $volunteer->profile_image);
+                    \Storage::disk('public')->delete($oldPath);
+                }
+
+                $profileImagePath = $request->file('profile_image')->store('profile_images', 'public');
+                $volunteer->profile_image = asset('storage/' . $profileImagePath);
+            }
+
+            $volunteer->update($request->except('profile_image'));
             return response()->json($volunteer, 200);
         }
         else{

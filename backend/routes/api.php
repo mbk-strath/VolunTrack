@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\galleryController;
 use App\Http\Middleware\RoleMiddleware;
 
 /*
@@ -32,11 +33,15 @@ Route::post('/reset-otp', [\App\Http\Controllers\MembershipController::class, 'p
 Route::post('/reset-password', [\App\Http\Controllers\MembershipController::class, 'passwordReset']);
 
 Route::middleware('auth:sanctum', 'role:admin')->group(function(){
-
+    Route::get('/all-memberships', [MembershipController::class, 'list']);
+    Route::get('/all-galleries', [GalleryController::class, 'listGalleries']);
 });
 
 Route::middleware('auth:sanctum', 'role:admin,organisation')->group(function(){
-
+    Route::post('/add-gallery', [GalleryController::class, 'addGallery']);
+    Route::put('/update-gallery/{id}', [GalleryController::class, 'updateGallery']);
+    Route::delete('/delete-gallery/{id}', [GalleryController::class, 'deleteGallery']);
+    Route::get('/my-gallery/{id}', [GalleryController::class, 'myGallery']);
 });
 
 Route::middleware('auth:sanctum', 'role:admin,volunteer')->group(function(){
@@ -47,7 +52,6 @@ Route::middleware('auth:sanctum', 'role:admin,organisation,volunteer')->group(fu
     Route::get('/show/{id}', [MembershipController::class, 'show']);
     Route::put('/update/{id}/{type}', [MembershipController::class, 'update']);
     Route::delete('/delete/{id}/{type}', [MembershipController::class, 'destroy']);
-    Route::get('/all-memberships', [MembershipController::class, 'list']);
     Route::post('/logout', [\App\Http\Controllers\MembershipController::class, 'logout']);
     
 });

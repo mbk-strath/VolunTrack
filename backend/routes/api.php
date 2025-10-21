@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MembershipController;
 use App\Http\Middleware\RoleMiddleware;
 
 /*
@@ -23,12 +24,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 /////////////////////////////////////////////////////////////////
 // Unprotected Unauthenticated Routes:
-Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register']);
-Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
-Route::get('/verify/{id}', [\App\Http\Controllers\AuthController::class, 'verify']);
-Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
-Route::post('/reset-otp', [AuthController::class, 'passwordResetOtp']);
-Route::post('/reset-password', [AuthController::class, 'passwordReset']);
+Route::post('/register', [\App\Http\Controllers\MembershipController::class, 'register']);
+Route::post('/login', [\App\Http\Controllers\MembershipController::class, 'login']);
+Route::get('/verify/{id}', [\App\Http\Controllers\MembershipController::class, 'verify']);
+Route::post('/verify-otp', [\App\Http\Controllers\MembershipController::class, 'verifyOtp']);
+Route::post('/reset-otp', [\App\Http\Controllers\MembershipController::class, 'passwordResetOtp']);
+Route::post('/reset-password', [\App\Http\Controllers\MembershipController::class, 'passwordReset']);
 
 Route::middleware('auth:sanctum', 'role:admin')->group(function(){
 
@@ -43,10 +44,20 @@ Route::middleware('auth:sanctum', 'role:admin,volunteer')->group(function(){
 });
 
 Route::middleware('auth:sanctum', 'role:admin,organisation,volunteer')->group(function(){
-    Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
+    Route::get('/show/{id}', [MembershipController::class, 'show']);
+    Route::put('/update/{id}', [MembershipController::class, 'update']);
+    Route::delete('/delete/{id}', [MembershipController::class, 'destroy']);
+    Route::get('/all-memberships', [MembershipController::class, 'list']);
+    Route::post('/logout', [\App\Http\Controllers\MembershipController::class, 'logout']);
     
 });
 
 
-Route::get('/auth/google/redirect', [AuthController::class, 'redirectToGoogle']);
-Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+
+// ///////////////////////////////////////////////  OLD AUTH ROUTES ///////////////////////
+// Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register']);
+// Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
+// Route::get('/verify/{id}', [\App\Http\Controllers\AuthController::class, 'verify']);
+// Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+// Route::post('/reset-otp', [AuthController::class, 'passwordResetOtp']);
+// Route::post('/reset-password', [AuthController::class, 'passwordReset']);

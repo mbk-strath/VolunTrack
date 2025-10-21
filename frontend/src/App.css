@@ -140,11 +140,3 @@ label {
   font-size: 12px;
   margin-top: -12px;
 }
-
-@media screen and (max-width: 840px) {
-  .loginForm,
-  .signupForm {
-    width: 50%;
-    padding: 60px;
-  }
-}

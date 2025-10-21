@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\VerificationEmail;
 use App\Mail\OtpEmail;
 use App\Mail\PasswordResetEmail;
+use App\Services\MembershipService;
 
 
 class MembershipController extends Controller
@@ -154,25 +155,17 @@ class MembershipController extends Controller
             $link = url("/api/verify/{$Userobj->id}");
             Mail::to($email)->send(new VerificationEmail($link));
             return response()->json(['message' => 'Account is not verified. Please check your email for verification instructions.'], 403);
-        }
-        if ($Userobj->role==='volunteer'){
-            $membership = Volunteer::firstWhere('user_id', $Userobj->id);
-            if ($membership->is_active == false){
-                return response()->json(['message' => 'Account is not active. Please contact support.'], 403);
-            }
-        }
-        if ($Userobj->role==='organisation'){
-            $membership = Organisation::firstWhere('user_id', $Userobj->id);
-            if ($membership->is_active == false){
-                return response()->json(['message' => 'Account is not active. Please contact support.'], 403);
-            }
-        }
+        }   
         if ($Userobj->role == 'admin'){
             $token = $Userobj->createToken('auth_token')->plainTextToken;
             return response()->json([
                 'user' => $Userobj,
                 'token' => $token,
             ], 200);
+        }
+        $membership = MembershipService::getMembership($Userobj);
+        if ($membership && !$membership->is_active){
+            return response()->json(['message' => 'Account is not active. Please contact support.'], 403);
         }
         $otp = rand(100000, 999999);
         $OtpCode = OtpCode::create([
@@ -207,41 +200,28 @@ class MembershipController extends Controller
         $OtpRecord->is_used = true;
         $OtpRecord->save();
 
+        $membership = MembershipService::getMembership($Userobj);
         $token = $Userobj->createToken('auth_token')->plainTextToken;
         return response()->json([
             'user' => $Userobj,
             'token' => $token,
+            'membership' => $membership,
         ], 200);
     }
 
 
-    public function show(string $id)
-    {
-        $type = request()->type;
-        if ($type === 'admin'){
-            $user = $user = User::find($id);
-            if (!$user) {
-                return response()->json(['message' => 'Resource not found'], 404);
-            }
-            return response()->json($user, 200);
+    public function show(Request $request, string $id)
+    {   
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
         }
-        else if ($type === 'organisation'){
-            $organisation = Organisation::find($id);
-            if (!$organisation) {
-                return response()->json(['message' => 'Resource not found'], 404);
-            }
-            $user = User::find($organisation->user_id);
-            $organisation->user = $user;
-            return response()->json($organisation, 200);
+        $membership = MembershipService::getMembership($user);
+        if ($membership === null && $user->role !== 'admin') {
+            return response()->json(['message' => 'Membership not found'], 404);
         }
-        else if ($type === 'volunteer'){
-            $volunteer = Volunteer::find($id);
-            if (!$volunteer) {
-                return response()->json(['message' => 'Resource not found'], 404);
-            }
-            $user = User::find($volunteer->user_id);
-            $volunteer->user = $user;
-            return response()->json($volunteer, 200);
+        if ($user->role === 'admin') {
+            return response()->json(['message' => 'Admin does not have a membership', 'user' => $user], 404);
         }
 
         return response()->json($membership, 200);
@@ -250,9 +230,8 @@ class MembershipController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id, string $type)
     {
-        $type = request()->type;
         if ($type == 'user'){
             $user = User::find($id);
             if (!$user) {
@@ -285,9 +264,8 @@ class MembershipController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, string $id)
+    public function destroy(Request $request, string $id, string $type)
     {
-        $type = request()->type;
         if ($type == 'organisation'){
             $organisation = Organisation::find($id);
             if (!$organisation) {

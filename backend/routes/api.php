@@ -45,8 +45,8 @@ Route::middleware('auth:sanctum', 'role:admin,volunteer')->group(function(){
 
 Route::middleware('auth:sanctum', 'role:admin,organisation,volunteer')->group(function(){
     Route::get('/show/{id}', [MembershipController::class, 'show']);
-    Route::put('/update/{id}', [MembershipController::class, 'update']);
-    Route::delete('/delete/{id}', [MembershipController::class, 'destroy']);
+    Route::put('/update/{id}/{type}', [MembershipController::class, 'update']);
+    Route::delete('/delete/{id}/{type}', [MembershipController::class, 'destroy']);
     Route::get('/all-memberships', [MembershipController::class, 'list']);
     Route::post('/logout', [\App\Http\Controllers\MembershipController::class, 'logout']);
     

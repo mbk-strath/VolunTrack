@@ -4,8 +4,25 @@
   align-items: center;
 }
 
-.labels {
-  width: 100%;
+.loginForm .title {
+  text-align: center;
+}
+.loginForm {
+  margin: auto;
+  width: 30%;
+  padding-left: 2rem;
+  padding-right: 2rem;
+
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  flex-direction: column;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
 }
 
 .loginForm .labels {
@@ -16,8 +33,12 @@
   max-width: 400px;
 }
 
-.labels label {
+.loginForm label {
   color: rgba(255, 255, 255, 0.79);
+}
+
+.resetLinks {
+  padding-top: 1%;
 }
 
 .or {
@@ -41,6 +62,9 @@
 .noAccount {
   display: flex;
   gap: 5px;
+  color: rgba(255, 255, 255, 0.452);
+  margin: auto;
+  padding-bottom: 20px;
 }
 
 .noAccount .link {
@@ -85,10 +109,6 @@
 }
 @media screen and (max-width: 768px) {
   .loginForm {
-    margin-top: 25px;
-    width: 100%;
-  }
-  .loginForm .googleBtn {
-    width: 88%;
+    width: 80%;
   }
 }

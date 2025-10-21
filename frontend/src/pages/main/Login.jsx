@@ -82,45 +82,43 @@ function Login() {
 
         {apiError && <p className="errors">{apiError}</p>}
 
-        <div className="labels">
-          <label htmlFor="email">Email Address</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            id="email"
-            placeholder="Enter your email"
-            onChange={handleChange}
-            disabled={loading}
-          />
-          {errors.email && <p className="errors">{errors.email}</p>}
+        <label htmlFor="email">Email Address</label>
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          id="email"
+          placeholder="Enter your email"
+          onChange={handleChange}
+          disabled={loading}
+        />
+        {errors.email && <p className="errors">{errors.email}</p>}
 
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            id="password"
-            placeholder="Enter your password"
-            onChange={handleChange}
-            disabled={loading}
-          />
-          {errors.password && <p className="errors">{errors.password}</p>}
+        <label htmlFor="password">Password</label>
+        <input
+          type="password"
+          name="password"
+          value={formData.password}
+          id="password"
+          placeholder="Enter your password"
+          onChange={handleChange}
+          disabled={loading}
+        />
+        {errors.password && <p className="errors">{errors.password}</p>}
 
-          <button
-            type="submit"
-            className="loginBtn loginBtnForm"
-            disabled={loading}
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
+        <button
+          type="submit"
+          className="loginBtn loginBtnForm"
+          disabled={loading}
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
 
-          <div className="resetLinks">
-            <Link className="reset" to="/password-reset">
-              Forgotten Password?
-            </Link>
-            <Link className="show">Show Password</Link>
-          </div>
+        <div className="resetLinks">
+          <Link className="reset" to="/password-reset">
+            Forgotten Password?
+          </Link>
+          <Link className="show">Show Password</Link>
         </div>
 
         <div className="or">

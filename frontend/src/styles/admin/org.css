@@ -1,29 +1,11 @@
-.header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .header .right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-    .header .circle {
-      background-color: #444;
-      color: white;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 50%;
-    }
+
     h1 {
       font-size: 1.8em;
       margin-bottom: 20px;
     }
     .org-card {
-      background-color: #2a2b3d;
+     background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
       padding: 20px;
       border-radius: 10px;
       margin-bottom: 15px;
@@ -57,4 +39,13 @@
     .btn-view {
       background-color: #ccc;
       color: black;
+    }
+
+
+    .OrganisationsPage {
+      padding-top:10%;
+      background-color: #f0f2f5;
+      min-height: 100vh;
+      padding-left: 30px;
+      padding-right: 30px;
     }

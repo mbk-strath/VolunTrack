@@ -3,19 +3,12 @@ import "../../styles/admin/org.css";
 
 const AdminOrganisations = () => {
   return (
-    <div className="admin-dashboard">
+    <div className="OrganisationsPage">
       
       
-        <div className="header">
-          <h1>Welcome user</h1>
-          <div className="right">
-            <span role="img" aria-label="sun">☀</span>
-            <span role="img" aria-label="bell">🔔</span>
-            <div className="circle">VO</div>
-          </div>
-        </div>
+      
 
-        <h1>Organisation Verification</h1>
+        <h2>Organisation Verification</h2>
 
         {/* Organisation Card 1 */}
         <div className="org-card">

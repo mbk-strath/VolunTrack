@@ -8,7 +8,7 @@ import { FaHistory } from "react-icons/fa";
 import { IoSettings } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
 import "../../styles/volunteer/sideVol.css";
-
+import "../../styles/admin/sideVolAdm.css";
 function SidebarAdmin() {
   return (
     <div className="sidebar">
@@ -18,60 +18,60 @@ function SidebarAdmin() {
         to="/dashboard"
         end
         className={({ isActive }) =>
-          isActive ? "sideElements active" : "sideElements"
+          isActive ? "sideElementsAdm active" : "sideElementsAdm"
         }
       >
-        <IoApps className="dash-icon" />
+        <IoApps className="adm-dash-icon" />
         <p>Dashboard</p>
       </NavLink>
 
       <NavLink
         to="/dashboard/opportunites"
         className={({ isActive }) =>
-          isActive ? "sideElements active" : "sideElements"
+          isActive ? "sideElementsAdm active" : "sideElementsAdm"
         }
       >
-        <MdOutlineFindInPage className="dash-icon" />
+        <MdOutlineFindInPage className="adm-dash-icon" />
         <p>Find Opportunities</p>
       </NavLink>
 
       <NavLink
         to="/dashboard-admin/organisations"
         className={({ isActive }) =>
-          isActive ? "sideElements active" : "sideElements"
+          isActive ? "sideElementsAdm active" : "sideElementsAdm"
         }
       >
-        <FaFileAlt className="dash-icon" />
+        <FaFileAlt className="adm-dash-icon" />
         <p>Organisations</p>
       </NavLink>
 
       <NavLink
         to="/dashboard/messages"
         className={({ isActive }) =>
-          isActive ? "sideElements active" : "sideElements"
+          isActive ? "sideElementsAdm active" : "sideElementsAdm"
         }
       >
-        <TiMessages className="dash-icon" />
+        <TiMessages className="adm-dash-icon" />
         <p>Messages</p>
       </NavLink>
 
       <NavLink
         to="/dashboard/history"
         className={({ isActive }) =>
-          isActive ? "sideElements active" : "sideElements"
+          isActive ? "sideElementsAdm active" : "sideElementsAdm"
         }
       >
-        <FaHistory className="dash-icon" />
+        <FaHistory className="adm-dash-icon" />
         <p>History</p>
       </NavLink>
 
       <NavLink
         to="/dashboard/settings"
         className={({ isActive }) =>
-          isActive ? "sideElements active" : "sideElements"
+          isActive ? "sideElementsAdm active" : "sideElementsAdm"
         }
       >
-        <IoSettings className="dash-icon" />
+        <IoSettings className="adm-dash-icon" />
         <p>Settings</p>
       </NavLink>
     </div>

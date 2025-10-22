@@ -5,7 +5,7 @@ use App\Models\User;
 use App\Models\Organisation;
 use App\Models\Volunteer;
 
-class UserTypeService
+class MembershipService
 {
     public static function getMembership($user)
     {

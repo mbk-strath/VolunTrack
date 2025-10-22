@@ -1,0 +1,60 @@
+.header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header .right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .header .circle {
+      background-color: #444;
+      color: white;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+    }
+    h1 {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+    }
+    .org-card {
+      background-color: #2a2b3d;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .org-info {
+      flex: 1;
+    }
+    .status {
+      color: #ffc107;
+      font-weight: 600;
+    }
+    .btns button {
+      border: none;
+      padding: 10px 15px;
+      margin: 0 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .btn-approve {
+      background-color: #000;
+      color: white;
+    }
+    .btn-reject {
+      background-color: #f44336;
+      color: white;
+    }
+    .btn-view {
+      background-color: #ccc;
+      color: black;
+    }

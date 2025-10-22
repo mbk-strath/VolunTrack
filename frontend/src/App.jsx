@@ -18,6 +18,8 @@ import ForgotPassword from "./pages/main/ForgotPassword";
 import ResetPassword from "./pages/main/ResetPassword";
 import ViewOpportunityPage from "./styles/volunteer/ViewOpportunityPage";
 import ApplicationHistoryPage from "./pages/volunteer/ApplicationHistoryPage";
+import DashboardLayoutAdmin from "../layouts/DashboardLayoutAdmin";
+import AdminOrganisations from "./pages/admin/AdminOrganisations";
 
 function App() {
   return (
@@ -42,6 +44,9 @@ function App() {
               <Route index element={<ProfilePage />} />
               <Route path="account" element={<AccountPage />} />
             </Route>
+          </Route>
+          <Route path="/dashboard-admin" element={<DashboardLayoutAdmin/>}>
+          <Route path="organisations" element={<AdminOrganisations/>}/>
           </Route>
         </Routes>
       </Router>

@@ -19,7 +19,7 @@ function TopBarAdmin() {
   }, [darkMode]);
 
   return (
-    <div className="TopbarAdmin">
+    <div className="Topbar">
      <h3>Welcome User</h3>
 
       <div className="topRight">

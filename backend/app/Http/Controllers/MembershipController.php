@@ -66,6 +66,9 @@ class MembershipController extends Controller
         }
 
         if ($role == 'admin'){
+            $user->is_verified = true;
+            $user->is_active = true;
+            $user->save();
             return response()->json(['message' => 'Admin registration successful.'], 201);
         }
 
@@ -147,10 +150,10 @@ class MembershipController extends Controller
 
 
 
-    public function login()
+    public function login(Request $request)
     {
-        $email = request->email;
-        $password = request->password;
+        $email = $request->email;
+        $password = $request->password;
         $Userobj = User::where('email',$email)->firstOrFail();
         if(!$Userobj || !Hash::check($password, $Userobj->password)){
             return response()->json(['message'=>'Invalid Credentials'],401);

@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\galleryController;
 use App\Http\Middleware\RoleMiddleware;
@@ -58,10 +57,3 @@ Route::middleware('auth:sanctum', 'role:admin,organisation,volunteer')->group(fu
 
 
 
-// ///////////////////////////////////////////////  OLD AUTH ROUTES ///////////////////////
-// Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register']);
-// Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
-// Route::get('/verify/{id}', [\App\Http\Controllers\AuthController::class, 'verify']);
-// Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
-// Route::post('/reset-otp', [AuthController::class, 'passwordResetOtp']);
-// Route::post('/reset-password', [AuthController::class, 'passwordReset']);

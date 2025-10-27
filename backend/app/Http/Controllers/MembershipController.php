@@ -44,7 +44,8 @@ class MembershipController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'role' => 'required|string|in:organisation,volunteer',
+            'gender' => 'required|string|max:255',
+            'role' => 'required|string|in:organisation,volunteer,admin',
         ]);
         $name = $request->name;
         $email = $request->email;
@@ -58,6 +59,7 @@ class MembershipController extends Controller
             'email' => $email,
             'password' => bcrypt($password),
             'gender' => $gender,
+            'phone' => $phone,
             'role' => $role,
         ]);
 
@@ -65,7 +67,7 @@ class MembershipController extends Controller
             return response()->json(['message' => 'Registration failed'], 500);
         }
 
-        if ($role == 'admin'){
+        if ($role === 'admin'){
             $user->is_verified = true;
             $user->is_active = true;
             $user->save();

@@ -46,23 +46,23 @@ function SidebarAdmin() {
       </NavLink>
 
       <NavLink
-        to="/dashboard/messages"
+        to="/dashboard-admin/reports"
         className={({ isActive }) =>
           isActive ? "sideElementsAdm active" : "sideElementsAdm"
         }
       >
         <TiMessages className="adm-dash-icon" />
-        <p>Messages</p>
+        <p>Reports</p>
       </NavLink>
 
       <NavLink
-        to="/dashboard/history"
+        to="/dashboard-admin/events"
         className={({ isActive }) =>
           isActive ? "sideElementsAdm active" : "sideElementsAdm"
         }
       >
         <FaHistory className="adm-dash-icon" />
-        <p>History</p>
+        <p>Events</p>
       </NavLink>
 
       <NavLink

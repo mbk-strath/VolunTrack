@@ -20,6 +20,8 @@ import ViewOpportunityPage from "./styles/volunteer/ViewOpportunityPage";
 import ApplicationHistoryPage from "./pages/volunteer/ApplicationHistoryPage";
 import DashboardLayoutAdmin from "../layouts/DashboardLayoutAdmin";
 import AdminOrganisations from "./pages/admin/AdminOrganisations";
+import AdminReports from "./pages/admin/AdminReports"; 
+import AdminEvents from "./pages/admin/AdminEvents"; 
 
 function App() {
   return (
@@ -47,6 +49,8 @@ function App() {
           </Route>
           <Route path="/dashboard-admin" element={<DashboardLayoutAdmin/>}>
           <Route path="organisations" element={<AdminOrganisations/>}/>
+          <Route path="reports" element={<AdminReports/>}/>
+          <Route path="events" element={<AdminEvents/>}/>
           </Route>
         </Routes>
       </Router>

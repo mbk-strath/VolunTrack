@@ -10,6 +10,7 @@ use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\galleryController;
 use App\Http\Controllers\OpportunityController;
+use App\Http\Controllers\ApplicationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,7 @@ Route::post('/reset-password', [\App\Http\Controllers\MembershipController::clas
 Route::middleware('auth:sanctum', 'role:admin')->group(function(){
     Route::get('/all-memberships', [MembershipController::class, 'list']);
     Route::get('/all-galleries', [GalleryController::class, 'listGalleries']);
+    Route::get('/all-applications', [ApplicationController::class, 'list']);
 });
 
 Route::middleware('auth:sanctum', 'role:admin,organisation')->group(function(){
@@ -48,9 +50,14 @@ Route::middleware('auth:sanctum', 'role:admin,organisation')->group(function(){
     Route::post('/create-opportunity', [OpportunityController::class, 'create']);
     Route::put('/update-opportunity/{id}', [OpportunityController::class, 'update']);
     Route::delete('/delete-opportunity/{id}', [OpportunityController::class, 'delete']);
-});
+    Route::get('/my-applicants/{id}', [ApplicationController::class, 'myApplicants']);
+    Route::put('/update-application/{id}', [ApplicationController::class, 'updateStatus']);
+}); 
 
 Route::middleware('auth:sanctum', 'role:admin,volunteer')->group(function(){
+    Route::get('/my-applications', [ApplicationController::class, 'myApplications']);
+    Route::post('/apply', [ApplicationController::class, 'apply']);
+    Route::delete('/delete-application/{id}', [ApplicationController::class, 'delete']);
 
 });
 

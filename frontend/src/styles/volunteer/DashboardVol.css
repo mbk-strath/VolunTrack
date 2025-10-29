@@ -45,7 +45,17 @@
   justify-content: space-between;
   width: 70%;
 }
-
+.TopbarAdmin {
+  z-index: 1200;
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  padding: 3px 5%;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 70%;
+}
 .topAvatar {
   display: flex;
   align-items: center;
@@ -105,7 +115,8 @@ body.dark-mode .EventsPage {
   background-color: #191725;
 }
 
-body.dark-mode .Topbar {
+body.dark-mode .Topbar,
+body.dark-mode .TopbarAdmin {
   background-color: #191725;
   color: white;
 }

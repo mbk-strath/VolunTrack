@@ -39,7 +39,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/login", {
+      const res = await fetch("http://localhost:8000/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -62,11 +62,20 @@ function Login() {
         throw new Error(`Error ${res.status}: ${backendMessage}`);
       }
 
-      // Save pending user for OTP flow
-      sessionStorage.setItem("pending_user", JSON.stringify(data.user));
+      sessionStorage.setItem("user", JSON.stringify(data.user));
 
-      // Redirect to OTP page
-      navigate("/two-factor", { state: { email: formData.email } });
+      const role = data.user.role?.toLowerCase();
+
+      // Redirect based on role
+      if (role === "volunteer") {
+        navigate("/dashboard/volunteer");
+      } else if (role === "organization") {
+        navigate("/dashboard/organization");
+      } else if (role === "admin") {
+        navigate("/dashboard/admin");
+      } else {
+        navigate("/");
+      }
     } catch (err) {
       console.error("Login error:", err);
       setApiError(err.message); // Show exact error

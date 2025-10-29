@@ -1,10 +1,10 @@
 import React from "react";
 import Logo from "../../assets/logo-dark.png";
 import { IoApps } from "react-icons/io5";
-import { MdOutlineFindInPage } from "react-icons/md";
-import { FaFileAlt } from "react-icons/fa";
-import { TiMessages } from "react-icons/ti";
-import { FaHistory } from "react-icons/fa";
+import { HiMiniUsers } from "react-icons/hi2";
+import { CgOrganisation } from "react-icons/cg";
+import { GoReport } from "react-icons/go";
+import { MdEvent } from "react-icons/md";
 import { IoSettings } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
 import "../../styles/volunteer/sideVol.css";
@@ -15,7 +15,7 @@ function SidebarAdmin() {
       <img src={Logo} alt="logo" className="logo" />
 
       <NavLink
-        to="/dashboard"
+        to="/dashboard/admin"
         end
         className={({ isActive }) =>
           isActive ? "sideElementsAdm active" : "sideElementsAdm"
@@ -26,47 +26,47 @@ function SidebarAdmin() {
       </NavLink>
 
       <NavLink
-        to="/dashboard/opportunites"
+        to="/dashboard/admin/users"
         className={({ isActive }) =>
           isActive ? "sideElementsAdm active" : "sideElementsAdm"
         }
       >
-        <MdOutlineFindInPage className="adm-dash-icon" />
-        <p>Find Opportunities</p>
+        <HiMiniUsers className="adm-dash-icon" />
+        <p>Users</p>
       </NavLink>
 
       <NavLink
-        to="/dashboard-admin/organisations"
+        to="/dashboard/admin/organisations"
         className={({ isActive }) =>
           isActive ? "sideElementsAdm active" : "sideElementsAdm"
         }
       >
-        <FaFileAlt className="adm-dash-icon" />
+        <CgOrganisation className="adm-dash-icon" />
         <p>Organisations</p>
       </NavLink>
 
       <NavLink
-        to="/dashboard-admin/reports"
+        to="/dashboard/admin/reports"
         className={({ isActive }) =>
           isActive ? "sideElementsAdm active" : "sideElementsAdm"
         }
       >
-        <TiMessages className="adm-dash-icon" />
+        <GoReport className="adm-dash-icon" />
         <p>Reports</p>
       </NavLink>
 
       <NavLink
-        to="/dashboard-admin/events"
+        to="/dashboard/admin/events"
         className={({ isActive }) =>
           isActive ? "sideElementsAdm active" : "sideElementsAdm"
         }
       >
-        <FaHistory className="adm-dash-icon" />
+        <MdEvent className="adm-dash-icon" />
         <p>Events</p>
       </NavLink>
 
       <NavLink
-        to="/dashboard/settings"
+        to="/dashboard/admin/settings"
         className={({ isActive }) =>
           isActive ? "sideElementsAdm active" : "sideElementsAdm"
         }

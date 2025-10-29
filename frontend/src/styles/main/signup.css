@@ -54,6 +54,11 @@ option {
   flex-direction: column;
 }
 
+input:focus,
+select:focus {
+  outline: none;
+}
+
 .flex label {
   width: 45%;
 }

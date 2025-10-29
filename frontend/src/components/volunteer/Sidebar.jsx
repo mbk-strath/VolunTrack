@@ -26,7 +26,7 @@ function Sidebar() {
       </NavLink>
 
       <NavLink
-        to="/dashboard/opportunites"
+        to="/dashboard/opportunitIes"
         className={({ isActive }) =>
           isActive ? "sideElements active" : "sideElements"
         }

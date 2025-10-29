@@ -1,17 +1,19 @@
 .landingPage {
   padding: 30px;
   margin-left: 4%;
-  min-height: 100vh;
+  height: auto;
+  min-height: 120vh;
+  padding-bottom: 6%;
 }
 
 .landingPage .logo {
   width: 20%;
 }
 
-h1 {
+.landingPage h1 {
   color: white;
-  margin-top: 10%;
-  font-size: 50px;
+  margin-top: 5%;
+  font-size: 4rem;
 }
 
 .tagline {
@@ -59,4 +61,40 @@ h1 {
   background-color: transparent;
   border: 2px solid #b5afaf;
   color: #b5afaf;
+}
+
+@media screen and (max-width: 1024px) {
+  .landingPage h1 {
+    margin-top: 10%;
+  }
+
+  .hero {
+    width: 45%;
+  }
+
+  .cta {
+    width: 70%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .landingPage h1 {
+    font-size: 40px;
+  }
+  .landingPage .logo {
+    width: 50%;
+    margin-left: -10%;
+  }
+  .cta {
+    width: 100%;
+  }
+
+  .hero {
+    width: 79%;
+    margin-bottom: 10%;
+  }
+
+  .cont-hero {
+    margin-top: 30%;
+  }
 }

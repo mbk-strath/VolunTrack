@@ -13,13 +13,14 @@ function Signup() {
   });
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false); // 👈 loading state
   const navigate = useNavigate();
 
   // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    setErrors({ ...errors, [name]: "", backend: "" }); // clear individual field errors
+    setErrors({ ...errors, [name]: "", backend: "" });
   };
 
   // Basic frontend validation
@@ -40,14 +41,14 @@ function Signup() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Run frontend validation
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
 
-    // Send POST request to Laravel API
+    setLoading(true); //
+
     fetch("http://127.0.0.1:8000/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -55,11 +56,11 @@ function Signup() {
     })
       .then((res) => res.json())
       .then((data) => {
+        setLoading(false); //
         if (data.user) {
           setMessage("Registered successfully!");
           setFormData({ name: "", email: "", password: "", role: "" });
           setErrors({});
-          // Redirect to login after 2 seconds
           setTimeout(() => {
             navigate("/login");
           }, 2000);
@@ -68,6 +69,7 @@ function Signup() {
         }
       })
       .catch((err) => {
+        setLoading(false);
         console.error("Fetch error:", err);
         setErrors({ backend: "Server error. Please try again." });
       });
@@ -75,7 +77,6 @@ function Signup() {
 
   return (
     <div className="signupPage">
-      <img src={Logo} alt="logo" className="logo-sign" />
       <form className="signupForm" onSubmit={handleSubmit}>
         <h2 className="title">Signup</h2>
 
@@ -90,6 +91,7 @@ function Signup() {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Enter your name"
+                disabled={loading}
               />
               {errors.name && <p className="errors">{errors.name}</p>}
             </label>
@@ -101,14 +103,22 @@ function Signup() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Enter your email"
+                disabled={loading}
               />
               {errors.email && <p className="errors">{errors.email}</p>}
             </label>
           </div>
+
           <div className="flex">
             <label className="role-label">
               Role
-              <select name="role" value={formData.role} onChange={handleChange}>
+              <select
+                name="role"
+                className="role"
+                value={formData.role}
+                onChange={handleChange}
+                disabled={loading}
+              >
                 <option value="">Select Role</option>
                 <option value="volunteer">Volunteer</option>
                 <option value="organization">Organization</option>
@@ -124,12 +134,14 @@ function Signup() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Enter your password"
+                disabled={loading}
               />
               {errors.password && <p className="errors">{errors.password}</p>}
             </label>
           </div>
-          <button type="submit" className="loginBtn">
-            Signup
+
+          <button type="submit" className="loginBtn" disabled={loading}>
+            {loading ? "Signing up..." : "Signup"}
           </button>
 
           {message && <p>{message}</p>}
@@ -140,13 +152,20 @@ function Signup() {
             <hr />
           </div>
 
-          <button type="button" className="googleBtn">
+          <button
+            type="button"
+            className="googleBtn googleSignup"
+            disabled={loading}
+          >
             <FcGoogle />
             Continue with Google
           </button>
         </div>
         <p className="noAccount">
-          Have an Account? <Link to="/login">Login</Link>
+          Have an Account?{" "}
+          <Link to="/login" className="link">
+            Login
+          </Link>
         </p>
       </form>
     </div>

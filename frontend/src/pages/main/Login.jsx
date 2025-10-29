@@ -7,32 +7,21 @@ import { Link, useNavigate } from "react-router-dom";
 function Login() {
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  function handleChange(e) {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  }
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const validate = () => {
-    let newErrors = {};
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    const newErrors = {};
+    if (!formData.email) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Email is invalid";
-    }
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    }
+    if (!formData.password) newErrors.password = "Password is required";
     return newErrors;
   };
 
@@ -42,79 +31,103 @@ function Login() {
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-    } else {
-      setErrors({});
-      setApiError("");
-      setLoading(true);
+      return;
+    }
 
+    setErrors({});
+    setApiError("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:8000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      let data;
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          setApiError(data.message || "Login failed");
-          return;
-        }
-
-        // ✅ Temporarily save user + token for OTP flow
-        sessionStorage.setItem("pending_user", JSON.stringify(data.user));
-        sessionStorage.setItem("pending_token", data.token);
-
-        //  Redirect to OTP page
-        navigate("/two-factor", { state: { email: formData.email } });
-      } catch (err) {
-        console.error(err);
-        setApiError("Something went wrong. Try again later.");
-      } finally {
-        setLoading(false);
+        data = await res.json(); // Try parsing JSON
+      } catch (jsonErr) {
+        throw new Error(
+          `Invalid JSON response from server. Status: ${res.status}`
+        );
       }
+
+      console.log("Login API response:", data);
+
+      if (!res.ok) {
+        // Show exact backend error or fallback
+        const backendMessage = data.message || JSON.stringify(data);
+        throw new Error(`Error ${res.status}: ${backendMessage}`);
+      }
+
+      sessionStorage.setItem("user", JSON.stringify(data.user));
+
+      const role = data.user.role?.toLowerCase();
+
+      // Redirect based on role
+      if (role === "volunteer") {
+        navigate("/dashboard/volunteer");
+      } else if (role === "organization") {
+        navigate("/dashboard/organization");
+      } else if (role === "admin") {
+        navigate("/dashboard/admin");
+      } else {
+        navigate("/");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setApiError(err.message); // Show exact error
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="loginPage">
-      <img src={Logo} alt="logo" className="logo-login" />
       <form className="loginForm" onSubmit={handleSubmit}>
         <h2 className="title">Login</h2>
 
         {apiError && <p className="errors">{apiError}</p>}
-        <div className="labels">
-          <label htmlFor="email">Email Address</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            id="email"
-            placeholder="Enter your email"
-            onChange={handleChange}
-            disabled={loading}
-          />
-          {errors.email && <p className="errors">{errors.email}</p>}
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            id="password"
-            placeholder="Enter your password"
-            onChange={handleChange}
-            disabled={loading}
-          />
-          {errors.password && <p className="errors">{errors.password}</p>}
-          <button type="submit" className="loginBtn" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
-          </button>
-          <div className="resetLinks">
-            <Link className="reset">Forgotten Password?</Link>
-            <Link className="show">Show Password</Link>
-          </div>
+
+        <label htmlFor="email">Email Address</label>
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          id="email"
+          placeholder="Enter your email"
+          onChange={handleChange}
+          disabled={loading}
+        />
+        {errors.email && <p className="errors">{errors.email}</p>}
+
+        <label htmlFor="password">Password</label>
+        <input
+          type="password"
+          name="password"
+          value={formData.password}
+          id="password"
+          placeholder="Enter your password"
+          onChange={handleChange}
+          disabled={loading}
+        />
+        {errors.password && <p className="errors">{errors.password}</p>}
+
+        <button
+          type="submit"
+          className="loginBtn loginBtnForm"
+          disabled={loading}
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
+
+        <div className="resetLinks">
+          <Link className="reset" to="/password-reset">
+            Forgotten Password?
+          </Link>
+          <Link className="show">Show Password</Link>
         </div>
 
         <div className="or">
@@ -123,7 +136,11 @@ function Login() {
           <hr />
         </div>
 
-        <button type="button" className="googleBtn" disabled={loading}>
+        <button
+          type="button"
+          className="googleBtn googlelogin"
+          disabled={loading}
+        >
           <FcGoogle />
           Continue with Google
         </button>

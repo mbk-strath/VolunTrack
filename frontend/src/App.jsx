@@ -20,8 +20,8 @@ import ViewOpportunityPage from "./styles/volunteer/ViewOpportunityPage";
 import ApplicationHistoryPage from "./pages/volunteer/ApplicationHistoryPage";
 import DashboardLayoutAdmin from "../layouts/DashboardLayoutAdmin";
 import AdminOrganisations from "./pages/admin/AdminOrganisations";
-import AdminReports from "./pages/admin/AdminReports"; 
-import AdminEvents from "./pages/admin/AdminEvents"; 
+import AdminReports from "./pages/admin/AdminReports";
+import AdminEvents from "./pages/admin/AdminEvents";
 import AdminHome from "./pages/admin/AdminHome";
 
 function App() {
@@ -37,7 +37,7 @@ function App() {
             <Route path="/password-reset" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
           </Route>
-          <Route path="/dashboard" element={<DashboardLayoutVol />}>
+          <Route path="/dashboard/volunteer" element={<DashboardLayoutVol />}>
             <Route index element={<HomePage />} />
             <Route path="history" element={<HistoryPage />} />
             <Route path="messages" element={<MessagesPage />} />
@@ -48,12 +48,11 @@ function App() {
               <Route path="account" element={<AccountPage />} />
             </Route>
           </Route>
-          <Route path="/dashboard-admin" element={<DashboardLayoutAdmin/>}>
-          <Route path="/admin/home" element={<AdminHome />} />
-          <Route path="organisations" element={<AdminOrganisations/>}/>
-          <Route path="reports" element={<AdminReports/>}/>
-          <Route path="events" element={<AdminEvents/>}/>
-
+          <Route path="/dashboard/admin" element={<DashboardLayoutAdmin />}>
+            <Route index element={<AdminHome />} />
+            <Route path="organisations" element={<AdminOrganisations />} />
+            <Route path="reports" element={<AdminReports />} />
+            <Route path="events" element={<AdminEvents />} />
           </Route>
         </Routes>
       </Router>

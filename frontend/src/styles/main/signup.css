@@ -1,5 +1,8 @@
 .signupPage {
-  height: 130vh;
+  height: 100vh;
+  overflow-y: scroll;
+  display: flex;
+  align-items: center;
 }
 
 .signupForm select {
@@ -51,6 +54,11 @@ option {
   flex-direction: column;
 }
 
+input:focus,
+select:focus {
+  outline: none;
+}
+
 .flex label {
   width: 45%;
 }
@@ -58,4 +66,28 @@ option {
 .flex {
   display: flex;
   justify-content: space-between;
+}
+
+@media screen and (max-width: 1024px) {
+  .signupForm {
+    width: 70%;
+  }
+}
+@media screen and (max-width: 768px) {
+  .signupForm {
+    width: 80%;
+  }
+  .flex {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .flex .role {
+    width: 100%;
+  }
+
+  .flex label {
+    width: 100%;
+    gap: 60px;
+  }
 }

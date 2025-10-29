@@ -59,6 +59,17 @@
   gap: 20px;
 }
 
+.topLeft {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 20px;
+}
+
+.menu {
+  display: none;
+}
+
 .search-bar {
   width: 50%;
 }
@@ -74,7 +85,7 @@
   display: flex;
   align-items: center;
 }
-.icon {
+.dark-toggle .icon {
   font-size: 25px;
   color: #e09c6d;
 }
@@ -87,7 +98,10 @@ body.dark-mode {
 
 /* Adjust dashboard backgrounds in dark mode */
 body.dark-mode .dashboard,
-body.dark-mode .dashboard-content {
+body.dark-mode .dashboard-content,
+body.dark-mode .OrganisationsPage,
+body.dark-mode .ReportsPage,
+body.dark-mode .EventsPage {
   background-color: #191725;
 }
 
@@ -156,10 +170,52 @@ body.dark-mode .exact {
 body.dark-mode .username {
   color: #ffffff;
 }
+
+body.dark-mode .OpportunityCard,
+body.dark-mode .history-card,
+body.dark-mode .application-card {
+  background: #252235;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.25);
+}
+
+body.dark-mode .application-holder {
+  background: rgba(247, 247, 247, 0.7);
+}
+
+body.dark-mode .names .title {
+  color: #181c2c;
+}
+
+body.dark-mode .names .org_name {
+  color: rgba(0, 0, 0, 0.33);
+}
+
+body.dark-mode .org-card,
+body.dark-mode .rep-card,
+body.dark-mode .event-card {
+  background: #1e2939;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
 /* Toggle button style */
 .dark-toggle {
   background: none;
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
+}
+
+@media screen and (max-width: 912px) {
+  .menu {
+    display: flex;
+  }
+  .dashboard-content {
+    margin-left: 0;
+  }
+  .sidebar {
+    display: none;
+  }
+  .Topbar {
+    width: 90%;
+  }
 }

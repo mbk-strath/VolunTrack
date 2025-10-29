@@ -1,5 +1,28 @@
 .loginPage {
-  height: 120vh;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.loginForm .title {
+  text-align: center;
+}
+.loginForm {
+  margin: auto;
+  width: 30%;
+  padding-left: 2rem;
+  padding-right: 2rem;
+
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  flex-direction: column;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
 }
 
 .loginForm .labels {
@@ -8,16 +31,14 @@
   gap: 23px;
   width: 100%;
   max-width: 400px;
-  margin: 0 auto;
 }
 
-.labels label {
+.loginForm label {
   color: rgba(255, 255, 255, 0.79);
 }
 
-.logo-login {
-  width: 20%;
-  padding: 10px;
+.resetLinks {
+  padding-top: 1%;
 }
 
 .or {
@@ -41,6 +62,9 @@
 .noAccount {
   display: flex;
   gap: 5px;
+  color: rgba(255, 255, 255, 0.452);
+  margin: auto;
+  padding-bottom: 20px;
 }
 
 .noAccount .link {
@@ -59,6 +83,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: -15px;
 }
 
 .reset,
@@ -66,4 +91,24 @@
   color: rgba(255, 255, 255, 0.564);
   text-decoration: none;
   transition: all 0.3s ease;
+  font-size: 13px;
+}
+
+.loginBtnForm {
+  margin-top: 0px;
+}
+
+.googlelogin {
+  width: 80%;
+}
+
+@media screen and (max-width: 1024px) {
+  .loginForm {
+    width: 70%;
+  }
+}
+@media screen and (max-width: 768px) {
+  .loginForm {
+    width: 80%;
+  }
 }

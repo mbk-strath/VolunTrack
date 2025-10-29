@@ -24,6 +24,14 @@ class GalleryController extends Controller
         $gallery = Gallery::where('org_id', $id)->get();
         return response()->json($gallery);
     }
+    public function get($id)
+    {
+        $gallery = Gallery::find($id);
+        if (!$gallery) {
+            return response()->json(['message' => 'Gallery item not found'], 404);
+        }
+        return response()->json($gallery);
+    }
     public function addGallery(Request $request)
     {
         $request->validate([

@@ -2,10 +2,15 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
+
+// middleware
+use App\Http\Middleware\RoleMiddleware;
+
+//controllers
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\galleryController;
-use App\Http\Middleware\RoleMiddleware;
+use App\Http\Controllers\OpportunityController;
+use App\Http\Controllers\ApplicationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,16 +40,24 @@ Route::post('/reset-password', [\App\Http\Controllers\MembershipController::clas
 Route::middleware('auth:sanctum', 'role:admin')->group(function(){
     Route::get('/all-memberships', [MembershipController::class, 'list']);
     Route::get('/all-galleries', [GalleryController::class, 'listGalleries']);
+    Route::get('/all-applications', [ApplicationController::class, 'list']);
 });
 
 Route::middleware('auth:sanctum', 'role:admin,organisation')->group(function(){
     Route::post('/add-gallery', [GalleryController::class, 'addGallery']);
     Route::put('/update-gallery/{id}', [GalleryController::class, 'updateGallery']);
     Route::delete('/delete-gallery/{id}', [GalleryController::class, 'deleteGallery']);
-    Route::get('/my-gallery/{id}', [GalleryController::class, 'myGallery']);
-});
+    Route::post('/create-opportunity', [OpportunityController::class, 'create']);
+    Route::put('/update-opportunity/{id}', [OpportunityController::class, 'update']);
+    Route::delete('/delete-opportunity/{id}', [OpportunityController::class, 'delete']);
+    Route::get('/my-applicants/{id}', [ApplicationController::class, 'myApplicants']);
+    Route::put('/update-application/{id}', [ApplicationController::class, 'updateStatus']);
+}); 
 
 Route::middleware('auth:sanctum', 'role:admin,volunteer')->group(function(){
+    Route::get('/my-applications', [ApplicationController::class, 'myApplications']);
+    Route::post('/apply', [ApplicationController::class, 'apply']);
+    Route::delete('/delete-application/{id}', [ApplicationController::class, 'delete']);
 
 });
 
@@ -52,16 +65,17 @@ Route::middleware('auth:sanctum', 'role:admin,organisation,volunteer')->group(fu
     Route::get('/show/{id}', [MembershipController::class, 'show']);
     Route::put('/update/{id}/{type}', [MembershipController::class, 'update']);
     Route::delete('/delete/{id}/{type}', [MembershipController::class, 'destroy']);
+
+    Route::get('/my-gallery/{id}', [GalleryController::class, 'myGallery']);
+    Route::get('/get-gallery/{id}', [GalleryController::class, 'get']);
+    
+    Route::get('/get-opportunity/{id}', [OpportunityController::class, 'get']);
+    Route::get('/all-opportunities', [OpportunityController::class, 'list']);
+
+
     Route::post('/logout', [\App\Http\Controllers\MembershipController::class, 'logout']);
     
 });
 
 
 
-// ///////////////////////////////////////////////  OLD AUTH ROUTES ///////////////////////
-// Route::post('/register', [\App\Http\Controllers\AuthController::class, 'register']);
-// Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
-// Route::get('/verify/{id}', [\App\Http\Controllers\AuthController::class, 'verify']);
-// Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
-// Route::post('/reset-otp', [AuthController::class, 'passwordResetOtp']);
-// Route::post('/reset-password', [AuthController::class, 'passwordReset']);

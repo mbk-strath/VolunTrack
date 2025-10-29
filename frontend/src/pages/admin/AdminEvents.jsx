@@ -6,6 +6,11 @@ const AdminEvents = () => {
     <div className="EventsPage">
 
         <h1>Ongoing Events</h1>
+      
+      
+      
+
+        <h2>Ongoing Events</h2>
 
         {/*Event Card 1 */}
         <div className="event-card">
@@ -22,6 +27,13 @@ const AdminEvents = () => {
             <button className="btn-suspend">Suspend</button>
             <button className="btn-delete">Delete</button>
             <button className="btn-reports">View Reports</button>
+            <strong>Hope4All</strong><br />
+            Status: <span className="status">Pending</span>
+          </div>
+          <div className="btns">
+            <button className="btn-approve">Approve</button>
+            <button className="btn-reject">Reject</button>
+            <button className="btn-view">View Documents</button>
           </div>
         </div>
 
@@ -42,6 +54,16 @@ const AdminEvents = () => {
             <button className="btn-reports">View Reports</button>
           </div>
         </div>
+            <strong>Hope4All</strong><br />
+            Status: <span className="status">Pending</span>
+          </div>
+          <div className="btns">
+            <button className="btn-approve">Approve</button>
+            <button className="btn-reject">Reject</button>
+            <button className="btn-view">View Documents</button>
+          </div>
+        </div>
+    
     </div>
   );
 };

@@ -49,10 +49,11 @@ function App() {
             </Route>
           </Route>
           <Route path="/dashboard-admin" element={<DashboardLayoutAdmin/>}>
-          <Route path="/admin/home" element={<AdminHome />} />
-          <Route path="organisations" element={<AdminOrganisations/>}/>
-          <Route path="reports" element={<AdminReports/>}/>
-          <Route path="events" element={<AdminEvents/>}/>
+           <Route index element={<AdminHome />} /> 
+            <Route path="home" element={<AdminHome />} />
+           <Route path="organisations" element={<AdminOrganisations/>}/>
+           <Route path="reports" element={<AdminReports/>}/>
+           <Route path="events" element={<AdminEvents/>}/>
 
           </Route>
         </Routes>

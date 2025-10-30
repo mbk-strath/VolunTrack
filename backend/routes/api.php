@@ -13,6 +13,7 @@ use App\Http\Controllers\OpportunityController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\ParticipationController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ReviewController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -44,6 +45,7 @@ Route::middleware('auth:sanctum', 'role:admin')->group(function(){
     Route::get('/all-applications', [ApplicationController::class, 'list']);
     Route::get('/all-participations', [ParticipationController::class, 'list']);
     Route::get('/all-notifications', [NotificationController::class, 'list']);
+    Route::get('/all-reviews', [ReviewController::class, 'list']);
     
 });
 
@@ -59,6 +61,7 @@ Route::middleware('auth:sanctum', 'role:admin,organisation')->group(function(){
     Route::get('/opportunity-participations/{id}', [ParticipationController::class, 'oppParticipations']);
     Route::post('/add-participation', [ParticipationController::class, 'create']);
     Route::delete('/delete-participation/{id}', [ParticipationController::class, 'delete']);
+    Route::get('/organisation-reviews/{id}', [ReviewController::class, 'getByOrganisation']);
 }); 
 
 Route::middleware('auth:sanctum', 'role:admin,volunteer')->group(function(){
@@ -66,6 +69,10 @@ Route::middleware('auth:sanctum', 'role:admin,volunteer')->group(function(){
     Route::post('/apply', [ApplicationController::class, 'apply']);
     Route::delete('/delete-application/{id}', [ApplicationController::class, 'delete']);
     Route::get('/my-participations', [ParticipationController::class, 'myParticipations']);
+    Route::post('my-reviews', [ReviewController::class, 'getByVolunteer']);
+    Route::post('/create-review', [ReviewController::class, 'create']);
+    Route::put('/update-review/{id}', [ReviewController::class, 'update']);
+    Route::delete('/delete-review/{id}', [ReviewController::class, 'delete']);
 
 });
 
@@ -84,6 +91,8 @@ Route::middleware('auth:sanctum', 'role:admin,organisation,volunteer')->group(fu
     Route::get('/my-notifications', [NotificationController::class, 'myNotifications']);
     Route::get('/unread-notifications', [NotificationController::class, 'unread']);
     Route::put('/mark-as-read/{id}', [NotificationController::class, 'markAsRead']);
+
+    Route::get('get-review/{id}', [ReviewController::class, 'getById']);
 
 
     Route::post('/logout', [\App\Http\Controllers\MembershipController::class, 'logout']);

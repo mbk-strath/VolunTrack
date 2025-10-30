@@ -7,5 +7,13 @@ export default defineConfig({
   server: {
     host: true,
     port: 5174,
+    proxy: {
+      // proxy any /api requests to your Laravel backend
+      "/api": {
+        target: "http://127.0.0.1:8000",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
 });

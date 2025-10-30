@@ -18,7 +18,7 @@ class ApplicationController extends Controller
 {
     public function list(Request $request)
     {
-        $applications = Application::get();
+        $applications = Application::all();
         return response()->json(['applications'=>$applications,"message"=>"Fetch Successlful"],200);
     }
 

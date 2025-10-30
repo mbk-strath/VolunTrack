@@ -478,3 +478,86 @@ or
     "message": "Gallery item deleted successfully"
 }
 ```
+
+---
+
+## List User Notifications
+
+**Endpoint:** `GET /notifications`
+
+**Headers:**
+
+-   Authorization: Bearer {token}
+
+**Response:**
+
+```
+{
+    "received_notifications": [
+        {
+            "id": 1,
+            "message": "Your application has been approved",
+            "sent_at": "2025-10-29T10:00:00.000000Z",
+            "is_read": false,
+            "read_at": null,
+            "channel": "email",
+            "receiver_id": 1,
+            "sender_id": 2,
+            "created_at": "2025-10-29T10:00:00.000000Z",
+            "updated_at": "2025-10-29T10:00:00.000000Z"
+        }
+    ],
+    "all_notifications": [...]
+}
+```
+
+---
+
+## Get Unread Notifications
+
+**Endpoint:** `GET /notifications/unread`
+
+**Headers:**
+
+-   Authorization: Bearer {token}
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "message": "New opportunity available",
+        "sent_at": "2025-10-29T10:00:00.000000Z",
+        "is_read": false,
+        "read_at": null,
+        "channel": "in_app",
+        "receiver_id": 1,
+        "sender_id": null,
+        "created_at": "2025-10-29T10:00:00.000000Z",
+        "updated_at": "2025-10-29T10:00:00.000000Z"
+    }
+]
+```
+
+---
+
+## Mark Notification as Read
+
+**Endpoint:** `PUT /notifications/{id}/read`
+
+**Headers:**
+
+-   Authorization: Bearer {token}
+
+**Path Parameters:**
+
+-   id (integer, required): The notification ID
+
+**Response:**
+
+```
+{
+    "message": "Notification marked as read"
+}
+```

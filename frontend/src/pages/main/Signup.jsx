@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 import { FcGoogle } from "react-icons/fc";
 import "../../styles/main/signup.css";
@@ -13,17 +13,14 @@ function Signup() {
   });
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false); // 👈 loading state
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     setErrors({ ...errors, [name]: "", backend: "" });
   };
 
-  // Basic frontend validation
   const validate = () => {
     const newErrors = {};
     if (!formData.name) newErrors.name = "Name is required";
@@ -37,33 +34,31 @@ function Signup() {
     return newErrors;
   };
 
-  // Submit form
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
 
-    setLoading(true); //
+    setLoading(true);
 
-    fetch("http://127.0.0.1:8000/api/register", {
+    fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
+      credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => {
-        setLoading(false); //
+        setLoading(false);
         if (data.user) {
-          setMessage("Registered successfully!");
+          setMessage(
+            "Registration successful! Please check your email to verify your account before logging in."
+          );
           setFormData({ name: "", email: "", password: "", role: "" });
           setErrors({});
-          setTimeout(() => {
-            navigate("/login");
-          }, 2000);
         } else {
           setErrors({ backend: data.message || "Registration failed" });
         }
@@ -81,6 +76,7 @@ function Signup() {
         <h2 className="title">Signup</h2>
 
         {errors.backend && <p className="errors">{errors.backend}</p>}
+        {message && <p className="successMessage">{message}</p>}
 
         <div className="labels">
           <div className="flex">
@@ -121,7 +117,7 @@ function Signup() {
               >
                 <option value="">Select Role</option>
                 <option value="volunteer">Volunteer</option>
-                <option value="organization">Organization</option>
+                <option value="organisation">Organisation</option>
               </select>
               {errors.role && <p className="errors">{errors.role}</p>}
             </label>
@@ -143,8 +139,6 @@ function Signup() {
           <button type="submit" className="loginBtn" disabled={loading}>
             {loading ? "Signing up..." : "Signup"}
           </button>
-
-          {message && <p>{message}</p>}
 
           <div className="or">
             <hr />

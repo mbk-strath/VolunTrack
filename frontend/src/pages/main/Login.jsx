@@ -39,7 +39,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:8000/api/login", {
+      const res = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -47,7 +47,7 @@ function Login() {
 
       let data;
       try {
-        data = await res.json(); // Try parsing JSON
+        data = await res.json();
       } catch (jsonErr) {
         throw new Error(
           `Invalid JSON response from server. Status: ${res.status}`
@@ -57,16 +57,21 @@ function Login() {
       console.log("Login API response:", data);
 
       if (!res.ok) {
-        // Show exact backend error or fallback
         const backendMessage = data.message || JSON.stringify(data);
         throw new Error(`Error ${res.status}: ${backendMessage}`);
       }
 
-      sessionStorage.setItem("user", JSON.stringify(data.user));
+      // Handle OTP sent response
+      if (data.message === "OTP sent to email") {
+        sessionStorage.setItem("otp_user_id", data.user?.id);
+        navigate("/two-factor");
+        return;
+      }
 
+      // Normal login
+      sessionStorage.setItem("user", JSON.stringify(data.user));
       const role = data.user.role?.toLowerCase();
 
-      // Redirect based on role
       if (role === "volunteer") {
         navigate("/dashboard/volunteer");
       } else if (role === "organization") {
@@ -78,7 +83,7 @@ function Login() {
       }
     } catch (err) {
       console.error("Login error:", err);
-      setApiError(err.message); // Show exact error
+      setApiError(err.message);
     } finally {
       setLoading(false);
     }

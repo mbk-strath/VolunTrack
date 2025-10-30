@@ -23,6 +23,7 @@ import AdminOrganisations from "./pages/admin/AdminOrganisations";
 import AdminReports from "./pages/admin/AdminReports";
 import AdminEvents from "./pages/admin/AdminEvents";
 import AdminHome from "./pages/admin/AdminHome";
+import VerifyUser from "./components/main/VerifyUser";
 
 function App() {
   return (
@@ -34,6 +35,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/two-factor" element={<TwoFactorPage />} />
+            <Route path="/verify/:id" element={<VerifyUser />} />
+
             <Route path="/password-reset" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
           </Route>

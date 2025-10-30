@@ -48,4 +48,29 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get the notifications received by the user.
+     */
+    public function receivedNotifications()
+    {
+        return $this->hasMany(Notification::class, 'receiver_id');
+    }
+
+    /**
+     * Get the notifications sent by the user.
+     */
+    public function sentNotifications()
+    {
+        return $this->hasMany(Notification::class, 'sender_id');
+    }
+
+    /**
+     * Get all notifications for the user (both sent and received).
+     */
+    public function notifications()
+    {
+        return Notification::where('receiver_id', $this->id)
+                          ->orWhere('sender_id', $this->id);
+    }
 }

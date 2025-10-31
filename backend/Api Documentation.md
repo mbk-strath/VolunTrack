@@ -260,7 +260,7 @@ _For role: volunteer_
 
 ## Show Membership
 
-**Endpoint:** `GET /show/{id}`
+**Endpoint:** `GET /get/{id}`
 **Headers:**
 
 -   Authorization: Bearer {token}
@@ -281,9 +281,9 @@ _For role: volunteer_
 
 ---
 
-## Update User/Organisation/Volunteer
+## Update User
 
-**Endpoint:** `PUT /update/{id}/{type}`
+**Endpoint:** `PATCH /update-user/{id}`
 
 **Content-Type:** `multipart/form-data` (for file uploads)
 
@@ -293,63 +293,50 @@ _For role: volunteer_
 
 **Path Parameters:**
 
--   id (integer, required): The ID of the resource
--   type (string, required: user|organisation|volunteer)
+-   id (integer, required): The user ID
 
 **Body Parameters:**
 
-_For type: user_
-
--   Any user fields to update (e.g., name, email, etc.)
-
-_For type: organisation_
-
--   Any organisation fields to update
--   logo (file, optional: image file, max 2MB, formats: jpeg,png,jpg,gif)
-
-_For type: volunteer_
-
--   Any volunteer fields to update
--   profile_image (file, optional: image file, max 2MB, formats: jpeg,png,jpg,gif)
+-   name (string, optional)
+-   email (string, optional)
+-   phone (string, optional)
+-   gender (string, optional)
+-   profile_image (file, optional: for volunteers)
+-   org_name (string, optional: for organisations)
+-   etc. (depending on user role)
 
 **Response:**
 
--   Returns the updated resource
-
 ```
 {
-    // Updated resource data
-    "id": 1,
-    "name": "Updated Name",
-    ...
+    "message": "User updated successfully",
+    "user": {
+        "id": 1,
+        "name": "Updated Name",
+        ...
+    }
 }
 ```
 
 ---
 
-## Delete Organisation/Volunteer
+## Delete Membership
 
-**Endpoint:** `DELETE /delete/{id}/{type}`
+**Endpoint:** `DELETE /delete/{id}/`
+
 **Headers:**
 
 -   Authorization: Bearer {token}
-    **Path Parameters:**
--   id (integer, required): The ID of the resource
--   type (string, required: organisation|volunteer)
+
+**Path Parameters:**
+
+-   id (integer, required): The membership ID
 
 **Response:**
 
 ```
 {
-	"message": "Organisation deleted"
-}
-```
-
-or
-
-```
-{
-	"message": "Volunteer deleted"
+    "message": "Membership deleted successfully"
 }
 ```
 
@@ -375,7 +362,7 @@ or
 
 ## List All Galleries
 
-**Endpoint:** `GET /all-galleries`
+**Endpoint:** `GET /all-images`
 **Headers:**
 
 -   Authorization: Bearer {token} (Admin only)
@@ -634,7 +621,7 @@ or
 
 ## Get Unread Notifications
 
-**Endpoint:** `GET /notifications/unread`
+**Endpoint:** `GET /unread-notifications`
 
 **Headers:**
 
@@ -778,7 +765,7 @@ or
 
 ## Update Opportunity
 
-**Endpoint:** `PUT /update-opportunity/{id}`
+**Endpoint:** `PATCH /update-opportunity/{id}`
 
 **Headers:**
 
@@ -1309,4 +1296,687 @@ or
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
 ]
+```
+
+---
+
+## List All Users
+
+**Endpoint:** `GET /all-users`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Admin only)
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john@example.com",
+        "role": "volunteer",
+        "gender": "male",
+        "phone": "+1234567890",
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
+    }
+]
+```
+
+---
+
+## List All Memberships
+
+**Endpoint:** `GET /all-memberships`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Admin only)
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "user_id": 1,
+        "org_name": "Example Org",
+        "org_type": "Non-profit",
+        "registration_number": "123456",
+        "website": "https://example.com",
+        "country": "Kenya",
+        "city": "Nairobi",
+        "street_address": "123 Main St",
+        "operating_region": "Nairobi",
+        "mission_statement": "To help the community",
+        "focus_area": "Education",
+        "target_beneficiary": "Children",
+        "logo": "path/to/logo.jpg",
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
+    }
+]
+```
+
+---
+
+## List All Images
+
+**Endpoint:** `GET /all-images`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Admin only)
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "organisation_id": 1,
+        "image_path": "path/to/image.jpg",
+        "description": "Gallery image",
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
+    }
+]
+```
+
+---
+
+## List All Applications
+
+**Endpoint:** `GET /all-applications`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Admin only)
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "volunteer_id": 1,
+        "opportunity_id": 1,
+        "status": "pending",
+        "applied_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
+    }
+]
+```
+
+---
+
+## List All Participations
+
+**Endpoint:** `GET /all-participations`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Admin only)
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "volunteer_id": 1,
+        "opportunity_id": 1,
+        "participated_at": "2025-10-20T10:00:00.000000Z",
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
+    }
+]
+```
+
+---
+
+## List All Notifications
+
+**Endpoint:** `GET /all-notifications`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Admin only)
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "message": "New opportunity available",
+        "sent_at": "2025-10-29T10:00:00.000000Z",
+        "is_read": false,
+        "read_at": null,
+        "channel": "in_app",
+        "receiver_id": 1,
+        "sender_id": null,
+        "created_at": "2025-10-29T10:00:00.000000Z",
+        "updated_at": "2025-10-29T10:00:00.000000Z"
+    }
+]
+```
+
+---
+
+## List All Reviews
+
+**Endpoint:** `GET /all-reviews`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Admin only)
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "org_id": 1,
+        "volunteer_id": 1,
+        "rating": 5,
+        "comment": "Great organization to work with!",
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
+    }
+]
+```
+
+---
+
+## My Applicants
+
+**Endpoint:** `GET /my-applicants/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Organisation or Admin only)
+
+**Path Parameters:**
+
+-   id (integer, required): The opportunity ID
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "volunteer_id": 1,
+        "opportunity_id": 1,
+        "status": "pending",
+        "applied_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z",
+        "volunteer": {
+            "id": 1,
+            "name": "John Doe",
+            "email": "john@example.com"
+        }
+    }
+]
+```
+
+---
+
+## Update Application Status
+
+**Endpoint:** `PATCH /update-application/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Organisation or Admin only)
+
+**Path Parameters:**
+
+-   id (integer, required): The application ID
+
+**Body Parameters:**
+
+-   status (string, required): New status (accepted|rejected)
+
+**Response:**
+
+```
+{
+    "message": "Application status updated successfully"
+}
+```
+
+---
+
+## Opportunity Participations
+
+**Endpoint:** `GET /opportunity-participations/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Organisation or Admin only)
+
+**Path Parameters:**
+
+-   id (integer, required): The opportunity ID
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "volunteer_id": 1,
+        "opportunity_id": 1,
+        "participated_at": "2025-10-20T10:00:00.000000Z",
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z",
+        "volunteer": {
+            "id": 1,
+            "name": "John Doe",
+            "email": "john@example.com"
+        }
+    }
+]
+```
+
+---
+
+## Add Participation
+
+**Endpoint:** `POST /add-participation`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Organisation or Admin only)
+
+**Body Parameters:**
+
+-   volunteer_id (integer, required): The volunteer ID
+-   opportunity_id (integer, required): The opportunity ID
+
+**Response:**
+
+```
+{
+    "message": "Participation added successfully"
+}
+```
+
+---
+
+## Delete Participation
+
+**Endpoint:** `DELETE /delete-participation/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Organisation or Admin only)
+
+**Path Parameters:**
+
+-   id (integer, required): The participation ID
+
+**Response:**
+
+```
+{
+    "message": "Participation deleted successfully"
+}
+```
+
+---
+
+## Organisation Reviews
+
+**Endpoint:** `GET /organisation-reviews/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Organisation or Admin only)
+
+**Path Parameters:**
+
+-   id (integer, required): The organisation ID
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "org_id": 1,
+        "volunteer_id": 1,
+        "rating": 5,
+        "comment": "Great organization to work with!",
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z",
+        "volunteer": {
+            "id": 1,
+            "name": "John Doe"
+        }
+    }
+]
+```
+
+---
+
+## My Applications
+
+**Endpoint:** `GET /my-applications`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Volunteer or Admin only)
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "volunteer_id": 1,
+        "opportunity_id": 1,
+        "status": "pending",
+        "applied_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z",
+        "opportunity": {
+            "id": 1,
+            "title": "Community Clean-up",
+            "description": "Help clean up the local park"
+        }
+    }
+]
+```
+
+---
+
+## Apply for Opportunity
+
+**Endpoint:** `POST /apply`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Volunteer or Admin only)
+
+**Body Parameters:**
+
+-   opportunity_id (integer, required): The opportunity ID
+
+**Response:**
+
+```
+{
+    "message": "Application submitted successfully"
+}
+```
+
+---
+
+## Delete Application
+
+**Endpoint:** `DELETE /delete-application/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Volunteer or Admin only)
+
+**Path Parameters:**
+
+-   id (integer, required): The application ID
+
+**Response:**
+
+```
+{
+    "message": "Application deleted successfully"
+}
+```
+
+---
+
+## My Participations
+
+**Endpoint:** `GET /my-participations`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Volunteer or Admin only)
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "volunteer_id": 1,
+        "opportunity_id": 1,
+        "participated_at": "2025-10-20T10:00:00.000000Z",
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z",
+        "opportunity": {
+            "id": 1,
+            "title": "Community Clean-up",
+            "description": "Help clean up the local park"
+        }
+    }
+]
+```
+
+---
+
+## Create Review
+
+**Endpoint:** `POST /create-review`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Volunteer or Admin only)
+
+**Body Parameters:**
+
+-   org_id (integer, required): The organisation ID
+-   rating (integer, required): Rating from 1 to 5
+-   comment (string, optional): Review comment
+
+**Response:**
+
+```
+{
+    "message": "Review created successfully",
+    "review": {
+        "id": 1,
+        "org_id": 1,
+        "volunteer_id": 1,
+        "rating": 5,
+        "comment": "Great organization to work with!",
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
+    }
+}
+```
+
+---
+
+## Update Review
+
+**Endpoint:** `PATCH /update-review/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Volunteer or Admin only)
+
+**Path Parameters:**
+
+-   id (integer, required): The review ID
+
+**Body Parameters:**
+
+-   rating (integer, optional): New rating from 1 to 5
+-   comment (string, optional): Updated comment
+
+**Response:**
+
+```
+{
+    "message": "Review updated successfully"
+}
+```
+
+---
+
+## Delete Review
+
+**Endpoint:** `DELETE /delete-review/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Volunteer or Admin only)
+
+**Path Parameters:**
+
+-   id (integer, required): The review ID
+
+**Response:**
+
+```
+{
+    "message": "Review deleted successfully"
+}
+```
+
+---
+
+## Get Membership
+
+**Endpoint:** `GET /get/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token}
+
+**Path Parameters:**
+
+-   id (integer, required): The user ID
+
+**Response:**
+
+Returns the membership data (organisation or volunteer) for the user with the given ID.
+
+```
+{
+    "id": 1,
+    "user_id": 1,
+    "org_name": "Example Org",
+    ...
+}
+```
+
+---
+
+## Update Membership
+
+**Endpoint:** `PATCH /update/{id}/`
+
+**Headers:**
+
+-   Authorization: Bearer {token}
+
+**Path Parameters:**
+
+-   id (integer, required): The membership ID
+
+**Body Parameters:**
+
+Depends on the membership type (organisation or volunteer). Similar to registration parameters.
+
+**Response:**
+
+```
+{
+    "message": "Membership updated successfully"
+}
+```
+
+---
+
+## Delete Membership
+
+**Endpoint:** `DELETE /delete/{id}/`
+
+**Headers:**
+
+-   Authorization: Bearer {token}
+
+**Path Parameters:**
+
+-   id (integer, required): The membership ID
+
+**Response:**
+
+```
+{
+    "message": "Membership deleted successfully"
+}
+```
+
+---
+
+## Get Image
+
+**Endpoint:** `GET /get-image/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token}
+
+**Path Parameters:**
+
+-   id (integer, required): The image ID
+
+**Response:**
+
+Returns the image data or URL.
+
+```
+{
+    "id": 1,
+    "organisation_id": 1,
+    "image_path": "path/to/image.jpg",
+    "description": "Gallery image",
+    "created_at": "2025-10-20T10:00:00.000000Z",
+    "updated_at": "2025-10-20T10:00:00.000000Z"
+}
+```
+
+---
+
+## Get Review by ID
+
+**Endpoint:** `GET /get-review/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token}
+
+**Path Parameters:**
+
+-   id (integer, required): The review ID
+
+**Response:**
+
+```
+{
+    "id": 1,
+    "org_id": 1,
+    "volunteer_id": 1,
+    "rating": 5,
+    "comment": "Great organization to work with!",
+    "created_at": "2025-10-20T10:00:00.000000Z",
+    "updated_at": "2025-10-20T10:00:00.000000Z"
+}
 ```

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
 
 //controllers
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\galleryController;
 use App\Http\Controllers\OpportunityController;
@@ -32,7 +33,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 /////////////////////////////////////////////////////////////////
 // Unprotected Unauthenticated Routes:
-Route::post('/register', [\App\Http\Controllers\MembershipController::class, 'register']);
+Route::post('/register', [\App\Http\Controllers\UserController::class, 'register']);
 Route::post('/login', [\App\Http\Controllers\MembershipController::class, 'login']);
 Route::get('/verify/{id}', [\App\Http\Controllers\MembershipController::class, 'verify']);
 Route::post('/verify-otp', [\App\Http\Controllers\MembershipController::class, 'verifyOtp']);

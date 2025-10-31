@@ -57,15 +57,15 @@ Route::middleware('auth:sanctum', 'role:admin')->group(function(){
 Route::middleware('auth:sanctum', 'role:admin,organisation')->group(function(){
     //Gallery Controller
     Route::post('/add-image', [GalleryController::class, 'addImage']);
-    Route::put('/update-image/{id}', [GalleryController::class, 'updateImage']);
+    Route::patch('/update-image/{id}', [GalleryController::class, 'updateImage']);
     Route::delete('/delete-image/{id}', [GalleryController::class, 'deleteImage']);
     //Opportunity Controller
     Route::post('/create-opportunity', [OpportunityController::class, 'create']);
-    Route::put('/update-opportunity/{id}', [OpportunityController::class, 'update']);
+    Route::patch('/update-opportunity/{id}', [OpportunityController::class, 'update']);
     Route::delete('/delete-opportunity/{id}', [OpportunityController::class, 'delete']);
     //Application Controller
     Route::get('/my-applicants/{id}', [ApplicationController::class, 'myApplicants']);
-    Route::put('/update-application/{id}', [ApplicationController::class, 'updateStatus']);
+    Route::patch('/update-application/{id}', [ApplicationController::class, 'updateStatus']);
     //Participation Controller
     Route::get('/opportunity-participations/{id}', [ParticipationController::class, 'oppParticipations']);
     Route::post('/add-participation', [ParticipationController::class, 'create']);
@@ -85,7 +85,7 @@ Route::middleware('auth:sanctum', 'role:admin,volunteer')->group(function(){
     //Review Controller
     Route::post('my-reviews', [ReviewController::class, 'getByVolunteer']);
     Route::post('/create-review', [ReviewController::class, 'create']);
-    Route::put('/update-review/{id}', [ReviewController::class, 'update']);
+    Route::patch('/update-review/{id}', [ReviewController::class, 'update']);
     Route::delete('/delete-review/{id}', [ReviewController::class, 'delete']);
 
 });
@@ -97,7 +97,7 @@ Route::middleware('auth:sanctum', 'role:admin,organisation,volunteer')->group(fu
     Route::patch('/update-user/{id}', [UserController::class, 'update']);
     //Membership Controller
     Route::get('/get/{id}', [MembershipController::class, 'get']);
-    Route::put('/update/{id}/', [MembershipController::class, 'update']);
+    Route::patch('/update/{id}/', [MembershipController::class, 'update']);
     Route::delete('/delete/{id}/', [MembershipController::class, 'destroy']);
     //Gallery Controller
     Route::get('/my-gallery/{id}', [GalleryController::class, 'myGallery']);

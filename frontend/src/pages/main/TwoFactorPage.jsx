@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import TwoFactorVerification from "../../components/main/TwoFactorVerification";
 import "../../styles/main/two-factor.css";
+import axios from "axios";
 
 const TwoFactorPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -10,6 +11,7 @@ const TwoFactorPage = () => {
   const location = useLocation();
   const { email } = location.state || {}; // email passed from login
 
+  // If email is not passed, redirect to login
   if (!email) {
     navigate("/login");
   }
@@ -19,38 +21,41 @@ const TwoFactorPage = () => {
     setError("");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          otp: code,
-        }),
+      const res = await axios.post("http://127.0.0.1:8000/api/verify-otp", {
+        email,
+        otp: code,
       });
 
-      const data = await response.json();
+      const data = res.data;
+      console.log("OTP Verification response:", data);
 
-      if (response.ok) {
-        // Save user + token directly from backend response
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+      // Save user + token from backend response
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-        // Navigate based on role
-        if (data.user?.role === "volunteer") {
-          navigate("/dashboard");
-        } else if (data.user?.role === "student") {
-          navigate("/student-dashboard");
-        } else if (data.user?.role === "admin") {
-          navigate("/admin-dashboard");
-        } else {
+      // Navigate based on role
+      const role = data.user?.role?.toLowerCase();
+
+      switch (role) {
+        case "volunteer":
+          navigate("/dashboard/volunteer");
+          break;
+        case "organisation":
+          navigate("/dashboard/organisation");
+          break;
+        case "admin":
+          navigate("/dashboard/admin");
+          break;
+        default:
           navigate("/login");
-        }
-      } else {
-        setError(data.message || "Invalid verification code");
       }
     } catch (err) {
-      setError("Network error. Please try again.");
-      console.error(err);
+      console.error("OTP verification error:", err);
+      if (err.response && err.response.data) {
+        setError(err.response.data.message || "Invalid verification code");
+      } else {
+        setError("Network error. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -61,21 +66,18 @@ const TwoFactorPage = () => {
     setError("");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/resend-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+      const res = await axios.post("http://127.0.0.1:8000/api/resend-otp", {
+        email,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (res.status === 200) {
         return true;
       } else {
-        setError(data.message || "Failed to resend code");
+        setError(res.data.message || "Failed to resend code");
         return false;
       }
     } catch (err) {
+      console.error("Resend OTP error:", err);
       setError("Network error. Please try again.");
       return false;
     } finally {

@@ -31,13 +31,13 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'gender' => 'required|string|max:255',
+            'gender' => 'sometimes|string|max:255',
             'role' => 'required|string|in:organisation,volunteer,admin',
         ]);
         $name = $request->name;
         $email = $request->email;
         $phone = $request->phone;
-        $gender = $request->gender;
+        $gender = $request->gender ?? null;
         $password = $request->password;
         $role = $request->role;
 
@@ -126,7 +126,8 @@ class UserController extends Controller
         $otp = rand(100000, 999999);
         $OtpCode = OtpCode::create([
             'user_id' => $Userobj->id,
-            'code' => $otp,
+            'otp_code' => $otp,
+            'expires_at' => now()->addMinutes(5),
         ]);
         Mail::to($email)->send(new OtpEmail($otp));
         return response()->json(['message' => 'OTP sent to email'], 200);

@@ -76,6 +76,8 @@ The API will be available at `http://127.0.0.1:8000`
 
 **Database Connection**: Verify MySQL is running and credentials are correct in `.env`
 
+**Wrong Controller Issues**: `Run composer install && php artisan optimize`
+
 **Cache Issues**: Run `php artisan config:clear && php artisan config:cache` if configuration changes don't take effect
 
 **Database issues**: Incase of conflicting migrations or new migrations or modifications on the old migrations. Run `php migrate:fresh`

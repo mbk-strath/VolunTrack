@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 import { FcGoogle } from "react-icons/fc";
 import "../../styles/main/signup.css";
+import axios from "axios";
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -34,7 +35,7 @@ function Signup() {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
@@ -43,31 +44,44 @@ function Signup() {
     }
 
     setLoading(true);
+    setErrors({});
+    setMessage("");
 
-    fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setLoading(false);
-        if (data.user) {
-          setMessage(
-            "Registration successful! Please check your email to verify your account before logging in."
-          );
-          setFormData({ name: "", email: "", password: "", role: "" });
-          setErrors({});
-        } else {
-          setErrors({ backend: data.message || "Registration failed" });
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/api/register",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
         }
-      })
-      .catch((err) => {
-        setLoading(false);
-        console.error("Fetch error:", err);
+      );
+
+      const data = res.data;
+
+      if (data.user || res.status === 201) {
+        setMessage(
+          "Registration successful! Please check your email to verify your account before logging in."
+        );
+        setFormData({ name: "", email: "", password: "", role: "" });
+        setErrors({});
+      } else {
+        setErrors({ backend: data.message || "Registration failed" });
+      }
+    } catch (err) {
+      console.error("Axios error:", err);
+      if (err.response && err.response.data) {
+        setErrors({
+          backend: err.response.data.message || "Registration failed",
+        });
+      } else {
         setErrors({ backend: "Server error. Please try again." });
-      });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

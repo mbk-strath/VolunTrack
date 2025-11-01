@@ -3,6 +3,7 @@ import Logo from "../../assets/logo.png";
 import { FcGoogle } from "react-icons/fc";
 import "../../styles/main/login.css";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Login() {
   const navigate = useNavigate();
@@ -39,27 +40,19 @@ function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const res = await axios.post(
+        "http://localhost:8000/api/login",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        }
+      );
 
-      let data;
-      try {
-        data = await res.json();
-      } catch (jsonErr) {
-        throw new Error(
-          `Invalid JSON response from server. Status: ${res.status}`
-        );
-      }
-
+      const data = res.data;
       console.log("Login API response:", data);
-
-      if (!res.ok) {
-        const backendMessage = data.message || JSON.stringify(data);
-        throw new Error(`Error ${res.status}: ${backendMessage}`);
-      }
 
       // Handle OTP sent response
       if (data.message === "OTP sent to email") {
@@ -70,11 +63,11 @@ function Login() {
 
       // Normal login
       sessionStorage.setItem("user", JSON.stringify(data.user));
-      const role = data.user.role?.toLowerCase();
-
+      const role = (data.user.role || "").trim().toLowerCase();
+      console.log("Role after processing:", `"${role}"`);
       if (role === "volunteer") {
         navigate("/dashboard/volunteer");
-      } else if (role === "organization") {
+      } else if (role === "organisation" || role === "organization") {
         navigate("/dashboard/organization");
       } else if (role === "admin") {
         navigate("/dashboard/admin");
@@ -82,8 +75,12 @@ function Login() {
         navigate("/");
       }
     } catch (err) {
-      console.error("Login error:", err);
-      setApiError(err.message);
+      console.error("Axios login error:", err);
+      if (err.response && err.response.data) {
+        setApiError(err.response.data.message || "Login failed");
+      } else {
+        setApiError("Server error. Please try again.");
+      }
     } finally {
       setLoading(false);
     }

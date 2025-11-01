@@ -70,34 +70,9 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 -   name (string, required)
 -   email (string, required)
 -   password (string, required)
--   role (string, required: organisation|volunteer)
+-   role (string, required: organisation|volunteer|admin)
 -   phone (string, optional)
 -   gender (string, optional)
-
-**Additional Parameters based on role:**
-
-_For role: organisation_
-
--   org_name (string, required)
--   org_type (string, required)
--   registration_number (string, required)
--   website (string, optional)
--   logo (file, optional: image file, max 2MB, formats: jpeg,png,jpg,gif)
--   country (string, required)
--   city (string, required)
--   street_address (string, required)
--   operating_region (string, required)
--   mission_statement (string, optional)
--   focus_area (string, optional)
--   target_beneficiary (string, optional)
-
-_For role: volunteer_
-
--   country (string, required)
--   bio (string, optional)
--   skills (string, optional)
--   location (string, required)
--   profile_image (file, optional: image file, max 2MB, formats: jpeg,png,jpg,gif)
 
 **Response:**
 

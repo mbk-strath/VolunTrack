@@ -51,6 +51,13 @@ function App() {
               <Route path="account" element={<AccountPage />} />
             </Route>
           </Route>
+          <Route path="/dashboard-admin" element={<DashboardLayoutAdmin/>}>
+           <Route index element={<AdminHome />} /> 
+            <Route path="home" element={<AdminHome />} />
+           <Route path="organisations" element={<AdminOrganisations/>}/>
+           <Route path="reports" element={<AdminReports/>}/>
+           <Route path="events" element={<AdminEvents/>}/>
+
           <Route path="/dashboard/admin" element={<DashboardLayoutAdmin />}>
             <Route index element={<AdminHome />} />
             <Route path="organisations" element={<AdminOrganisations />} />

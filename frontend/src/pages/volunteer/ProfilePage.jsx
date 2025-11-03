@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/volunteer/profileVol.css";
 import UserProfile from "../../components/main/UserProfile";
+import axios from "axios";
 
 function ProfilePage() {
   const [user, setUser] = useState({
@@ -10,8 +11,10 @@ function ProfilePage() {
     gender: "",
     country: "",
     bio: "",
-    avatar: "", // <-- add avatar field
+    avatar: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState({ message: "", type: "" }); // type: success | error
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -25,7 +28,7 @@ function ProfilePage() {
         gender: parsedUser.gender || "",
         country: parsedUser.country || "",
         bio: parsedUser.bio || "",
-        avatar: parsedUser.avatar || "", // load saved avatar
+        avatar: parsedUser.avatar || "",
       }));
     }
   }, []);
@@ -41,23 +44,59 @@ function ProfilePage() {
       const reader = new FileReader();
       reader.onload = () => {
         setUser((prev) => ({ ...prev, avatar: reader.result }));
-        localStorage.setItem(
-          "user",
-          JSON.stringify({ ...user, avatar: reader.result })
-        );
       };
-      reader.readAsDataURL(file); // convert image to base64 string
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = (e) => {
+  const showAlert = (message, type = "success") => {
+    setAlert({ message, type });
+    setTimeout(() => {
+      setAlert({ message: "", type: "" });
+    }, 3000); // alert disappears after 3 seconds
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    localStorage.setItem("user", JSON.stringify(user));
-    alert("Profile updated!");
+    setLoading(true);
+
+    try {
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+      const id = storedUser?.id;
+
+      const res = await axios.patch(
+        `http://localhost:8000/api/update-user/${id}`,
+        user,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      const updatedUser = res.data;
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      setUser(updatedUser);
+      showAlert("Profile updated successfully!", "success");
+    } catch (err) {
+      console.error("Profile update error:", err);
+      showAlert(
+        err.response?.data?.message || "Failed to update profile. Try again.",
+        "error"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="profilePage">
+      {/* Custom alert box */}
+      {alert.message && (
+        <div className={`custom-alert ${alert.type}`}>{alert.message}</div>
+      )}
+
       <div className="profile">
         <UserProfile
           name={user.name}
@@ -75,15 +114,7 @@ function ProfilePage() {
         <button onClick={() => document.getElementById("avatarInput").click()}>
           Update Avatar
         </button>
-        <button
-          onClick={() => {
-            setUser((prev) => ({ ...prev, avatar: "" }));
-            localStorage.setItem(
-              "user",
-              JSON.stringify({ ...user, avatar: "" })
-            );
-          }}
-        >
+        <button onClick={() => setUser((prev) => ({ ...prev, avatar: "" }))}>
           Delete Avatar
         </button>
       </div>
@@ -94,24 +125,12 @@ function ProfilePage() {
             <div className="left-content">
               <label>
                 Full Name
-                <input
-                  type="text"
-                  name="name"
-                  value={user.name}
-                  onChange={handleChange}
-                  readOnly
-                />
+                <input type="text" name="name" value={user.name} readOnly />
               </label>
 
               <label>
                 Email
-                <input
-                  type="email"
-                  name="email"
-                  value={user.email}
-                  onChange={handleChange}
-                  readOnly
-                />
+                <input type="email" name="email" value={user.email} readOnly />
               </label>
 
               <label>
@@ -157,7 +176,6 @@ function ProfilePage() {
                   type="date"
                   name="date"
                   value={user.date}
-                  placeholder="Enter your Date of Birth"
                   onChange={handleChange}
                 />
               </label>
@@ -173,8 +191,9 @@ function ProfilePage() {
             ></textarea>
           </label>
         </div>
-        <button className="save" type="submit">
-          Save Changes
+
+        <button className="save" type="submit" disabled={loading}>
+          {loading ? "Saving..." : "Save Changes"}
         </button>
       </form>
     </div>

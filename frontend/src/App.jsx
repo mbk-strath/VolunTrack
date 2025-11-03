@@ -20,9 +20,10 @@ import ViewOpportunityPage from "./styles/volunteer/ViewOpportunityPage";
 import ApplicationHistoryPage from "./pages/volunteer/ApplicationHistoryPage";
 import DashboardLayoutAdmin from "../layouts/DashboardLayoutAdmin";
 import AdminOrganisations from "./pages/admin/AdminOrganisations";
-import AdminReports from "./pages/admin/AdminReports"; 
-import AdminEvents from "./pages/admin/AdminEvents"; 
+import AdminReports from "./pages/admin/AdminReports";
+import AdminEvents from "./pages/admin/AdminEvents";
 import AdminHome from "./pages/admin/AdminHome";
+import VerifyUser from "./components/main/VerifyUser";
 
 function App() {
   return (
@@ -34,10 +35,12 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/two-factor" element={<TwoFactorPage />} />
+            <Route path="/verify/:id" element={<VerifyUser />} />
+
             <Route path="/password-reset" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
           </Route>
-          <Route path="/dashboard" element={<DashboardLayoutVol />}>
+          <Route path="/dashboard/volunteer" element={<DashboardLayoutVol />}>
             <Route index element={<HomePage />} />
             <Route path="history" element={<HistoryPage />} />
             <Route path="messages" element={<MessagesPage />} />
@@ -55,6 +58,11 @@ function App() {
            <Route path="reports" element={<AdminReports/>}/>
            <Route path="events" element={<AdminEvents/>}/>
 
+          <Route path="/dashboard/admin" element={<DashboardLayoutAdmin />}>
+            <Route index element={<AdminHome />} />
+            <Route path="organisations" element={<AdminOrganisations />} />
+            <Route path="reports" element={<AdminReports />} />
+            <Route path="events" element={<AdminEvents />} />
           </Route>
         </Routes>
       </Router>

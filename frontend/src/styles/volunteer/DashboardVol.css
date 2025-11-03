@@ -45,7 +45,17 @@
   justify-content: space-between;
   width: 70%;
 }
-
+.TopbarAdmin {
+  z-index: 1200;
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  padding: 3px 5%;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 70%;
+}
 .topAvatar {
   display: flex;
   align-items: center;
@@ -98,11 +108,15 @@ body.dark-mode {
 
 /* Adjust dashboard backgrounds in dark mode */
 body.dark-mode .dashboard,
-body.dark-mode .dashboard-content,body.dark-mode .OrganisationsPage {
+body.dark-mode .dashboard-content,
+body.dark-mode .OrganisationsPage,
+body.dark-mode .ReportsPage,
+body.dark-mode .EventsPage {
   background-color: #191725;
 }
 
-body.dark-mode .Topbar {
+body.dark-mode .Topbar,
+body.dark-mode .TopbarAdmin {
   background-color: #191725;
   color: white;
 }
@@ -188,9 +202,11 @@ body.dark-mode .names .org_name {
   color: rgba(0, 0, 0, 0.33);
 }
 
-body.dark-mode .org-card{
-  background: #1E2939;
-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+body.dark-mode .org-card,
+body.dark-mode .rep-card,
+body.dark-mode .event-card {
+  background: #1e2939;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 /* Toggle button style */
 .dark-toggle {

@@ -72,11 +72,10 @@
 
 .bio {
   width: 100%;
-  margin: auto;
 }
 
 label textarea {
-  width: 110%;
+  width: 100%;
   border-top: 0;
   border-right: 0;
   border-left: 0;

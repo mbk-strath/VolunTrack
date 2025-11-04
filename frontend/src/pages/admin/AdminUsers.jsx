@@ -2,32 +2,57 @@ import React from "react";
 import "../../styles/admin/users.css";
 
 const AdminUsers = () => {
+  const users = [
+    {
+      name: "Linda Opolo",
+      email: "opololinda@gmail.com",
+      role: "Volunteer",
+      status: "Active",
+      verified: "true",
+      lastLogin: "20/10/2025",
+      signUpDate: "02/10/2025",
+      totalHours: 12,
+    },
+  ];
+
   return (
     <div className="UsersPage">
-      <h2>Ongoing Events</h2>
+      <h2 className="page-title">User Management</h2>
 
-      {/*Event Card 1 */}
-      <div className="event-card">
-        <div className="event-info">
-          <h3>
-            <strong>Food Donation Campaign</strong>
-          </h3>
-          <p className="detail">Organization: Hope Foundation</p>
-          <p className="detail">Start Date: 12/10/2025</p>
-          <p className="detail">End Date: 25/12/2025</p>
-          <p className="detail">
-            Description: Donate food to many parts of the country
-          </p>
-          <p className="status-line">
-            Status: <span className="status">Approved</span>
-          </p>
-        </div>
-        <div className="btns">
-          <button className="btn-approve">Approve</button>
-          <button className="btn-suspend">Suspend</button>
-          <button className="btn-delete">Delete</button>
-          <button className="btn-reports">View Reports</button>
-        </div>
+      <div className="table-container">
+        <table className="users-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Verified</th>
+              <th>Last Login</th>
+              <th>Sign Up Date</th>
+              <th>Total Hours</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {users.map((user, index) => (
+              <tr key={index}>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{user.role}</td>
+                <td>{user.status}</td>
+                <td>{user.verified}</td>
+                <td>{user.lastLogin}</td>
+                <td>{user.signUpDate}</td>
+                <td className="text-center">{user.totalHours}</td>
+                <td className="text-center">
+                  <button className="action-btn">⋮</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

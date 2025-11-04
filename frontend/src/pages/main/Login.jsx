@@ -108,7 +108,7 @@ function Login() {
 
         <label htmlFor="password">Password</label>
         <input
-          type={showPassword ? "text" : "password"} // 👈 toggle visibility
+          type={showPassword ? "text" : "password"}
           name="password"
           value={formData.password}
           id="password"

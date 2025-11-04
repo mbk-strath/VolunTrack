@@ -1,1 +1,85 @@
+/* Container layout */
+.admin-container {
+  display: flex;
+  background-color: #f4f6f9;
+  min-height: 100vh;
+  padding: 20px;
+}
 
+/* Main content */
+.admin-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Welcome Text */
+.welcome-text {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+/* Section Title */
+.section-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: #444;
+  border-left: 4px solid #007bff;
+  padding-left: 10px;
+}
+
+/* Metrics container */
+.metrics-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Each card */
+.metric-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex: 1;
+  min-width: 200px;
+  text-align: center;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.metric-card p {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+}
+
+.metric-card h2 {
+  margin-top: 10px;
+  font-size: 32px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Hover effects */
+.metric-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Chart section */
+.chart-container {
+  margin-top: 30px;
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 18px;
+  color: #555;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}

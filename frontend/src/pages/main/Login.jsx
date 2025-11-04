@@ -12,6 +12,7 @@ function Login() {
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // 👈 new state
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -107,7 +108,7 @@ function Login() {
 
         <label htmlFor="password">Password</label>
         <input
-          type="password"
+          type={showPassword ? "text" : "password"} // 👈 toggle visibility
           name="password"
           value={formData.password}
           id="password"
@@ -129,7 +130,15 @@ function Login() {
           <Link className="reset" to="/password-reset">
             Forgotten Password?
           </Link>
-          <Link className="show">Show Password</Link>
+          {/* 👇 updated Show Password link */}
+          <button
+            type="button"
+            className="show"
+            onClick={() => setShowPassword(!showPassword)}
+            disabled={loading}
+          >
+            {showPassword ? "Hide Password" : "Show Password"}
+          </button>
         </div>
 
         <div className="or">

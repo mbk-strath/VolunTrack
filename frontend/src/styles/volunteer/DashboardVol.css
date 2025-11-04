@@ -111,7 +111,8 @@ body.dark-mode .dashboard,
 body.dark-mode .dashboard-content,
 body.dark-mode .OrganisationsPage,
 body.dark-mode .ReportsPage,
-body.dark-mode .EventsPage {
+body.dark-mode .EventsPage,
+body.dark-mode .admin-container {
   background-color: #191725;
 }
 
@@ -178,13 +179,20 @@ body.dark-mode .exact {
   color: #b4adad;
 }
 
-body.dark-mode .username {
+body.dark-mode .username,
+body.dark-mode .section-title,
+body.dark-mode .metric-card p,
+body.dark-mode .page-title,
+body.dark-mode .users-table {
   color: #ffffff;
 }
 
 body.dark-mode .OpportunityCard,
 body.dark-mode .history-card,
-body.dark-mode .application-card {
+body.dark-mode .application-card,
+body.dark-mode .metric-card,
+body.dark-mode .chart-container,
+body.dark-mode .table-container {
   background: #252235;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.25);

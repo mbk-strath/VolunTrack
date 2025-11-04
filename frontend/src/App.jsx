@@ -24,6 +24,7 @@ import AdminReports from "./pages/admin/AdminReports";
 import AdminEvents from "./pages/admin/AdminEvents";
 import AdminHome from "./pages/admin/AdminHome";
 import VerifyUser from "./components/main/VerifyUser";
+import AdminUsers from "./pages/admin/AdminUsers";
 
 function App() {
   return (
@@ -54,15 +55,11 @@ function App() {
           <Route path="/dashboard-admin" element={<DashboardLayoutAdmin/>}>
            <Route index element={<AdminHome />} /> 
             <Route path="home" element={<AdminHome />} />
+           <Route path ="users" element ={<AdminUsers/>}/> 
            <Route path="organisations" element={<AdminOrganisations/>}/>
            <Route path="reports" element={<AdminReports/>}/>
            <Route path="events" element={<AdminEvents/>}/>
 
-          <Route path="/dashboard/admin" element={<DashboardLayoutAdmin />}>
-            <Route index element={<AdminHome />} />
-            <Route path="organisations" element={<AdminOrganisations />} />
-            <Route path="reports" element={<AdminReports />} />
-            <Route path="events" element={<AdminEvents />} />
           </Route>
         </Routes>
       </Router>

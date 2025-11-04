@@ -1,46 +1,50 @@
 .UsersPage {
-  padding: 1.5rem;
+  padding: 32px;
   background-color: #0e1420;
   color: #f1f5f9;
-  border-radius: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   flex: 1;
+  min-height: 85vh;
 }
 
+/* Title */
 .page-title {
-  font-size: 1.6rem;
+  font-size: 32px;
   font-weight: 700;
   color: #e2e8f0;
-  margin-bottom: 1.5rem;
+  margin-bottom: 32px;
 }
 
 /* Table container */
 .table-container {
   overflow-x: auto;
   background-color: #162032;
-  border-radius: 0.75rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  padding: 16px;
 }
 
 /* Table */
 .users-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
+  font-size: 16px;
   color: #cbd5e1;
 }
 
 .users-table th,
 .users-table td {
-  padding: 0.75rem 1rem;
+  padding: 12px 18px; 
   white-space: nowrap;
 }
 
 .users-table th {
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 16px;
   color: #9ca3af;
-  border-bottom: 1px solid #334155;
+  border-bottom: 2px solid #334155;
   background-color: #101828;
 }
 
@@ -59,13 +63,13 @@
 
 /* Action button */
 .action-btn {
-  background-color: #2563eb;
+  background-color: #0e1420;
   color: white;
   border: none;
-  padding: 0.25rem 0.6rem;
-  border-radius: 0.3rem;
+  padding: 6px 12px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 18px;
   transition: background-color 0.2s ease;
 }
 
@@ -73,32 +77,50 @@
   background-color: #1e40af;
 }
 
-/* Responsive design */
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .users-table th,
+  .users-table td {
+    padding: 14px 18px;
+    font-size: 15px;
+  }
+}
+
 @media (max-width: 768px) {
   .table-container {
     overflow-x: auto;
   }
 
+  .users-table {
+    font-size: 14px;
+  }
+
   .users-table th,
   .users-table td {
-    padding: 0.6rem 0.8rem;
+    padding: 12px 14px;
   }
 
   .page-title {
-    font-size: 1.3rem;
+    font-size: 26px;
   }
 }
 
 @media (max-width: 480px) {
   .UsersPage {
-    padding: 1rem;
+    padding: 16px;
   }
 
   .users-table {
-    font-size: 0.8rem;
+    font-size: 13px;
+  }
+
+  .users-table th,
+  .users-table td {
+    padding: 10px 12px;
   }
 
   .action-btn {
-    padding: 0.2rem 0.4rem;
+    padding: 5px 8px;
+    font-size: 16px;
   }
 }

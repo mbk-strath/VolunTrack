@@ -16,7 +16,7 @@ import MessagesPage from "./pages/volunteer/MessagesPage";
 import HistoryPage from "./pages/volunteer/HistoryPage";
 import ForgotPassword from "./pages/main/ForgotPassword";
 import ResetPassword from "./pages/main/ResetPassword";
-import ViewOpportunityPage from "./styles/volunteer/ViewOpportunityPage";
+import ViewOpportunityPage from "./pages/volunteer/ViewOpportunityPage";
 import ApplicationHistoryPage from "./pages/volunteer/ApplicationHistoryPage";
 import DashboardLayoutAdmin from "../layouts/DashboardLayoutAdmin";
 import AdminOrganisations from "./pages/admin/AdminOrganisations";
@@ -24,6 +24,7 @@ import AdminReports from "./pages/admin/AdminReports";
 import AdminEvents from "./pages/admin/AdminEvents";
 import AdminHome from "./pages/admin/AdminHome";
 import VerifyUser from "./components/main/VerifyUser";
+import AdminUsers from "./pages/admin/AdminUsers";
 
 function App() {
   return (

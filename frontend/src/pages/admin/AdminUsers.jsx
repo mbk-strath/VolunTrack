@@ -13,7 +13,7 @@ const AdminUsers = () => {
       signUpDate: "02/10/2025",
       totalHours: 12,
     },
-       {
+    {
       name: "Linda Opolo",
       email: "opololinda@gmail.com",
       role: "Volunteer",
@@ -22,7 +22,8 @@ const AdminUsers = () => {
       lastLogin: "20/10/2025",
       signUpDate: "02/10/2025",
       totalHours: 12,
-    },   {
+    },
+    {
       name: "Linda Opolo",
       email: "opololinda@gmail.com",
       role: "Volunteer",
@@ -31,7 +32,8 @@ const AdminUsers = () => {
       lastLogin: "20/10/2025",
       signUpDate: "02/10/2025",
       totalHours: 12,
-    },   {
+    },
+    {
       name: "Linda Opolo",
       email: "opololinda@gmail.com",
       role: "Volunteer",
@@ -40,7 +42,8 @@ const AdminUsers = () => {
       lastLogin: "20/10/2025",
       signUpDate: "02/10/2025",
       totalHours: 12,
-    },   {
+    },
+    {
       name: "Linda Opolo",
       email: "opololinda@gmail.com",
       role: "Volunteer",
@@ -49,7 +52,18 @@ const AdminUsers = () => {
       lastLogin: "20/10/2025",
       signUpDate: "02/10/2025",
       totalHours: 12,
-    },   {
+    },
+    {
+      name: "Linda Opolo",
+      email: "opololinda@gmail.com",
+      role: "Volunteer",
+      status: "Active",
+      verified: "true",
+      lastLogin: "20/10/2025",
+      signUpDate: "02/10/2025",
+      totalHours: 12,
+    },
+    {
       name: "Linda Opolo",
       email: "opololinda@gmail.com",
       role: "Volunteer",

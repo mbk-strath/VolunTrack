@@ -22,15 +22,22 @@ class ApplicationController extends Controller
         return response()->json(['applications'=>$applications,"message"=>"Fetch Successlful"],200);
     }
 
-    public function myApplications(Request $request){
-        $user = request()->user();
-        $volunteer = MembershipService::getMembership($user);
-        if(!$user->role == 'volunteer' || !$volunteer){
-            return response()->json(['message'=>"Unauthorized"],403);
-        }
-        $applications = Application::where('volunteer_id',$volunteer->id)->get();
-        return response()->json(['applications'=>$applications,"message"=>"Fetch Successlful"],200);
+  public function myApplications(Request $request){
+    $user = request()->user();
+    $volunteer = MembershipService::getMembership($user);
+
+    if($user->role !== 'volunteer' || !$volunteer){
+        return response()->json(['message'=>"Unauthorized"],403);
     }
+
+    $applications = Application::where('volunteer_id', $volunteer->id)->get();
+
+    return response()->json([
+        'applications' => $applications,
+        'message' => 'Fetch Successful'
+    ], 200);
+}
+
 
     public function myApplicants(Request $request, $id){
         $user = request()->user();

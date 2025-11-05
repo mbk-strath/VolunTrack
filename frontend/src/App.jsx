@@ -16,7 +16,7 @@ import MessagesPage from "./pages/volunteer/MessagesPage";
 import HistoryPage from "./pages/volunteer/HistoryPage";
 import ForgotPassword from "./pages/main/ForgotPassword";
 import ResetPassword from "./pages/main/ResetPassword";
-import ViewOpportunityPage from "./styles/volunteer/ViewOpportunityPage";
+import ViewOpportunityPage from "./pages/volunteer/ViewOpportunityPage";
 import ApplicationHistoryPage from "./pages/volunteer/ApplicationHistoryPage";
 import DashboardLayoutAdmin from "../layouts/DashboardLayoutAdmin";
 import AdminOrganisations from "./pages/admin/AdminOrganisations";
@@ -52,20 +52,17 @@ function App() {
               <Route path="account" element={<AccountPage />} />
             </Route>
           </Route>
-          <Route path="/dashboard-admin" element={<DashboardLayoutAdmin/>}>
-           <Route index element={<AdminHome />} /> 
-            <Route path="home" element={<AdminHome />} />
-           <Route path ="users" element ={<AdminUsers/>}/> 
-           <Route path="organisations" element={<AdminOrganisations/>}/>
-           <Route path="reports" element={<AdminReports/>}/>
-           <Route path="events" element={<AdminEvents/>}/>
-
+          <Route path="/dashboard/admin" element={<DashboardLayoutAdmin />}>
+            <Route index element={<AdminHome />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="organisations" element={<AdminOrganisations />} />
+            <Route path="reports" element={<AdminReports />} />
+            <Route path="events" element={<AdminEvents />} />
           </Route>
         </Routes>
       </Router>
     </div>
   );
-  
 }
 
 export default App;

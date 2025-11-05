@@ -42,9 +42,6 @@ const AdminHome = () => {
 
         {/* Chart Section */}
         <div className="chart-container">
-<<<<<<< Updated upstream
-          <p>Chart Placeholder</p>
-=======
           <ResponsiveContainer width="100%" height={300}>
             <BarChart
               data={data}
@@ -58,7 +55,6 @@ const AdminHome = () => {
               <Bar dataKey="count" fill="#4f46e5" barSize={50} />
             </BarChart>
           </ResponsiveContainer>
->>>>>>> Stashed changes
         </div>
       </div>
     </div>

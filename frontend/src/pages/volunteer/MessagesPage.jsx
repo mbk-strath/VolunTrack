@@ -1,145 +1,104 @@
-import React, { useState, useRef } from "react";
-import EmojiPicker from "emoji-picker-react";
+import React, { useState } from "react";
 import "../../styles/volunteer/MessagesPage.css";
-import { FaMicrophone } from "react-icons/fa";
-import { BsEmojiSmile } from "react-icons/bs";
-import { FaPaperPlane } from "react-icons/fa";
 
-function MessagesPage() {
+const MessagesPage = () => {
   const [messages, setMessages] = useState([
-    { text: "Hey there! How are you?", sender: "other" },
-    { text: "I'm good, thanks! You?", sender: "me" },
-    { text: "Doing great, just working on a project.", sender: "other" },
+    {
+      id: 1,
+      message: "Your application has been approved!",
+      sent_at: "2025-10-29T10:00:00.000000Z",
+      is_read: false,
+      channel: "email",
+    },
+    {
+      id: 2,
+      message: "A new volunteering event is available.",
+      sent_at: "2025-11-01T09:30:00.000000Z",
+      is_read: true,
+      channel: "in_app",
+    },
+    {
+      id: 3,
+      message: "Your report was reviewed successfully.",
+      sent_at: "2025-11-02T15:20:00.000000Z",
+      is_read: false,
+      channel: "in_app",
+    },
   ]);
 
-  const [input, setInput] = useState("");
-  const [showEmoji, setShowEmoji] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  const mediaRecorderRef = useRef(null);
-  const [audioChunks, setAudioChunks] = useState([]);
-
-  const handleSend = () => {
-    if (input.trim() === "") return;
-    setMessages([...messages, { text: input, sender: "me" }]);
-    setInput("");
+  // Mark message as read
+  const markAsRead = (id) => {
+    setMessages((prev) =>
+      prev.map((msg) => (msg.id === id ? { ...msg, is_read: true } : msg))
+    );
   };
 
-  const onEmojiClick = (emojiData) => {
-    setInput(input + emojiData.emoji);
+  // Simulate sending a message
+  const [newMessage, setNewMessage] = useState("");
+  const [receiverId, setReceiverId] = useState("");
+
+  const sendMessage = (e) => {
+    e.preventDefault();
+    const newMsg = {
+      id: messages.length + 1,
+      message: newMessage,
+      sent_at: new Date().toISOString(),
+      is_read: false,
+      channel: "in_app",
+    };
+    setMessages([newMsg, ...messages]);
+    setNewMessage("");
+    setReceiverId("");
+    alert("✅ Dummy message added!");
   };
 
-  const handleVoice = async () => {
-    if (isRecording) {
-      // Stop recording
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-    } else {
-      // Start recording
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-        });
-        const mediaRecorder = new MediaRecorder(stream);
-        mediaRecorderRef.current = mediaRecorder;
-        setAudioChunks([]);
-
-        mediaRecorder.ondataavailable = (e) => {
-          setAudioChunks((prev) => [...prev, e.data]);
-        };
-
-        mediaRecorder.onstop = () => {
-          const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
-          const audioUrl = URL.createObjectURL(audioBlob);
-          setMessages((prev) => [
-            ...prev,
-            { type: "audio", url: audioUrl, sender: "me" },
-          ]);
-        };
-
-        mediaRecorder.start();
-        setIsRecording(true);
-      } catch (err) {
-        console.error("Microphone access denied:", err);
-        alert("Please allow microphone access to record voice notes.");
-      }
-    }
-  };
   return (
-    <div className="chat-app">
-      {/* Sidebar */}
-      <div className="side">
-        <input
-          type="text"
-          placeholder="Search messages..."
-          className="search-contact"
-        />
-        <div className="contacts">
-          <div className="contact active">
-            <div className="avatar"></div>
-            <div>
-              <p className="name">Mary Doe</p>
-              <p className="last-msg">Remember to book your appointment...</p>
+    <div className="messages-page">
+      <h2>My Messages</h2>
+
+      <div className="messages-list">
+        {messages.length === 0 ? (
+          <p>No messages yet.</p>
+        ) : (
+          messages.map((msg) => (
+            <div
+              key={msg.id}
+              className={`message-card ${msg.is_read ? "read" : "unread"}`}
+            >
+              <p>{msg.message}</p>
+              <small>
+                Sent at: {new Date(msg.sent_at).toLocaleString()} | Channel:{" "}
+                {msg.channel}
+              </small>
+              {!msg.is_read && (
+                <button onClick={() => markAsRead(msg.id)}>Mark as Read</button>
+              )}
             </div>
-          </div>
-        </div>
+          ))
+        )}
       </div>
 
-      {/* Chat Area */}
-      <div className="chat-area">
-        <div className="chat-header">
-          <div className="avatar"></div>
-          <p className="name">Mary Doe</p>
-        </div>
-
-        <div className="chat-messages">
-          {messages.length === 0 ? (
-            <p style={{ color: "#888", textAlign: "center" }}>
-              No messages yet
-            </p>
-          ) : (
-            messages.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`message ${msg.sender === "me" ? "me" : "other"}`}
-              >
-                <span>{msg.text}</span>
-              </div>
-            ))
-          )}
-        </div>
-
-        <div className="chat-input">
-          <button onClick={() => setShowEmoji(!showEmoji)}>
-            <BsEmojiSmile className="icon-msg" />
-          </button>
+      <div className="send-form">
+        <h3>Send a Message</h3>
+        <form onSubmit={sendMessage}>
           <input
             type="text"
-            placeholder="Type a message..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            placeholder="Receiver ID"
+            value={receiverId}
+            onChange={(e) => setReceiverId(e.target.value)}
+            required
           />
-          <button
-            onClick={handleVoice}
-            style={{
-              color: isRecording ? "red" : "black",
-            }}
-          >
-            <FaMicrophone className="icon-msg" />
-          </button>
-          <button onClick={handleSend}>
-            <FaPaperPlane className="icon-msg" />
-          </button>
-
-          {showEmoji && (
-            <div className="emoji-picker">
-              <EmojiPicker onEmojiClick={onEmojiClick} />
-            </div>
-          )}
-        </div>
+          <textarea
+            placeholder="Type your message"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            required
+          />
+          <button type="submit">Send</button>
+        </form>
       </div>
     </div>
   );
-}
+};
 
 export default MessagesPage;

@@ -1,13 +1,13 @@
-import React from "react";
+import React, { use } from "react";
 import "../../styles/admin/report.css";
 
 const AdminReports = () => {
+  const[reports, setReports] = useState([]);
+  const[loading, setLoading] = useState(true);
+  
+
   return (
     <div className="ReportsPage">
-      
-      
-      
-
         <h2>Flagged Reports</h2>
 
         {/* Report Card 1 */}

@@ -1,8 +1,9 @@
 .UsersPage {
-  padding-top: 5%;
+  padding-top: 70%;
   color: #f1f5f9;
   border-radius: 16px;
   flex: 1;
+
   min-height: 95vh;
 
   padding-left: 2%;
@@ -23,14 +24,14 @@
   border-radius: 16px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
   padding: 16px;
-  width: 95%;
+  width: 94%;
 }
 
 /* Table */
 .users-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 16px;
+  font-size: 10px;
   color: #041326;
 }
 
@@ -43,7 +44,7 @@
 .users-table th {
   text-transform: uppercase;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 12px;
   color: #9ca3af;
   border-bottom: 2px solid #334155;
 }
@@ -127,7 +128,7 @@
 
 .UsersPage {
   padding: 32px;
-  background-color: #0e1420;
+  background-color: #fff;
   color: #f1f5f9;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
@@ -137,7 +138,7 @@
 
 /* Title */
 .page-title {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
   color: #e2e8f0;
   margin-bottom: 32px;
@@ -146,7 +147,7 @@
 /* Table container */
 .table-container {
   overflow-x: auto;
-  background-color: #162032;
+  background-color: #fff;
   border-radius: 16px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
   padding: 16px;
@@ -156,7 +157,7 @@
 .users-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 16px;
+  font-size: 14px;
   color: #cbd5e1;
 }
 
@@ -172,7 +173,6 @@
   font-size: 16px;
   color: #9ca3af;
   border-bottom: 2px solid #334155;
-  background-color: #101828;
 }
 
 .users-table tbody tr {

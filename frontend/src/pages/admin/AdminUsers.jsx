@@ -13,8 +13,6 @@ const AdminUsers = () => {
       signUpDate: "02/10/2025",
       totalHours: 12,
     },
-<<<<<<< HEAD
-=======
     {
       name: "Linda Opolo",
       email: "opololinda@gmail.com",
@@ -75,7 +73,6 @@ const AdminUsers = () => {
       signUpDate: "02/10/2025",
       totalHours: 12,
     },
->>>>>>> linda
   ];
 
   return (

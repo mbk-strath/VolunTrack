@@ -48,12 +48,21 @@ function App() {
               <Route path="account" element={<AccountPage />} />
             </Route>
           </Route>
+<<<<<<< Updated upstream
           <Route path="/dashboard-admin" element={<DashboardLayoutAdmin/>}>
           <Route path="/admin/home" element={<AdminHome />} />
           <Route path="organisations" element={<AdminOrganisations/>}/>
           <Route path="reports" element={<AdminReports/>}/>
           <Route path="events" element={<AdminEvents/>}/>
 
+=======
+          <Route path="/dashboard/admin" element={<DashboardLayoutAdmin />}>
+            <Route index element={<AdminHome />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="organisations" element={<AdminOrganisations />} />
+            <Route path="reports" element={<AdminReports />} />
+             <Route path="events" element={<AdminEvents />} />
+>>>>>>> Stashed changes
           </Route>
         </Routes>
       </Router>

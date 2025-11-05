@@ -1,22 +1,24 @@
 # VolunTrack Backend
 
-
 ## Requirements
 
-- PHP 8.0 or higher
-- Composer
-- MySQL database
-- Git
+-   PHP 8.0 or higher
+-   Composer
+-   MySQL database
+-   Git
 
 ## Quick Start
 
 ### 1. Clone and Setup
+
 ```bash
 cp .env.example .env
 ```
 
 ### 2. Configure Environment
+
 Edit `.env` file and set your database credentials:
+
 ```
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -27,6 +29,7 @@ DB_PASSWORD=your_password
 ```
 
 For email functionality, configure mail settings:
+
 ```
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.gmail.com
@@ -37,6 +40,7 @@ MAIL_ENCRYPTION=tls
 ```
 
 ### 3. Install Dependencies
+
 ```bash
 composer install
 php artisan optimize
@@ -46,6 +50,7 @@ php artisan migrate
 ```
 
 ### 4. Start Development Server
+
 ```bash
 php artisan serve
 ```
@@ -55,18 +60,15 @@ The API will be available at `http://127.0.0.1:8000`
 ## Features
 
 ### Authentication System
-- User registration with email verification
-- Email-based account verification
-- Secure login/logout functionality
-- Password reset capabilities
 
+-   User registration with email verification
+-   Email-based account verification
+-   Secure login/logout functionality
+-   Password reset capabilities
 
 ## API Endpoints
 
-- `POST /api/register` - User registration
-- `POST /api/login` - User authentication
-- `POST /api/logout` - User logout
-- Email verification endpoints
+-   Refer to the Api Documentation markdown document
 
 ## Troubleshooting
 
@@ -74,10 +76,16 @@ The API will be available at `http://127.0.0.1:8000`
 
 **Database Connection**: Verify MySQL is running and credentials are correct in `.env`
 
+**Wrong Controller Issues**: `Run composer install && php artisan optimize`
+
 **Cache Issues**: Run `php artisan config:clear && php artisan config:cache` if configuration changes don't take effect
 
 **Database issues**: Incase of conflicting migrations or new migrations or modifications on the old migrations. Run `php migrate:fresh`
 
 **Image Storage Issues**: Make sure your storage/app/public directory is linked to public/storage by running `php artisan storage:link`
 
+## License
 
+Copyright © 2025 VolunTrack. All rights reserved.
+
+This project is developed by VolunTrack and is not licensed for public distribution or use without permission.

@@ -1,18 +1,10 @@
-import React from "react";
+import React, { use } from "react";
 import "../../styles/admin/report.css";
 
 const AdminReports = () => {
-
-  const reports = [
-    {
-      reporter: "Linda Opollo",
-      reason: "Spamming",
-      evidence: "Shared unsolicited links in 3 events",
-    },{
-      reporter: "Linda Opollo",
-      reason: "Spamming",
-      evidence: "Shared unsolicited links in 3 events",
-    }];
+  const[reports, setReports] = useState([]);
+  const[loading, setLoading] = useState(true);
+  
 
   return (
     <div className="ReportsPage">

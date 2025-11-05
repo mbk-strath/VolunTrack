@@ -11,12 +11,15 @@ function ApplicationHistoryPage() {
     const fetchApplications = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:8000/my-applications", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-type": "application/json",
-          },
-        });
+        const res = await axios.get(
+          "http://localhost:8000/api/my-applications",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-type": "application/json",
+            },
+          }
+        );
 
         console.log("Fetched applications:", res.data);
 

@@ -72,11 +72,10 @@
 
 .bio {
   width: 100%;
-  margin: auto;
 }
 
 label textarea {
-  width: 110%;
+  width: 100%;
   border-top: 0;
   border-right: 0;
   border-left: 0;
@@ -104,4 +103,47 @@ label textarea {
 
 .profile {
   width: 100%;
+}
+
+.custom-alert {
+  position: fixed;
+  top: 70%;
+  right: 10%;
+  padding: 15px 25px;
+  border-radius: 6px;
+  font-weight: bold;
+  color: #fff;
+  z-index: 9999;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+.custom-alert.success {
+  background-color: #4caf50;
+}
+
+.custom-alert.error {
+  background-color: #f44336;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeout {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
 }

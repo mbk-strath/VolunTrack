@@ -1,66 +1,83 @@
-    .EventsPage {
-      padding-top:10%;
-      background-color: #f0f2f5;
-      min-height: 100vh;
-      padding-left: 30px;
-      padding-right: 30px;
-    }
-    h1 {
-      font-size: 1.5em;
-      margin-bottom: 20px;
-    }
-    .event-card {
-      background: #ffffff;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      padding: 25px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-    }
-    .event-info .detail {
-      font-size: 0.85em;
-      color: #666;
-      margin: 4px 0;
-      line-height: 1.4;
-   }
-   .btns{
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-left: 20px;
-   }
-    .btns button {
-      border: none;
-      padding: 10px 15px;
-      margin: 0 5px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: 500;
-    }
-    .btn-approve {
-      background-color: #0D3D15;
-      color: white;
-    }
-    btn-suspend {
-      background-color: #003973;
-      color: white;
-    }
-    .btn-delete {
-      background-color: #FF0000;
-      color: white;
-    }
-    .btn-reports {
-      background-color: black;
-      color: white;
-    }
-    .status {
-      color: #319F43;
-      font-weight: 600;
-     }
-    .status-line {
-      margin-top: 10px;
-      font-weight: 500;
-      color: #319F43;
-    }
+.EventsPage {
+  padding-top: 6%;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+h1 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+}
+.event-card {
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.event-info .detail {
+  font-size: 0.85em;
+  color: #666;
+  margin: 4px 0;
+  line-height: 1.4;
+}
+.event-card .btns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-left: 20px;
+}
+.btns button {
+  border: none;
+  padding: 10px 15px;
+  margin: 0 5px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: 500;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+.btn-approve {
+  background-color: #0d3d15;
+  color: white;
+}
+.btn-approve:hover {
+  background-color: #5ea86a;
+}
+.btn-suspend {
+  background-color: #003973;
+  color: white;
+}
+.btn-suspend:hover {
+  background-color: #2466a9;
+}
+.btn-delete {
+  background-color: #ff0000;
+  color: white;
+}
+
+.btn-delete:hover,
+.btn-ban:hover,
+.btn-reject:hover {
+  background-color: #db3636;
+}
+.btn-reports {
+  background-color: black;
+  color: white;
+}
+.btn-reports:hover {
+  background-color: #181717;
+}
+.status {
+  color: #319f43;
+  font-weight: 600;
+}
+.status-line {
+  margin-top: 10px;
+  font-weight: 500;
+  color: #319f43;
+}

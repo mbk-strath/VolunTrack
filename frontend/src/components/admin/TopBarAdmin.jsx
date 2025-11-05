@@ -19,8 +19,8 @@ function TopBarAdmin() {
   }, [darkMode]);
 
   return (
-    <div className="Topbar">
-     <h3>Welcome User</h3>
+    <div className="TopbarAdmin">
+      <h3>Welcome User</h3>
 
       <div className="topRight">
         <FaCalendarCheck />

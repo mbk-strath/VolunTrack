@@ -2,12 +2,20 @@ import React from "react";
 import "../../styles/admin/report.css";
 
 const AdminReports = () => {
+
+  const reports = [
+    {
+      reporter: "Linda Opollo",
+      reason: "Spamming",
+      evidence: "Shared unsolicited links in 3 events",
+    },{
+      reporter: "Linda Opollo",
+      reason: "Spamming",
+      evidence: "Shared unsolicited links in 3 events",
+    }];
+
   return (
     <div className="ReportsPage">
-      
-      
-      
-
         <h2>Flagged Reports</h2>
 
         {/* Report Card 1 */}

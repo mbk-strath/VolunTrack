@@ -131,16 +131,16 @@
   background-color: #fff;
   color: #f1f5f9;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   flex: 1;
-  min-height: 85vh;
+  min-height: 95vh;
+  padding-left:2%;
 }
 
 /* Title */
 .page-title {
   font-size: 28px;
   font-weight: 700;
-  color: #e2e8f0;
+  color: black;
   margin-bottom: 32px;
 }
 
@@ -149,13 +149,15 @@
   overflow-x: auto;
   background-color: #fff;
   border-radius: 16px;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
   padding: 16px;
+  width:85%;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+  background-color: #fff;
+  border-radius: 10px;
 }
 
 /* Table */
 .users-table {
-  width: 100%;
   border-collapse: collapse;
   font-size: 14px;
   color: #cbd5e1;
@@ -170,7 +172,7 @@
 .users-table th {
   text-transform: uppercase;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 14px;
   color: #9ca3af;
   border-bottom: 2px solid #334155;
 }
@@ -181,7 +183,7 @@
 }
 
 .users-table tbody tr:hover {
-  background-color: #1c2a40;
+  background-color: #d4d8df;
 }
 
 .text-center {
@@ -251,3 +253,9 @@
     font-size: 16px;
   }
 }
+
+.UsersPage.dark-mode {
+  background-color: #0f0f0f;
+  color: #ffffff;
+}
+

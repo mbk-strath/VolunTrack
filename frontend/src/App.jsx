@@ -26,7 +26,8 @@ import AdminHome from "./pages/admin/AdminHome";
 import VerifyUser from "./components/main/VerifyUser";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminSettings from "./pages/admin/AdminSettings";
-
+import DashboardLayoutOrg from "../layouts/DashboardLayoutOrg";
+import DashboardOrg from "./pages/organization/dashboardOrg";
 function App() {
   return (
     <div className="main">
@@ -53,6 +54,7 @@ function App() {
               <Route path="account" element={<AccountPage />} />
             </Route>
           </Route>
+
           <Route path="/dashboard/admin" element={<DashboardLayoutAdmin />}>
             <Route index element={<AdminHome />} />
             <Route path="users" element={<AdminUsers />} />
@@ -62,6 +64,13 @@ function App() {
             <Route path="settings" element={<AdminSettings />}>
               <Route path="account" element={<AccountPage />} />
             </Route>
+          </Route>
+
+          <Route
+            path="/dashboard/organization"
+            element={<DashboardLayoutOrg />}
+          >
+            <Route index element={<DashboardOrg />} />
           </Route>
         </Routes>
       </Router>

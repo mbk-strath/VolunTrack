@@ -72,6 +72,8 @@ function App() {
             element={<DashboardLayoutOrg />}
           >
             <Route index element={<DashboardOrg />} />
+            <Route path="opportunities" element={<OpportunitiesOrg />} />
+            <Route path="applications" element={<ApplicationsOrg />} />
           </Route>
         </Routes>
       </Router>

@@ -1,0 +1,43 @@
+.settingVolNav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background-color: #0f172a; /* dark navy background */
+  border-radius: 16px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #cbd5e1;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 12px 18px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #1e293b;
+  color: #fff;
+}
+
+.btn.active {
+  background-color: #1e293b;
+  color: #fff;
+}
+
+.icon {
+  font-size: 20px;
+  color: #94a3b8;
+}
+
+.btn.active .icon {
+  color: #60a5fa; /* blue tone for active icon */
+}

@@ -26,6 +26,7 @@ import AdminHome from "./pages/admin/AdminHome";
 import VerifyUser from "./components/main/VerifyUser";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminSettings from "./pages/admin/AdminSettings";
+import AdminSettingsProfile from "./pages/admin/SettingsProfile";
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
             <Route path="events" element={<AdminEvents />} />
             <Route path="settings" element={<AdminSettings />}>
               <Route path="account" element={<AccountPage />} />
+              <Route path="profile" element={<AdminSettingsProfile />} />
             </Route>
           </Route>
         </Routes>

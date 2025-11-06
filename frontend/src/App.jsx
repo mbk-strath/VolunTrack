@@ -54,6 +54,7 @@ function App() {
               <Route path="account" element={<AccountPage />} />
             </Route>
           </Route>
+
           <Route path="/dashboard/admin" element={<DashboardLayoutAdmin />}>
             <Route index element={<AdminHome />} />
             <Route path="users" element={<AdminUsers />} />
@@ -64,6 +65,13 @@ function App() {
               <Route path="account" element={<AccountPage />} />
               <Route path="profile" element={<AdminSettingsProfile />} />
             </Route>
+          </Route>
+
+          <Route
+            path="/dashboard/organization"
+            element={<DashboardLayoutOrg />}
+          >
+            <Route index element={<DashboardOrg />} />
           </Route>
         </Routes>
       </Router>

@@ -1,0 +1,36 @@
+@import './baseOrg.css';
+
+.applications-container {
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+  padding: var(--p-6);
+}
+
+.application-card {
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  border-radius: var(--rounded-lg);
+}
+
+.application-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-outline {
+  @apply btn-outline;
+}
+
+.btn-primary {
+  @apply btn-primary;
+}
+
+.btn-success {
+  @apply btn-success;
+}
+
+.btn-danger {
+  @apply btn-danger;
+}

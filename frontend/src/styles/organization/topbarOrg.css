@@ -1,0 +1,36 @@
+@import './baseOrg.css';
+
+.topbar {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+  padding: var(--p-4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.create-btn {
+  @apply btn-primary;
+}
+
+.icon-btn {
+  @apply btn-outline;
+}
+
+.notification-btn {
+  @apply btn-outline;
+  position: relative;
+}
+
+.notification-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background-color: var(--danger-color);
+  border-radius: 50%;
+}

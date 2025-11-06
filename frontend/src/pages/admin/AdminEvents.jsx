@@ -25,30 +25,12 @@ const AdminEvents = () => {
   return (
     <div className="EventsPage">
       <h2>Ongoing Events</h2>
-
-      {/*Event Card 1 */}
-      <div className="event-card">
-        <div className="event-info">
-          <h3>
-            <strong>Food Donation Campaign</strong>
-          </h3>
-          <p className="detail">Organization: Hope Foundation</p>
-          <p className="detail">Start Date: 12/10/2025</p>
-          <p className="detail">End Date: 25/12/2025</p>
-          <p className="detail">
-            Description: Donate food to many parts of the country
-          </p>
-          <p className="status-line">
-            Status: <span className="status">Approved</span>
-          </p>
-        </div>
-        <div className="btns">
-          <button className="btn-approve">Approve</button>
-          <button className="btn-suspend">Suspend</button>
-          <button className="btn-delete">Delete</button>
-          <button className="btn-reports">View Reports</button>
-        </div>
-      {events.length > 0 ? (
+      
+      {loading?( 
+        <p>Loading...</p>
+      ): events.length === 0 ? (
+        <p className="no-events">No events available.</p>
+      ):(
         events.map((event) => (
           <div className="event-card" key={event.id}>
             <div className="event-info">
@@ -56,8 +38,8 @@ const AdminEvents = () => {
                 <strong>{event.title}</strong>
               </h3>
               <p className="detail">Organization ID: {event.organisation_id}</p>
-              <p className="detail">Start Date: {event.start_date}</p>
-              <p className="detail">End Date: {event.end_date}</p>
+              <p className="detail">Start Date: {new Date(event.start_date).toLocaleDateString()}</p>
+              <p className="detail">End Date: {new Date(event.end_date).toLocaleDateString()}</p>
               <p className="detail">Description: {event.description}</p>
               <p className="detail">Required Skills: {event.required_skills}</p>
               <p className="detail">Volunteers Needed: {event.num_volunteers_needed}</p>
@@ -65,10 +47,10 @@ const AdminEvents = () => {
               <p className="detail">Location: {event.location}</p>
               <p className="detail">Benefits: {event.benefits}</p>
               <p className="detail">
-                Application Deadline: {event.application_deadline}
+                Application Deadline: {new Date(event.application_deadline).toLocaleDateString()}
               </p>
               <p className="status-line">
-                Status: <span className="status">Approved</span>
+                Status: <span className="status">{event.status || "Pending"}</span>
               </p>
             </div>
             <div className="btns">
@@ -79,14 +61,10 @@ const AdminEvents = () => {
             </div>
           </div>
         ))
-      ) : (
-        <p>No events available.</p>
       )}
-
       </div>
-
-    </div>
-  );
-};
+      ) ;
+}; 
+ 
 
 export default AdminEvents;

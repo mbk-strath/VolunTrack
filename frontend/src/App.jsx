@@ -25,6 +25,7 @@ import AdminEvents from "./pages/admin/AdminEvents";
 import AdminHome from "./pages/admin/AdminHome";
 import VerifyUser from "./components/main/VerifyUser";
 import AdminUsers from "./pages/admin/AdminUsers";
+import AdminSettings from "./pages/admin/AdminSettings";
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
             <Route path="organisations" element={<AdminOrganisations />} />
             <Route path="reports" element={<AdminReports />} />
             <Route path="events" element={<AdminEvents />} />
+            <Route path="settings" element={<AdminSettings />} />
           </Route>
         </Routes>
       </Router>

@@ -27,7 +27,11 @@ import VerifyUser from "./components/main/VerifyUser";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminSettingsProfile from "./pages/admin/SettingsProfile";
-
+import DashboardLayoutOrg from "../layouts/DashboardLayoutOrg";
+import DashboardOrg from "./pages/organization/dashboardOrg";
+import OpportunitiesOrg from "./pages/organization/opportunitiesOrg";
+import ApplicationsOrg from "./pages/organization/applicationsOrg";
+import HistoryOrg from "./pages/organization/historyOrg";
 function App() {
   return (
     <div className="main">
@@ -74,6 +78,7 @@ function App() {
             <Route index element={<DashboardOrg />} />
             <Route path="opportunities" element={<OpportunitiesOrg />} />
             <Route path="applications" element={<ApplicationsOrg />} />
+            <Route path="history" element={<HistoryOrg />} />
           </Route>
         </Routes>
       </Router>

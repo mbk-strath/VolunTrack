@@ -8,7 +8,7 @@ const AdminSettingsProfile = () => {
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setAvatar(URL.createObjectURL(file)); // show preview
+      setAvatar(URL.createObjectURL(file)); 
     }
   };
 
@@ -36,8 +36,8 @@ const AdminSettingsProfile = () => {
               onChange={handleAvatarChange}
               style={{ display: "none" }}
             />
-            <label htmlFor="avatarInput" className="camera-icon">
-              📷
+           <label htmlFor="avatarInput" className="camera-icon">
+              
             </label>
           </div>
         </div>

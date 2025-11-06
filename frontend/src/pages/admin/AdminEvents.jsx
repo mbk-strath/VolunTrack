@@ -24,6 +24,7 @@ const AdminEvents = () => {
 
   return (
     <div className="EventsPage">
+      <h2>Ongoing Events</h2>
 
       {events.length > 0 ? (
         events.map((event) => (

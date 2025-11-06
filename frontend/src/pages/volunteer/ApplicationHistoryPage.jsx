@@ -1,48 +1,94 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "../../styles/volunteer/ApplicationVol.css";
 
-const data = [
-  {
-    Title: "Frontend Develepor",
-    Organization_Name: "Lead Tech",
-    Status: "pending",
-  },
-  {
-    Title: "Frontend Develepor",
-    Organization_Name: "Lead Tech",
-    Status: "accepted",
-  },
-  {
-    Title: "Frontend Develepor",
-    Organization_Name: "Lead Tech",
-    Status: "cancelled",
-  },
-];
 function ApplicationHistoryPage() {
+  const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(
+          "http://localhost:8000/api/my-applications",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-type": "application/json",
+            },
+          }
+        );
+
+        console.log("Fetched applications:", res.data);
+
+        if (
+          !res.data ||
+          !res.data.applications ||
+          res.data.applications.length === 0
+        ) {
+          setError("No Applications Found");
+        } else {
+          setApplications(res.data.applications);
+        }
+      } catch (err) {
+        // Log full error object
+        console.error("Axios error object:", err);
+
+        if (err.response) {
+          console.error("Response data:", err.response.data);
+          console.error("Response status:", err.response.status);
+          console.error("Response headers:", err.response.headers);
+          setError(`Server Error: ${err.response.status}`);
+        } else if (err.request) {
+          console.error("Request made but no response:", err.request);
+          setError("No response from server. Check your backend.");
+        } else {
+          console.error("Error message:", err.message);
+          setError(`Error: ${err.message}`);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApplications();
+  }, []);
+
+  if (loading) {
+    return <h3 className="no-opp">Loading applications...</h3>;
+  }
+
+  if (error) {
+    return <h3 className="no-opp">{error}</h3>;
+  }
+
   return (
     <div className="ApplicationPage">
-      <div className="application-card">
-        <h2 className="heading">Application Status</h2>
-        {data.map((application, index) => (
-          <div className="application-holder" key={index}>
-            <div className="names">
-              <h4 className="title">{application.Title}</h4>
-              <p className="org_name">{application.Organization_Name}</p>
-            </div>
-            <div
-              className={
-                application.Status === "pending"
-                  ? "pending"
-                  : application.Status === "accepted"
-                  ? "accepted"
-                  : "cancelled"
-              }
-            >
-              {application.Status}
-            </div>
+      {applications.map((application) => (
+        <div className="application-holder" key={application.id}>
+          <div className="names">
+            <h4 className="title">
+              Opportunity ID: {application.opportunity_id}
+            </h4>
+            <p className="org_name">
+              Application Date: {application.application_date}
+            </p>
           </div>
-        ))}
-      </div>
+          <div
+            className={
+              application.status === "pending"
+                ? "pending"
+                : application.status === "accepted"
+                ? "accepted"
+                : "cancelled"
+            }
+          >
+            {application.status}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

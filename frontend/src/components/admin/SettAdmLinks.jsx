@@ -5,7 +5,7 @@ function SettingLinks() {
   return (
     <div className="settingVolNav">
       <NavLink
-        to="/dashboard/volunteer/settings"
+        to="/dashboard/admuin/settings"
         end
         className={({ isActive }) => (isActive ? "btn active" : "btn")}
       >
@@ -13,7 +13,7 @@ function SettingLinks() {
       </NavLink>
 
       <NavLink
-        to="/dashboard/volunteer/settings/account"
+        to="/dashboard/admin/settings/account"
         className={({ isActive }) => (isActive ? "btn active" : "btn")}
       >
         Account

@@ -72,6 +72,11 @@
   text-decoration: none;
 }
 
+.show {
+  background: transparent;
+  border: none;
+}
+
 .link:hover,
 .reset:hover,
 .show:hover {

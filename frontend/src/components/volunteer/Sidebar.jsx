@@ -15,7 +15,7 @@ function Sidebar() {
       <img src={Logo} alt="logo" className="logo" />
 
       <NavLink
-        to="/dashboard"
+        to="/dashboard/volunteer"
         end
         className={({ isActive }) =>
           isActive ? "sideElements active" : "sideElements"
@@ -26,7 +26,7 @@ function Sidebar() {
       </NavLink>
 
       <NavLink
-        to="/dashboard/opportunitIes"
+        to="/dashboard/volunteer/opportunitIes"
         className={({ isActive }) =>
           isActive ? "sideElements active" : "sideElements"
         }
@@ -36,7 +36,7 @@ function Sidebar() {
       </NavLink>
 
       <NavLink
-        to="/dashboard/applications"
+        to="/dashboard/volunteer/applications"
         className={({ isActive }) =>
           isActive ? "sideElements active" : "sideElements"
         }
@@ -46,7 +46,7 @@ function Sidebar() {
       </NavLink>
 
       <NavLink
-        to="/dashboard/messages"
+        to="/dashboard/volunteer/messages"
         className={({ isActive }) =>
           isActive ? "sideElements active" : "sideElements"
         }
@@ -56,7 +56,7 @@ function Sidebar() {
       </NavLink>
 
       <NavLink
-        to="/dashboard/history"
+        to="/dashboard/volunteer/history"
         className={({ isActive }) =>
           isActive ? "sideElements active" : "sideElements"
         }
@@ -66,7 +66,7 @@ function Sidebar() {
       </NavLink>
 
       <NavLink
-        to="/dashboard/settings"
+        to="/dashboard/volunteer/settings"
         className={({ isActive }) =>
           isActive ? "sideElements active" : "sideElements"
         }

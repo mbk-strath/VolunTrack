@@ -6,7 +6,6 @@ import DeleteAccount from "../../components/main/DeleteLogoutAccount";
 function AccountPage() {
   return (
     <div className="account-page">
-      <PasswordReset />
       <DeleteAccount />
     </div>
   );

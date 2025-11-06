@@ -140,3 +140,8 @@ label {
   font-size: 12px;
   margin-top: -12px;
 }
+
+input:focus {
+  outline: none;
+  background: transparent;
+}

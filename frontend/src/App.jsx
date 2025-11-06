@@ -28,6 +28,8 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminSettings from "./pages/admin/AdminSettings";
 import DashboardLayoutOrg from "../layouts/DashboardLayoutOrg";
 import DashboardOrg from "./pages/organization/dashboardOrg";
+import OpportunitiesOrg from "./pages/organization/opportunitiesOrg";
+import ApplicationsOrg from "./pages/organization/applicationsOrg";
 function App() {
   return (
     <div className="main">
@@ -71,6 +73,8 @@ function App() {
             element={<DashboardLayoutOrg />}
           >
             <Route index element={<DashboardOrg />} />
+            <Route path="opportunities" element={<OpportunitiesOrg />} />
+            <Route path="applications" element={<ApplicationsOrg />} />
           </Route>
         </Routes>
       </Router>

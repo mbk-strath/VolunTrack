@@ -1,5 +1,12 @@
 import React from "react";
-import { Card, CardContent, CardActions, Typography, Button, Grid } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardActions,
+  Typography,
+  Button,
+  Grid,
+} from "@mui/material";
 import { toast } from "sonner";
 import "../../styles/organization/opportunitiesOrg.css";
 
@@ -75,7 +82,10 @@ const OpportunitiesOrg = () => {
                   <Typography variant="body2">
                     <strong>Skills:</strong> {opportunity.skills}
                   </Typography>
-                  <Typography variant="body2" className="opportunity-description">
+                  <Typography
+                    variant="body2"
+                    className="opportunity-description"
+                  >
                     {opportunity.description}
                   </Typography>
                 </div>

@@ -1,18 +1,4 @@
 import React from "react";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Chip,
-  Box,
-  Avatar,
-} from "@mui/material";
-import {
-  AccessTime,
-  CheckCircle,
-  Cancel,
-  PauseCircle,
-} from "@mui/icons-material";
 import "../../styles/organization/historyOrg.css";
 
 const events = [
@@ -22,7 +8,6 @@ const events = [
     date: "Posted at 12/10/2025",
     status: "Ongoing",
     color: "primary",
-    icon: <AccessTime />,
   },
   {
     id: 2,
@@ -30,7 +15,6 @@ const events = [
     date: "Posted at 12/10/2025",
     status: "Suspended",
     color: "warning",
-    icon: <PauseCircle />,
   },
   {
     id: 3,
@@ -38,7 +22,6 @@ const events = [
     date: "Posted at 12/10/2025",
     status: "Completed",
     color: "success",
-    icon: <CheckCircle />,
   },
   {
     id: 4,
@@ -46,51 +29,33 @@ const events = [
     date: "Posted at 12/10/2025",
     status: "Deleted",
     color: "error",
-    icon: <Cancel />,
   },
 ];
 
 const HistoryOrg = () => {
   return (
-    <Box className="history-container">
-      <Card className="history-card">
-        <CardContent>
-          <Typography variant="h5" className="history-title">
-            Organisation Events
-          </Typography>
+    <div className="history-container-org">
+      <div className="history-card-org">
+        <h2 className="history-title">Organisation Events</h2>
 
-          <Box className="history-list">
-            {events.map((event) => (
-              <Box key={event.id} className="history-item">
-                <Box className="history-left">
-                  <Avatar className="history-avatar" color={event.color}>
-                    {event.icon}
-                  </Avatar>
-                  <Box>
-                    <Typography variant="subtitle1" className="event-title">
-                      {event.title}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      className="event-date"
-                    >
-                      {event.date}
-                    </Typography>
-                  </Box>
-                </Box>
-                <Chip
-                  label={event.status}
-                  color={event.color}
-                  variant={event.color === "default" ? "outlined" : "filled"}
-                  className="status-chip"
-                />
-              </Box>
-            ))}
-          </Box>
-        </CardContent>
-      </Card>
-    </Box>
+        <div className="history-list">
+          {events.map((event) => (
+            <div key={event.id} className="history-item">
+              <div className="history-left">
+                <div>
+                  <p className="event-title">{event.title}</p>
+                  <p className="event-date">{event.date}</p>
+                </div>
+              </div>
+
+              <span className={`status-chip ${event.color}`}>
+                {event.status}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 };
 

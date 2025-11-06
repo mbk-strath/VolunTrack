@@ -78,3 +78,9 @@ h2 {
   background: linear-gradient(180deg, #e2be93 0%, #b88b6a 50%, #f39e61 100%);
   color: black;
 }
+
+.no-op {
+  text-align: center;
+  margin-top: 20%;
+  font-size: 2rem;
+}

@@ -1,66 +1,102 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "../../styles/volunteer/MessagesPage.css";
 
+const API_BASE_URL = "http://127.0.0.1:8000/api"; // ✅ Update this if needed
+
 const MessagesPage = () => {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      message: "Your application has been approved!",
-      sent_at: "2025-10-29T10:00:00.000000Z",
-      is_read: false,
-      channel: "email",
-    },
-    {
-      id: 2,
-      message: "A new volunteering event is available.",
-      sent_at: "2025-11-01T09:30:00.000000Z",
-      is_read: true,
-      channel: "in_app",
-    },
-    {
-      id: 3,
-      message: "Your report was reviewed successfully.",
-      sent_at: "2025-11-02T15:20:00.000000Z",
-      is_read: false,
-      channel: "in_app",
-    },
-  ]);
-
-  // Mark message as read
-  const markAsRead = (id) => {
-    setMessages((prev) =>
-      prev.map((msg) => (msg.id === id ? { ...msg, is_read: true } : msg))
-    );
-  };
-
-  // Simulate sending a message
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [newMessage, setNewMessage] = useState("");
   const [receiverId, setReceiverId] = useState("");
 
-  const sendMessage = (e) => {
-    e.preventDefault();
-    const newMsg = {
-      id: messages.length + 1,
-      message: newMessage,
-      sent_at: new Date().toISOString(),
-      is_read: false,
-      channel: "in_app",
-    };
-    setMessages([newMsg, ...messages]);
-    setNewMessage("");
-    setReceiverId("");
-    alert("✅ Dummy message added!");
+  const token = localStorage.getItem("token");
+
+  /** 🔹 Fetch notifications */
+  const fetchNotifications = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`${API_BASE_URL}/my-notifications`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // ✅ Safely extract notifications
+      const data = Array.isArray(res.data)
+        ? res.data
+        : res.data.notifications || [];
+
+      setMessages(data);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      setMessages([]); // ✅ Ensure messages is always an array
+    } finally {
+      setLoading(false);
+    }
   };
+
+  /** 🔹 Mark as read */
+  const markAsRead = async (id) => {
+    try {
+      await axios.put(`${API_BASE_URL}/mark-as-read/${id}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === id
+            ? { ...msg, is_read: true, read_at: new Date().toISOString() }
+            : msg
+        )
+      );
+    } catch (error) {
+      console.error("Error marking as read:", error);
+    }
+  };
+
+  /** 🔹 Send a new notification */
+  const sendMessage = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(
+        `${API_BASE_URL}/send-notification`,
+        {
+          message: newMessage,
+          receiver_id: receiverId,
+          channel: "in_app",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      alert("Notification sent successfully!");
+      setMessages((prev) => [res.data.notification, ...prev]);
+      setNewMessage("");
+      setReceiverId("");
+    } catch (error) {
+      console.error("Error sending notification:", error);
+      alert("Failed to send notification.");
+    }
+  };
+
+  /** 🔹 On page load */
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
 
   return (
     <div className="messages-page">
-      <h2>My Messages</h2>
+      <h2>My Notifications</h2>
 
-      <div className="messages-list">
-        {messages.length === 0 ? (
-          <p>No messages yet.</p>
-        ) : (
-          messages.map((msg) => (
+      {loading ? (
+        <p>Loading notifications...</p>
+      ) : Array.isArray(messages) && messages.length > 0 ? (
+        <div className="messages-list">
+          {messages.map((msg) => (
             <div
               key={msg.id}
               className={`message-card ${msg.is_read ? "read" : "unread"}`}
@@ -74,12 +110,14 @@ const MessagesPage = () => {
                 <button onClick={() => markAsRead(msg.id)}>Mark as Read</button>
               )}
             </div>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      ) : (
+        <p>No notifications yet.</p>
+      )}
 
       <div className="send-form">
-        <h3>Send a Message</h3>
+        <h3>Send Notification</h3>
         <form onSubmit={sendMessage}>
           <input
             type="text"

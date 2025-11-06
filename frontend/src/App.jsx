@@ -26,10 +26,8 @@ import AdminHome from "./pages/admin/AdminHome";
 import VerifyUser from "./components/main/VerifyUser";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminSettings from "./pages/admin/AdminSettings";
-import DashboardLayoutOrg from "../layouts/DashboardLayoutOrg";
-import DashboardOrg from "./pages/organization/dashboardOrg";
-import OpportunitiesOrg from "./pages/organization/opportunitiesOrg";
-import ApplicationsOrg from "./pages/organization/applicationsOrg";
+import AdminSettingsProfile from "./pages/admin/SettingsProfile";
+
 function App() {
   return (
     <div className="main">
@@ -65,6 +63,7 @@ function App() {
             <Route path="events" element={<AdminEvents />} />
             <Route path="settings" element={<AdminSettings />}>
               <Route path="account" element={<AccountPage />} />
+              <Route path="profile" element={<AdminSettingsProfile />} />
             </Route>
           </Route>
 

@@ -17,7 +17,7 @@ function DeleteAccount() {
       if (response.ok) {
         alert(data.message);
         localStorage.removeItem("token");
-        localStorage.removeItem("user"); // clear user data too
+        localStorage.removeItem("user");
         window.location.href = "/login";
       } else {
         alert(data.message || "Logout failed");
@@ -58,7 +58,7 @@ function DeleteAccount() {
         alert(data.message || "Account deleted successfully.");
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        window.location.href = "/register"; // redirect to registration/login
+        window.location.href = "/register";
       } else {
         alert(data.message || "Failed to delete account.");
       }

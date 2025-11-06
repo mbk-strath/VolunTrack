@@ -25,6 +25,8 @@ import AdminEvents from "./pages/admin/AdminEvents";
 import AdminHome from "./pages/admin/AdminHome";
 import VerifyUser from "./components/main/VerifyUser";
 import AdminUsers from "./pages/admin/AdminUsers";
+import AdminSettings from "./pages/admin/AdminSettings";
+import AdminSettingsProfile from "./pages/admin/SettingsProfile";
 
 function App() {
   return (
@@ -52,12 +54,26 @@ function App() {
               <Route path="account" element={<AccountPage />} />
             </Route>
           </Route>
+
           <Route path="/dashboard/admin" element={<DashboardLayoutAdmin />}>
             <Route index element={<AdminHome />} />
             <Route path="users" element={<AdminUsers />} />
             <Route path="organisations" element={<AdminOrganisations />} />
             <Route path="reports" element={<AdminReports />} />
             <Route path="events" element={<AdminEvents />} />
+            <Route path="settings" element={<AdminSettings />}>
+              <Route path="account" element={<AccountPage />} />
+              <Route path="profile" element={<AdminSettingsProfile />} />
+            </Route>
+          </Route>
+
+          <Route
+            path="/dashboard/organization"
+            element={<DashboardLayoutOrg />}
+          >
+            <Route index element={<DashboardOrg />} />
+            <Route path="opportunities" element={<OpportunitiesOrg />} />
+            <Route path="applications" element={<ApplicationsOrg />} />
           </Route>
         </Routes>
       </Router>

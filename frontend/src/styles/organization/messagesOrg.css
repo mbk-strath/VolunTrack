@@ -1,0 +1,145 @@
+.chat-app {
+  display: flex;
+  height: 80vh;
+  font-family: Arial, sans-serif;
+  margin-top: 10%;
+  margin-left: 3%;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  border-radius: 40px;
+  padding-left: 3%;
+  width: 80%;
+  margin-bottom: 3%;
+}
+
+.chat-app .side {
+  border-right: 1px solid #ccc;
+  padding-right: 10px;
+}
+
+.side input {
+  margin-top: 5%;
+  width: 90%;
+  margin-bottom: 10px;
+  padding: 3%;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.contacts {
+  border-top: 1px solid #ccc;
+}
+
+.contact {
+  display: flex;
+  margin-bottom: 10px;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.contact.active .avatar {
+  border: 2px solid #007bff;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #aaa;
+  margin-right: 10px;
+}
+
+.name {
+  margin: 0;
+  font-weight: bold;
+}
+
+.last-msg {
+  margin: 0;
+  font-size: 12px;
+  color: #555;
+}
+
+.chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-header {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  font-weight: bold;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.message {
+  margin-bottom: 8px;
+}
+
+.message.me {
+  text-align: right;
+}
+
+.message.other {
+  text-align: left;
+}
+
+.message span {
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 20px;
+}
+
+.message.me span {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.message.other span {
+  background-color: #e5e5ea;
+  color: #000;
+}
+
+.chat-input {
+  display: flex;
+  padding: 20px;
+  border-top: 1px solid #ccc;
+  align-items: center;
+  position: relative;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+.chat-input button {
+  margin-left: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  border: none;
+}
+
+.emoji-picker {
+  position: absolute;
+  bottom: 60px;
+  right: 45%;
+}
+
+.icon-msg {
+  font-size: 20px;
+}

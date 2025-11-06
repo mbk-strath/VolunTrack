@@ -1,0 +1,110 @@
+.applications-container {
+  padding-top: 10%;
+  background-color: #f9fafb;
+  display: flex;
+  padding-left: 5%;
+}
+
+.main-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.application-card {
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 24px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.application-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .application-content {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.application-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.application-position {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.application-details {
+  font-size: 14px;
+  color: #555;
+}
+
+.label {
+  font-weight: 600;
+  color: #333;
+}
+
+/* Buttons */
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  width: 150px;
+}
+
+.btn-outline {
+  background: linear-gradient(90deg, #0f172a 0%, #003973 100%);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-outline:hover {
+  background: linear-gradient(90deg, #0066cc 0%, #003973 100%);
+}
+
+.btn-success {
+  background-color: #166534;
+}
+
+.btn-success:hover {
+  background-color: #238c4b;
+}
+
+.btn-primary {
+  background-color: #0f172a;
+}
+
+.btn-primary:hover {
+  background-color: #182542;
+}
+
+.btn-danger {
+  background-color: #b91a1d;
+}
+
+.btn-danger:hover {
+  background-color: #f22d31;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}

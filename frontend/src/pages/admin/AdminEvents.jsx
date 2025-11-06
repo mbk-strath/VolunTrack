@@ -82,6 +82,7 @@ const AdminEvents = () => {
       ) : (
         <p>No events available.</p>
       )}
+
       </div>
 
     </div>

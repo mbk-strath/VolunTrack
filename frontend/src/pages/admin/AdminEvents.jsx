@@ -84,6 +84,7 @@ const AdminEvents = () => {
       )}
 
       </div>
+
     </div>
   );
 };

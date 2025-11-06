@@ -3,6 +3,7 @@
   background-color: #f9fafb;
   display: flex;
   padding-left: 5%;
+  min-height: 90vh;
 }
 
 .main-card {
@@ -63,7 +64,10 @@
   color: white;
   cursor: pointer;
   font-size: 14px;
-  width: 150px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-outline {
@@ -107,4 +111,5 @@
 .action-buttons {
   display: flex;
   gap: 10px;
+  width: 60%;
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { ImProfile } from "react-icons/im";
-function SettingLinks() {
+function SettAdmLinks() {
   return (
     <div className="settingVolNav">
       <NavLink
@@ -22,4 +22,4 @@ function SettingLinks() {
   );
 }
 
-export default SettingLinks;
+export default SettAdmLinks;

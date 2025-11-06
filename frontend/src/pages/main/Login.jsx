@@ -12,7 +12,7 @@ function Login() {
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // 👈 new state
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -130,7 +130,7 @@ function Login() {
           <Link className="reset" to="/password-reset">
             Forgotten Password?
           </Link>
-          {/* 👇 updated Show Password link */}
+
           <button
             type="button"
             className="show"

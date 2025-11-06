@@ -59,7 +59,9 @@ function App() {
             <Route path="organisations" element={<AdminOrganisations />} />
             <Route path="reports" element={<AdminReports />} />
             <Route path="events" element={<AdminEvents />} />
-            <Route path="settings" element={<AdminSettings />} />
+            <Route path="settings" element={<AdminSettings />}>
+              <Route path="account" element={<AccountPage />} />
+            </Route>
           </Route>
         </Routes>
       </Router>

@@ -9,7 +9,7 @@ function GoogleLoginButton({ role }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           credential: response.credential,
-          role: role, // 👈 send the selected role
+          role: role,
         }),
       });
 
@@ -20,7 +20,6 @@ function GoogleLoginButton({ role }) {
         localStorage.setItem("role", role);
         alert("Google Login successful!");
 
-        // redirect based on role
         if (role === "volunteer") {
           window.location.href = "/volunteer/dashboard";
         } else if (role === "organization") {

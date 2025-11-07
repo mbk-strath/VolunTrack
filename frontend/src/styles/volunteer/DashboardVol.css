@@ -114,7 +114,11 @@ body.dark-mode .ReportsPage,
 body.dark-mode .EventsPage,
 body.dark-mode .AdminUsersPage,
 body.dark-mode .AdminSettingsPage,
-body.dark-mode .admin-container {
+body.dark-mode .admin-container,
+body.dark-mode .dashboard-container,
+body.dark-mode .manage-opportunities,
+body.dark-mode .applications-container,
+body.dark-mode .history-container-org {
   background-color: #191725;
 }
 
@@ -177,7 +181,8 @@ body.dark-mode .checkSystem {
 
 body.dark-mode .exact span,
 body.dark-mode .exact p,
-body.dark-mode .exact {
+body.dark-mode .exact,
+body.dark-mode p {
   color: #b4adad;
 }
 
@@ -185,7 +190,11 @@ body.dark-mode .username,
 body.dark-mode .section-title,
 body.dark-mode .metric-card p,
 body.dark-mode .page-title,
-body.dark-mode .users-table {
+body.dark-mode .users-table,
+body.dark-mode h3,
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode label {
   color: #ffffff;
 }
 
@@ -197,7 +206,6 @@ body.dark-mode .chart-container,
 body.dark-mode .table-container,
 body.dark-mode .settings-profile-container,
 body.dark-mode .settingVolNav {
- 
   background: #252235;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.25);
@@ -220,6 +228,15 @@ body.dark-mode .rep-card,
 body.dark-mode .event-card {
   background: #1e2939;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+body.dark-mode .summary-card,
+body.dark-mode .chart-org,
+body.dark-mode .opportunity-card,
+body.dark-mode .history-card-org {
+  background: #252235;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.608);
 }
 /* Toggle button style */
 .dark-toggle {

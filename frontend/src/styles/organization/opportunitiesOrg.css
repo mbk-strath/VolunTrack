@@ -12,8 +12,8 @@
 }
 
 .opportunities-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
 }
 
@@ -22,7 +22,7 @@
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   padding: 20px 25px;
-  width: 80%;
+  width: 90%;
   transition: all 0.2s ease;
 }
 
@@ -38,6 +38,7 @@
 .row {
   display: flex;
   justify-content: space-between;
+  flex-direction: column;
   flex-wrap: wrap;
   margin-bottom: 8px;
 }

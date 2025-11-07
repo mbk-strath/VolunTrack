@@ -67,7 +67,7 @@ function SidebarOrg() {
       </NavLink>
 
       <NavLink
-        to="/dashboard/volunteer/settings"
+        to="/dashboard/organization/settings"
         className={({ isActive }) =>
           isActive ? "sideElementsOrg active" : "sideElementsOrg"
         }

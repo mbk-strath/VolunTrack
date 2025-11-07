@@ -15,7 +15,6 @@ const SettingsOrg = () => {
 
   return (
     <div className="settings-container">
-      {/* Sidebar Tabs */}
       <div className="settings-sidebar">
         {tabs.map((tab) => (
           <button
@@ -29,7 +28,6 @@ const SettingsOrg = () => {
         ))}
       </div>
 
-      {/* Content Section */}
       <div className="settings-content-org">
         {activeTab === "profile" && (
           <div className="settings-card-org prof-org">
@@ -38,7 +36,7 @@ const SettingsOrg = () => {
               <UserProfile />
               <div className="avatar-buttons">
                 <button className="btn-update">Update Avatar</button>
-                <button className="btn outline">Delete Avatar</button>
+                <button className="btn-out">Delete Avatar</button>
               </div>
             </div>
 

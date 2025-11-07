@@ -115,6 +115,11 @@
   color: white;
 }
 
+.btn-out {
+  background: transparent;
+  border: 1px solid white;
+}
+
 .btn.full {
   width: 100%;
 }
@@ -190,6 +195,7 @@ input:focus {
   padding-top: 12px;
   border-radius: 10px;
   cursor: pointer;
+  border: none;
 }
 
 .prof-org-title {

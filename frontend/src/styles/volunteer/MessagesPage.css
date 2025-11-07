@@ -4,6 +4,7 @@
   font-family: "Poppins", sans-serif;
   padding-left: 2%;
   padding-right: 2%;
+  min-height: 90vh;
 }
 
 h2 {

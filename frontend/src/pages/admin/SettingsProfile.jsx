@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FaCamera } from "react-icons/fa";
 import "../../styles/admin/settprofile.css";
 
 const AdminSettingsProfile = () => {
@@ -8,7 +9,7 @@ const AdminSettingsProfile = () => {
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setAvatar(URL.createObjectURL(file)); 
+      setAvatar(URL.createObjectURL(file));
     }
   };
 
@@ -24,10 +25,11 @@ const AdminSettingsProfile = () => {
         <div className="avatar-wrapper">
           <div className="avatar-placeholder">
             {avatar ? (
-              <img src={avatar} alt="Avatar Preview" />
+              <img src={avatar} alt="Avatar Preview" className="avatar-image" />
             ) : (
-              <span className="avatar-initial">+</span>
+              <div className="avatar-circle"></div>
             )}
+
             {/* Hidden File Input */}
             <input
               type="file"
@@ -36,8 +38,10 @@ const AdminSettingsProfile = () => {
               onChange={handleAvatarChange}
               style={{ display: "none" }}
             />
-           <label htmlFor="avatarInput" className="camera-icon">
-              
+
+            {/* Camera Icon Overlay */}
+            <label htmlFor="avatarInput" className="camera-icon">
+              <FaCamera />
             </label>
           </div>
         </div>
@@ -96,5 +100,3 @@ const AdminSettingsProfile = () => {
 };
 
 export default AdminSettingsProfile;
-
-

@@ -29,7 +29,7 @@ import AdminSettings from "./pages/admin/AdminSettings";
 import AdminSettingsProfile from "./pages/admin/SettingsProfile";
 import DashboardLayoutOrg from "../layouts/DashboardLayoutOrg";
 import DashboardOrg from "./pages/organization/dashboardOrg";
-import OpportunitiesOrg from "./pages/organization/opportunitiesOrg";
+import ManageOpportunities from "./pages/organization/ManageOpportunities";
 import ApplicationsOrg from "./pages/organization/applicationsOrg";
 import HistoryOrg from "./pages/organization/historyOrg";
 function App() {
@@ -76,7 +76,7 @@ function App() {
             element={<DashboardLayoutOrg />}
           >
             <Route index element={<DashboardOrg />} />
-            <Route path="opportunities" element={<OpportunitiesOrg />} />
+            <Route path="opportunities" element={<ManageOpportunities />} />
             <Route path="applications" element={<ApplicationsOrg />} />
             <Route path="history" element={<HistoryOrg />} />
           </Route>

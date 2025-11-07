@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../styles/organization/opportunityFormOverlay.css";
 
-const OpportunityFormOverlay = ({ onClose }) => {
+const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
   const [formData, setFormData] = useState({
     organizationName: "",
     opportunityTitle: "",
@@ -17,6 +17,17 @@ const OpportunityFormOverlay = ({ onClose }) => {
     cvRequired: false,
   });
 
+  // Populate form when editing existing data
+  useEffect(() => {
+    if (prefillData) {
+      setFormData({
+        ...formData,
+        ...prefillData,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefillData]);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
@@ -27,12 +38,28 @@ const OpportunityFormOverlay = ({ onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+
+    // Validation example
+    if (!formData.opportunityTitle || !formData.location) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    // Detect mode
+    if (prefillData) {
+      console.log("Editing opportunity:", formData);
+      // Example: update API call
+      // fetch(`/api/opportunities/${prefillData.id}`, { method: "PUT", body: JSON.stringify(formData) })
+    } else {
+      console.log("Creating new opportunity:", formData);
+      // Example: create API call
+      // fetch("/api/opportunities", { method: "POST", body: JSON.stringify(formData) })
+    }
   };
 
   return (
-    <div className="overlay">
-      <div className="form-container">
+    <div className="overlay" onClick={onClose}>
+      <div className="form-container" onClick={(e) => e.stopPropagation()}>
         <button className="close-btn" onClick={onClose}>
           ✕
         </button>
@@ -152,8 +179,9 @@ const OpportunityFormOverlay = ({ onClose }) => {
                 onChange={handleChange}
               />
             </fieldset>
+
             <button type="submit" className="submit-btn">
-              Create New Opportunity
+              {prefillData ? "Update Opportunity" : "Create New Opportunity"}
             </button>
           </div>
         </form>

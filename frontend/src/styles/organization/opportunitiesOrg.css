@@ -1,63 +1,89 @@
-.opportunities-container {
-  padding-top: 10%;
+.manage-opportunities {
+  padding-top: 8%;
+  padding-left: 2%;
+  background-color: #f5f7fb;
+  min-height: 100vh;
+}
+
+.manage-opportunities h1 {
+  font-size: 28px;
+  margin-bottom: 25px;
+  color: #001f3f;
+}
+
+.opportunities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .opportunity-card {
-  border-radius: 16px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  padding: 20px 25px;
+  width: 80%;
+  transition: all 0.2s ease;
 }
 
-.opportunity-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+.opportunity-card.active-card {
+  border: 2px solid #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
 }
 
-.opportunity-title {
-  font-weight: 700 !important;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem !important;
+.opportunity-details {
+  margin-bottom: 20px;
 }
 
-.opportunity-info {
+.row {
   display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
 }
 
-.opportunity-description {
-  margin-top: 0.8rem;
-  color: var(--text-secondary);
+.row p {
+  margin: 4px 0;
+  flex: 1;
+  min-width: 180px;
+  color: #333;
 }
 
-.opportunity-actions {
+.description p {
+  white-space: pre-wrap;
+}
+
+.card-actions {
   display: flex;
-  justify-content: flex-end;
-  padding: 1rem !important;
+  justify-content: center;
+  gap: 16px;
 }
 
-.apply-btn {
-  background: linear-gradient(45deg, #ff7b00, #ff4500);
-  color: #fff;
-  text-transform: none;
-  font-weight: 600;
-  border-radius: 10px;
-  padding: 0.5rem 1.2rem;
+.edit-btn,
+.delete-btn {
+  border: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  width: 100%;
 }
 
-.apply-btn:hover {
-  background: linear-gradient(45deg, #ff9050, #ff5722);
+.edit-btn {
+  background-color: #d6f5e1;
+  color: #1b5e20;
 }
 
-/* 🌙 Dark Mode */
-body.dark .opportunity-card {
-  background-color: #1e1e1e;
-  color: #e0e0e0;
+.delete-btn {
+  background-color: #dce9ff;
+  color: #004080;
 }
 
-body.dark .opportunity-title {
-  color: #ffa726;
+.edit-btn:hover {
+  background-color: #b8e6c6;
 }
 
-body.dark .apply-btn {
-  background: linear-gradient(45deg, #ffa726, #ff7043);
+.delete-btn:hover {
+  background-color: #b8d4ff;
 }

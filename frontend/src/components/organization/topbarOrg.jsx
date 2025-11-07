@@ -3,10 +3,14 @@ import UserProfile from "../../components/main/UserProfile";
 import { FaCalendarCheck } from "react-icons/fa";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { IoMenuSharp } from "react-icons/io5";
+import "../../styles/organization/topbarOrg.css";
+import OpportunityFormOverlay from "../../pages/organization/OpportunityFormOverlay";
+
 function TopBarOrg() {
   const [darkMode, setDarkMode] = useState(
     () => localStorage.getItem("theme") === "dark"
   );
+  const [showCreate, setShowCreate] = useState(false);
 
   useEffect(() => {
     if (darkMode) {
@@ -22,13 +26,16 @@ function TopBarOrg() {
     <div className="Topbar">
       <div className="topLeft">
         <IoMenuSharp className="menu" />
-        <button className="create">Create Opportunity</button>
+
+        {/* Your existing button — now functional */}
+        <button className="create" onClick={() => setShowCreate(true)}>
+          Create Opportunity
+        </button>
       </div>
 
       <div className="topRight">
         <FaCalendarCheck />
 
-        {/* Dark mode toggle */}
         <button
           className="dark-toggle"
           onClick={() => setDarkMode((prev) => !prev)}
@@ -47,6 +54,11 @@ function TopBarOrg() {
           showName={false}
         />
       </div>
+
+      {/* Render CreateOpportunity if showCreate is true */}
+      {showCreate && (
+        <OpportunityFormOverlay onClose={() => setShowCreate(false)} />
+      )}
     </div>
   );
 }

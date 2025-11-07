@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { User, Users, Lock } from "lucide-react";
 import "../../styles/organization/settingsOrg.css";
+import UserProfile from "../../components/main/UserProfile";
+import AccountPage from "../volunteer/AccountPage";
 
 const SettingsOrg = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -28,66 +30,68 @@ const SettingsOrg = () => {
       </div>
 
       {/* Content Section */}
-      <div className="settings-content">
+      <div className="settings-content-org">
         {activeTab === "profile" && (
-          <div className="settings-card">
-            <h2>Profile</h2>
+          <div className="settings-card-org prof-org">
+            <h2 className="prof-org-title">Profile</h2>
             <div className="avatar-section">
-              <div className="avatar-circle">👤</div>
+              <UserProfile />
               <div className="avatar-buttons">
-                <button className="btn primary">Update Avatar</button>
+                <button className="btn-update">Update Avatar</button>
                 <button className="btn outline">Delete Avatar</button>
               </div>
             </div>
 
             <form className="form-grid">
-              <label>
-                Organization Name
-                <input placeholder="Enter organization name" />
-              </label>
-              <label>
-                Email Address
-                <input placeholder="Enter your email" />
-              </label>
-              <label>
-                Phone Number
-                <input placeholder="Enter phone number" />
-              </label>
-              <label>
-                Country
-                <input placeholder="Enter your country" />
-              </label>
-              <label>
-                Website URL
-                <input placeholder="http://..." />
-              </label>
-              <label>
-                Organization Type
-                <input placeholder="Enter organization type" />
-              </label>
-              <label>
-                City/Town
-                <input placeholder="Enter city of operation" />
-              </label>
-              <label>
-                Address
-                <input placeholder="Enter address" />
-              </label>
-              <label>
-                Registration Number
-                <input placeholder="Enter registration number" />
-              </label>
-              <label>
-                Focus Areas
-                <input placeholder="Enter area of focus" />
-              </label>
+              <div className="org-form">
+                <label>
+                  Organization Name
+                  <input placeholder="Enter organization name" />
+                </label>
+                <label>
+                  Email Address
+                  <input placeholder="Enter your email" />
+                </label>
+                <label>
+                  Phone Number <input placeholder="Enter phone number" />
+                </label>
+                <label>
+                  Country
+                  <input placeholder="Enter your country" />
+                </label>
+                <label>
+                  Website URL
+                  <input placeholder="http://..." />
+                </label>
+                <label>
+                  Organization Type
+                  <input placeholder="Enter organization type" />
+                </label>
+                <label>
+                  City/Town
+                  <input placeholder="Enter city of operation" />
+                </label>
+                <label>
+                  Address
+                  <input placeholder="Enter address" />
+                </label>
+                <label>
+                  Registration Number
+                  <input placeholder="Enter registration number" />
+                </label>
+                <label>
+                  Focus Areas
+                  <input placeholder="Enter area of focus" />
+                </label>
+              </div>
+              <button className="save-org">Save</button>
             </form>
           </div>
         )}
 
         {activeTab === "contacts" && (
-          <div className="settings-card">
-            <h2>Contact Personal Details</h2>
+          <div className="settings-card-org cont-org">
+            <h2 className="prof-org-title"> Contact Personal Details</h2>
             <form className="form-column">
               <label>
                 Full Name
@@ -105,45 +109,12 @@ const SettingsOrg = () => {
                 Role
                 <input placeholder="Enter your role" />
               </label>
-              <button className="btn primary full">Save Changes</button>
+              <button className="save-cont">Save Changes</button>
             </form>
           </div>
         )}
 
-        {activeTab === "account" && (
-          <div className="settings-card">
-            <h2>Account Settings</h2>
-            <form className="form-column">
-              <label>
-                Current Password
-                <input type="password" placeholder="********" />
-              </label>
-              <label>
-                New Password
-                <input type="password" placeholder="********" />
-              </label>
-              <label>
-                Confirm Password
-                <input type="password" placeholder="********" />
-              </label>
-              <button className="btn primary full">Save Changes</button>
-            </form>
-
-            <div className="danger-zone">
-              <h3>Delete Account</h3>
-              <p>
-                This is a permanent action. Once deleted, all your information will be lost.
-              </p>
-              <button className="btn danger">Delete Account</button>
-            </div>
-
-            <div className="danger-zone">
-              <h3>Log Out</h3>
-              <p>You will be logged out from your account.</p>
-              <button className="btn danger">Log Out</button>
-            </div>
-          </div>
-        )}
+        {activeTab === "account" && <AccountPage />}
       </div>
     </div>
   );

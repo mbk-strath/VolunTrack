@@ -32,6 +32,8 @@ import DashboardOrg from "./pages/organization/dashboardOrg";
 import ManageOpportunities from "./pages/organization/ManageOpportunities";
 import ApplicationsOrg from "./pages/organization/applicationsOrg";
 import HistoryOrg from "./pages/organization/historyOrg";
+import MessagesOrg from "./pages/organization/messagesOrg";
+import SettingsOrg from "./pages/organization/settingsOrg";
 function App() {
   return (
     <div className="main">
@@ -78,7 +80,9 @@ function App() {
             <Route index element={<DashboardOrg />} />
             <Route path="opportunities" element={<ManageOpportunities />} />
             <Route path="applications" element={<ApplicationsOrg />} />
+            <Route path="messages" element={<MessagesOrg />} />
             <Route path="history" element={<HistoryOrg />} />
+            <Route path="settings" element={<SettingsOrg />} />
           </Route>
         </Routes>
       </Router>

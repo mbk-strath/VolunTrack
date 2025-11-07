@@ -69,43 +69,36 @@ const ManageOpportunities = () => {
         {opportunities.map((opportunity) => (
           <div key={opportunity.id} className="opportunity-card">
             <div className="opportunity-details">
-              <div className="row">
-                <p>
-                  <strong>Opportunity Title:</strong>{" "}
-                  {opportunity.opportunityTitle}
-                </p>
-                <p>
-                  <strong>Number of Volunteers:</strong>{" "}
-                  {opportunity.volunteers}
-                </p>
-                <p>
-                  <strong>Working Hours:</strong> {opportunity.workingHours}
-                </p>
-              </div>
+              <p>
+                <strong>Opportunity Title:</strong>{" "}
+                {opportunity.opportunityTitle}
+              </p>
+              <p>
+                <strong>Number of Volunteers:</strong> {opportunity.volunteers}
+              </p>
+              <p>
+                <strong>Working Hours:</strong> {opportunity.workingHours}
+              </p>
 
-              <div className="row">
-                <p>
-                  <strong>Start Date:</strong> {opportunity.startDate}
-                </p>
-                <p>
-                  <strong>End Date:</strong> {opportunity.endDate}
-                </p>
-                <p>
-                  <strong>Location:</strong> {opportunity.location}
-                </p>
-              </div>
+              <p>
+                <strong>Start Date:</strong> {opportunity.startDate}
+              </p>
+              <p>
+                <strong>End Date:</strong> {opportunity.endDate}
+              </p>
+              <p>
+                <strong>Location:</strong> {opportunity.location}
+              </p>
 
-              <div className="row">
-                <p>
-                  <strong>Application Deadline:</strong> {opportunity.deadline}
-                </p>
-                <p>
-                  <strong>Benefits:</strong> {opportunity.benefits}
-                </p>
-                <p>
-                  <strong>Skills:</strong> {opportunity.skills}
-                </p>
-              </div>
+              <p>
+                <strong>Application Deadline:</strong> {opportunity.deadline}
+              </p>
+              <p>
+                <strong>Benefits:</strong> {opportunity.benefits}
+              </p>
+              <p>
+                <strong>Skills:</strong> {opportunity.skills}
+              </p>
 
               <div className="row description">
                 <p>

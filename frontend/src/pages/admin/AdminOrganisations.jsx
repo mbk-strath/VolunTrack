@@ -5,25 +5,48 @@ import "../../styles/admin/org.css";
 const AdminOrganisations = () => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Example: retrieve token from localStorage
-  const token = localStorage.getItem("token");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchApplications = async () => {
       try {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+          setError("No authorization token found.");
+          setLoading(false);
+          return;
+        }
+
         setLoading(true);
-        const response = await axios.get("/api/all-applications", {
+        setError(""); // Clear any previous errors
+
+        const response = await axios.get("http://localhost:8000/api/all-applications", {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         });
 
-        // Ensure applications array exists
+        console.log("Fetched organisation applications:", response.data);
+
         const data = response.data.applications || [];
-        setApplications(data);
-      } catch (error) {
-        console.error("Error fetching applications:", error);
+        if (data.length === 0) {
+          setError("No applications pending verification.");
+        } else {
+          setApplications(data);
+        }
+      } catch (err) {
+        console.error("Error fetching applications:", err);
+
+        if (err.response) {
+          setError(`Server Error: ${err.response.status}`);
+        } else if (err.request) {
+          setError("No response from server. Check your backend or CORS settings.");
+        } else {
+          setError(`Error: ${err.message}`);
+        }
+
         setApplications([]);
       } finally {
         setLoading(false);
@@ -31,35 +54,36 @@ const AdminOrganisations = () => {
     };
 
     fetchApplications();
-  }, [token]);
+  }, []);
+
+  // 🧠 Conditional UI rendering
+  if (loading) return <h3 className="no-opp">Loading organisation applications...</h3>;
+  if (error) return <h3 className="no-opp">{error}</h3>;
 
   return (
     <div className="OrganisationsPage">
-      <h2>Organisation Verification</h2>
+      <h2 className="page-title">Organisation Verification</h2>
 
-      {loading ? (
-        <p>Loading applications...</p>
-      ) : applications.length === 0 ? (
-        <p className="no-op">No applications pending verification.</p>
-      ) : (
-        applications.map((app) => (
-          <div key={app.id} className="org-card">
-            <div className="org-info">
-              <strong>Application ID: {app.id}</strong>
-              <br />
-              Status: <span className="status">{app.status}</span>
-              <br />
-              Application Date:{" "}
-              {new Date(app.application_date).toLocaleDateString()}
-            </div>
-            <div className="btns">
-              <button className="btn-approve">Approve</button>
-              <button className="btn-reject">Reject</button>
-              <button className="btn-view">View Documents</button>
-            </div>
+      {applications.map((app) => (
+        <div key={app.id} className="org-card">
+          <div className="org-info">
+            <strong>Application ID:</strong> {app.id} <br />
+            <strong>Status:</strong>{" "}
+            <span className={`status ${app.status.toLowerCase()}`}>{app.status}</span>
+            <br />
+            <strong>Application Date:</strong>{" "}
+            {app.application_date
+              ? new Date(app.application_date).toLocaleDateString()
+              : "—"}
           </div>
-        ))
-      )}
+
+          <div className="btns">
+            <button className="btn-approve">Approve</button>
+            <button className="btn-reject">Reject</button>
+            <button className="btn-view">View Documents</button>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };

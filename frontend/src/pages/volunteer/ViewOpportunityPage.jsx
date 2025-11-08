@@ -13,11 +13,15 @@ function ViewOpportunityPage() {
     const fetchOpportunities = async () => {
       try {
         const token = localStorage.getItem("token"); // get token from storage
-        const res = await axios.get("http://localhost:8000/all-opportunities", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await axios.get(
+          "http://localhost:8000/api/all-opportunities",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         console.log("Fetched opportunities:", res.data);
         setOpportunities(res.data);

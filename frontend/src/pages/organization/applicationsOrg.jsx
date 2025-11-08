@@ -1,42 +1,76 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "../../styles/organization/applicationsOrg.css";
 
-const applications = [
-  {
-    id: 1,
-    name: "John Doe",
-    email: "johndoe@gmail.com",
-    phone: "0722000000",
-    position: "Frontend Developer",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    email: "janesmith@gmail.com",
-    phone: "0711000000",
-    position: "Backend Developer",
-  },
-];
+const ApplicationsOrg = ({ opportunityId }) => {
+  const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-const ApplicationsOrg = () => {
+  useEffect(() => {
+    const fetchApplications = async () => {
+      if (!opportunityId) {
+        setLoading(false);
+        setApplications([]);
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          `http://localhost:8000/api/my-applicants/${opportunityId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        // Filter only pending applications
+        const pendingApplications = response.data.filter(
+          (app) => app.status.toLowerCase() === "pending"
+        );
+
+        setApplications(pendingApplications);
+      } catch (err) {
+        console.error("Fetch applications error:", err);
+        setError(err.response?.data?.message || "Failed to fetch applications");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApplications();
+  }, [opportunityId]);
+
+  if (loading) return <p>Loading applicants...</p>;
+  if (error) return <p className="error">{error}</p>;
+  if (!applications || applications.length === 0)
+    return <p className="no-opp">No applicants </p>;
+
   return (
     <div className="applications-container">
       <div className="main-card">
         {applications.map((app) => (
           <div key={app.id} className="application-card">
             <div className="application-content">
-              {/* Left side info */}
               <div className="application-info">
-                <h3 className="application-position">{app.position}</h3>
+                <h3 className="application-position">
+                  Opportunity ID: {app.opportunity_id}
+                </h3>
                 <div className="application-details">
                   <p>
-                    <span className="label">Name:</span> {app.name}
+                    <span className="label">Volunteer ID:</span>{" "}
+                    {app.volunteer?.id || app.volunteer_id}
                   </p>
                   <p>
-                    <span className="label">Email:</span> {app.email}
+                    <span className="label">Name:</span>{" "}
+                    {app.volunteer?.name || "N/A"}
                   </p>
                   <p>
-                    <span className="label">Phone:</span> {app.phone}
+                    <span className="label">Email:</span>{" "}
+                    {app.volunteer?.email || "N/A"}
                   </p>
                 </div>
                 <button className="btn-outline">Download CV</button>

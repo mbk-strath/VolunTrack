@@ -1,56 +1,80 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "../../styles/organization/historyOrg.css";
 
-const events = [
-  {
-    id: 1,
-    title: "Community Clean Up Drive",
-    date: "Posted at 12/10/2025",
-    status: "Ongoing",
-    color: "primary",
-  },
-  {
-    id: 2,
-    title: "Tree Planting Event",
-    date: "Posted at 12/10/2025",
-    status: "Suspended",
-    color: "warning",
-  },
-  {
-    id: 3,
-    title: "Youth Empowerment Workshop",
-    date: "Posted at 12/10/2025",
-    status: "Completed",
-    color: "success",
-  },
-  {
-    id: 4,
-    title: "Health Awareness Campaign",
-    date: "Posted at 12/10/2025",
-    status: "Deleted",
-    color: "error",
-  },
-];
-
 const HistoryOrg = () => {
+  const [opportunities, setOpportunities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchOpportunities = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get(
+          "http://localhost:8000/api/all-opportunities",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        console.log("Fetched opportunities:", res.data);
+        setOpportunities(res.data);
+      } catch (err) {
+        console.error("Error fetching opportunities:", err);
+        setError("Failed to fetch opportunities. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOpportunities();
+  }, []);
+
+  if (loading) return <p className="no-opp">Loading opportunities...</p>;
+  if (error) return <p className="no-opp">{error}</p>;
+  if (!opportunities || opportunities.length === 0)
+    return <p className="no-opp">No opportunities have been created yet.</p>;
+
   return (
     <div className="history-container-org">
       <div className="history-card-org">
-        <h2 className="history-title">Organisation Events</h2>
+        <h2 className="history-title">Organisation Opportunities</h2>
 
         <div className="history-list">
-          {events.map((event) => (
-            <div key={event.id} className="history-item">
+          {opportunities.map((opp) => (
+            <div key={opp.id} className="history-item">
               <div className="history-left">
                 <div>
-                  <p className="event-title">{event.title}</p>
-                  <p className="event-date">{event.date}</p>
+                  <p className="event-title">{opp.title}</p>
+                  <p className="event-date">
+                    Posted at {new Date(opp.created_at).toLocaleDateString()}
+                  </p>
+                  <p className="event-status">
+                    Status:{" "}
+                    {new Date(opp.end_date) < new Date()
+                      ? "Completed"
+                      : "Ongoing"}
+                  </p>
+                  <p className="event-description">{opp.description}</p>
+                  <p className="event-skills">
+                    Required Skills: {opp.required_skills}
+                  </p>
+                  <p className="event-volunteers">
+                    Volunteers Needed: {opp.num_volunteers_needed}
+                  </p>
+                  <p className="event-location">Location: {opp.location}</p>
+                  <p className="event-schedule">Schedule: {opp.schedule}</p>
+                  <p className="event-benefits">Benefits: {opp.benefits}</p>
+                  <p className="event-deadline">
+                    Application Deadline:{" "}
+                    {new Date(opp.application_deadline).toLocaleDateString()}
+                  </p>
                 </div>
               </div>
-
-              <span className={`status-chip ${event.color}`}>
-                {event.status}
-              </span>
             </div>
           ))}
         </div>

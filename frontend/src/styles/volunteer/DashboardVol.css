@@ -246,6 +246,15 @@ body.dark-mode .history-card-org {
   cursor: pointer;
 }
 
+body.dark-mode .dash-icon-org {
+  color: #0066cc;
+}
+body.dark-mode .sideElementsOrg.active {
+  border-top: 1px solid #0066cc;
+  border-bottom: 1px solid#0066cc;
+  border-right: 4px solid #0066cc;
+}
+
 @media screen and (max-width: 912px) {
   .menu {
     display: flex;

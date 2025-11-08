@@ -30,7 +30,6 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
-
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
@@ -55,26 +54,29 @@ function Login() {
       const data = res.data;
       console.log("Login API response:", data);
 
-      // Handle OTP sent response
+      // Admin login: direct
+      if (data.user && data.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        const role = (data.user.role || "").trim().toLowerCase();
+        if (role === "admin") navigate("/dashboard/admin");
+        else if (role === "volunteer")
+          navigate("/two-factor"); // volunteer needs OTP
+        else if (role === "organisation" || role === "organization")
+          navigate("/two-factor"); // org needs OTP
+        else navigate("/");
+        return;
+      }
+
+      // OTP login (volunteer/org)
       if (data.message === "OTP sent to email") {
-        sessionStorage.setItem("otp_user_id", data.user?.id);
+        sessionStorage.setItem("otp_user_email", formData.email);
         navigate("/two-factor");
         return;
       }
 
-      // Normal login
-      sessionStorage.setItem("user", JSON.stringify(data.user));
-      const role = (data.user.role || "").trim().toLowerCase();
-      console.log("Role after processing:", `"${role}"`);
-      if (role === "volunteer") {
-        navigate("/dashboard/volunteer");
-      } else if (role === "organisation" || role === "organization") {
-        navigate("/dashboard/organization");
-      } else if (role === "admin") {
-        navigate("/dashboard/admin");
-      } else {
-        navigate("/");
-      }
+      setApiError(data.message || "Login failed");
     } catch (err) {
       console.error("Axios login error:", err);
       if (err.response && err.response.data) {

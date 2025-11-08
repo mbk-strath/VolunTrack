@@ -68,7 +68,7 @@
   margin-top: 10px;
 }
 
-.form-grid {
+.form-grid-overlay {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
@@ -107,4 +107,9 @@
 
 .footer .field {
   width: 45%;
+}
+
+.field-error {
+  color: red;
+  font-size: 12px;
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "../../styles/organization/opportunityFormOverlay.css";
 
 const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
@@ -17,6 +18,8 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
     cvRequired: false,
   });
 
+  const [errors, setErrors] = useState({}); // store form errors
+
   // Populate form when editing existing data
   useEffect(() => {
     if (prefillData) {
@@ -34,26 +37,92 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
       ...formData,
       [name]: type === "checkbox" ? checked : value,
     });
+
+    if (errors[name]) {
+      setErrors({ ...errors, [name]: null });
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const newErrors = {};
 
-    // Validation example
-    if (!formData.opportunityTitle || !formData.location) {
-      alert("Please fill in all required fields.");
+    // Validation
+    if (!formData.opportunityTitle)
+      newErrors.opportunityTitle = "Title is required";
+    if (!formData.location) newErrors.location = "Location is required";
+    if (!formData.skills) newErrors.skills = "Skills are required";
+    if (!formData.volunteers)
+      newErrors.volunteers = "Number of volunteers is required";
+    if (!formData.startDate) newErrors.startDate = "Start date is required";
+    if (!formData.endDate) newErrors.endDate = "End date is required";
+    if (!formData.deadline)
+      newErrors.deadline = "Application deadline is required";
+    if (!formData.workingHours) newErrors.workingHours = "Schedule is required";
+    if (!formData.description)
+      newErrors.description = "Description is required";
+
+    // Date validations
+    if (
+      formData.startDate &&
+      formData.endDate &&
+      new Date(formData.endDate) < new Date(formData.startDate)
+    ) {
+      newErrors.endDate = "End date cannot be before start date";
+    }
+    if (
+      formData.startDate &&
+      formData.deadline &&
+      new Date(formData.deadline) > new Date(formData.startDate)
+    ) {
+      newErrors.deadline = "Deadline must be before or equal to start date";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
-    // Detect mode
-    if (prefillData) {
-      console.log("Editing opportunity:", formData);
-      // Example: update API call
-      // fetch(`/api/opportunities/${prefillData.id}`, { method: "PUT", body: JSON.stringify(formData) })
-    } else {
-      console.log("Creating new opportunity:", formData);
-      // Example: create API call
-      // fetch("/api/opportunities", { method: "POST", body: JSON.stringify(formData) })
+    // Prepare request body
+    const body = {
+      title: formData.opportunityTitle,
+      description: formData.description,
+      required_skills: formData.skills,
+      num_volunteers_needed: parseInt(formData.volunteers),
+      start_date: formData.startDate,
+      end_date: formData.endDate,
+      schedule: formData.workingHours,
+      benefits: formData.benefits,
+      application_deadline: formData.deadline,
+      location: formData.location,
+    };
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        "http://localhost:8000/api/create-opportunity",
+        body,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        onClose();
+      } else {
+        setErrors({
+          form: response.data.message || "Failed to create opportunity",
+        });
+      }
+    } catch (error) {
+      setErrors({
+        form:
+          error.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      });
     }
   };
 
@@ -65,6 +134,7 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
         </button>
 
         <form onSubmit={handleSubmit} className="opportunity-form">
+          {errors.form && <div className="form-error">{errors.form}</div>}
           <div className="form-header">
             <label className="checkbox">
               <input
@@ -76,8 +146,7 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
               CV Required
             </label>
           </div>
-
-          <div className="form-grid">
+          <div className="form-grid-overlay">
             <fieldset className="field">
               <legend>Opportunity Title</legend>
               <input
@@ -86,6 +155,9 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
                 value={formData.opportunityTitle}
                 onChange={handleChange}
               />
+              {errors.opportunityTitle && (
+                <span className="field-error">{errors.opportunityTitle}</span>
+              )}
             </fieldset>
 
             <fieldset className="field">
@@ -96,6 +168,9 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
                 value={formData.volunteers}
                 onChange={handleChange}
               />
+              {errors.volunteers && (
+                <span className="field-error">{errors.volunteers}</span>
+              )}
             </fieldset>
 
             <fieldset className="field">
@@ -106,6 +181,9 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
                 value={formData.workingHours}
                 onChange={handleChange}
               />
+              {errors.workingHours && (
+                <span className="field-error">{errors.workingHours}</span>
+              )}
             </fieldset>
 
             <fieldset className="field">
@@ -116,6 +194,9 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
                 value={formData.startDate}
                 onChange={handleChange}
               />
+              {errors.startDate && (
+                <span className="field-error">{errors.startDate}</span>
+              )}
             </fieldset>
 
             <fieldset className="field">
@@ -126,6 +207,9 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
                 value={formData.endDate}
                 onChange={handleChange}
               />
+              {errors.endDate && (
+                <span className="field-error">{errors.endDate}</span>
+              )}
             </fieldset>
 
             <fieldset className="field">
@@ -136,6 +220,9 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
                 value={formData.location}
                 onChange={handleChange}
               />
+              {errors.location && (
+                <span className="field-error">{errors.location}</span>
+              )}
             </fieldset>
 
             <fieldset className="field wide">
@@ -146,6 +233,9 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
                 value={formData.skills}
                 onChange={handleChange}
               />
+              {errors.skills && (
+                <span className="field-error">{errors.skills}</span>
+              )}
             </fieldset>
 
             <fieldset className="field wide">
@@ -167,6 +257,9 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
               value={formData.description}
               onChange={handleChange}
             ></textarea>
+            {errors.description && (
+              <span className="field-error">{errors.description}</span>
+            )}
           </fieldset>
 
           <div className="footer">
@@ -178,6 +271,9 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
                 value={formData.deadline}
                 onChange={handleChange}
               />
+              {errors.deadline && (
+                <span className="field-error">{errors.deadline}</span>
+              )}
             </fieldset>
 
             <button type="submit" className="submit-btn">

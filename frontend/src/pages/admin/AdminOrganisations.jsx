@@ -19,14 +19,17 @@ const AdminOrganisations = () => {
         }
 
         setLoading(true);
-        setError(""); // Clear any previous errors
+        setError("");
 
-        const response = await axios.get("http://localhost:8000/api/all-applications", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:8000/api/all-applications",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         console.log("Fetched organisation applications:", response.data);
 
@@ -42,7 +45,9 @@ const AdminOrganisations = () => {
         if (err.response) {
           setError(`Server Error: ${err.response.status}`);
         } else if (err.request) {
-          setError("No response from server. Check your backend or CORS settings.");
+          setError(
+            "No response from server. Check your backend or CORS settings."
+          );
         } else {
           setError(`Error: ${err.message}`);
         }
@@ -56,8 +61,15 @@ const AdminOrganisations = () => {
     fetchApplications();
   }, []);
 
-  // 🧠 Conditional UI rendering
-  if (loading) return <h3 className="no-opp">Loading organisation applications...</h3>;
+  // 🧠 Conditional UI rendering with spinner
+  if (loading)
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <h3 className="loading-text">Loading organisation applications...</h3>
+      </div>
+    );
+
   if (error) return <h3 className="no-opp">{error}</h3>;
 
   return (
@@ -69,7 +81,11 @@ const AdminOrganisations = () => {
           <div className="org-info">
             <strong>Application ID:</strong> {app.id} <br />
             <strong>Status:</strong>{" "}
-            <span className={`status ${app.status.toLowerCase()}`}>{app.status}</span>
+            <span
+              className={`status-adm ${app.status?.toLowerCase() || "pending"}`}
+            >
+              {app.status || "Pending"}
+            </span>
             <br />
             <strong>Application Date:</strong>{" "}
             {app.application_date

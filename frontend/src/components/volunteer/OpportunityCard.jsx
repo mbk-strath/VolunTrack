@@ -1,6 +1,6 @@
 import React from "react";
 
-function OpportunityCard({ img, name, title, startdate, enddate }) {
+function OpportunityCard({ img, name, title, startdate, enddate, onViewMore }) {
   return (
     <div className="OpportunityCard">
       <div className="org-name">
@@ -23,7 +23,9 @@ function OpportunityCard({ img, name, title, startdate, enddate }) {
           <p>{enddate}</p>
         </div>
       </div>
-      <button className="view">View More</button>
+      <button className="view" onClick={onViewMore}>
+        View More
+      </button>
     </div>
   );
 }

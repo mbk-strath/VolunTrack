@@ -66,29 +66,32 @@ function ApplicationHistoryPage() {
 
   return (
     <div className="ApplicationPage">
-      {applications.map((application) => (
-        <div className="application-holder" key={application.id}>
-          <div className="names">
-            <h4 className="title">
-              Opportunity ID: {application.opportunity_id}
-            </h4>
-            <p className="org_name">
-              Application Date: {application.application_date}
-            </p>
+      <div className="application-vol">
+        <h3>Applications</h3>
+        {applications.map((application) => (
+          <div className="application-holder" key={application.id}>
+            <div className="names">
+              <h4 className="title">
+                Opportunity ID: {application.opportunity_id}
+              </h4>
+              <p className="org_name">
+                Application Date: {application.application_date}
+              </p>
+            </div>
+            <div
+              className={
+                application.status === "pending"
+                  ? "pending"
+                  : application.status === "accepted"
+                  ? "accepted"
+                  : "cancelled"
+              }
+            >
+              {application.status}
+            </div>
           </div>
-          <div
-            className={
-              application.status === "pending"
-                ? "pending"
-                : application.status === "accepted"
-                ? "accepted"
-                : "cancelled"
-            }
-          >
-            {application.status}
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

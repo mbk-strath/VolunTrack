@@ -14,10 +14,19 @@ h1 {
 }
 .org-info {
   flex: 1;
+  gap: 5px;
+  display: flex;
+  flex-direction: column;
 }
-.status {
+
+.org-info strong {
+  display: flex;
+  flex-direction: row;
+}
+.status-adm {
   color: #ffc107;
   font-weight: 600;
+  width: 80px;
 }
 
 .org-card .btns button {

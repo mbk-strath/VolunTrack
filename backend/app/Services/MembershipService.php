@@ -10,7 +10,10 @@ class MembershipService
     public static function getMembership($user)
     {
         if ($user->role === 'organisation') {
-            return Organisation::where('user_id', $user->id)->first();
+            $organisation = Organisation::where('user_id', $user->id)->first();
+            $organisation->total_volunteers = $organisation->uniqueVolunteerCount();
+            $organisation->opportunities = $organisation->opportunities()->count();
+            return $organisation;
         } elseif ($user->role === 'volunteer') {
             return Volunteer::where('user_id', $user->id)->first();
         } elseif($user->role === 'admin') {

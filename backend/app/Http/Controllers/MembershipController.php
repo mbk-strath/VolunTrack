@@ -35,6 +35,17 @@ class MembershipController extends Controller
         ], 200);
     }
 
+    public function listActive()
+    {
+        // Get all Memberships
+        $organisations = Organisation::where('is_active', true)->get();
+        $volunteers = Volunteer::where('is_active', true)->get();
+        return response()->json([
+            'organisations' => $organisations,
+            'volunteers' => $volunteers
+        ], 200);
+    }
+
 
     public function get(Request $request, string $id)
     {
@@ -157,6 +168,10 @@ class MembershipController extends Controller
         }
     }
 
-
+    public function verifiedOrganisations()
+    {
+        $organisations = Organisation::where('is_verified', true)->get();
+        return response()->json($organisations, 200);
+    }
 
 }

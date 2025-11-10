@@ -1,0 +1,68 @@
+/* Opportunities page specific styles - no inline styles */
+
+.opportunities-container {
+  padding: 2rem;
+}
+
+.opportunities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.opportunity-card {
+  padding: 1.5rem;
+  background-color: #ffffff !important;
+}
+
+.dark .opportunity-card {
+  background-color: #252235 !important;
+}
+
+.opportunity-content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.opportunity-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.opportunity-title {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+}
+
+.opportunity-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.opportunity-info-item {
+  color: hsl(var(--foreground));
+}
+
+.opportunity-info-label {
+  font-weight: 500;
+}
+
+.opportunity-apply-btn {
+  border-radius: 0.5rem !important;
+  background: linear-gradient(to right, #fdba74, #fb923c) !important;
+  color: white !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  padding: 0.5rem 1.5rem !important;
+}
+
+.opportunity-apply-btn:hover {
+  background: linear-gradient(to right, #fb923c, #f97316) !important;
+}

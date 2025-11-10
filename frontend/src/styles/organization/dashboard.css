@@ -1,0 +1,114 @@
+/* Dashboard specific styles - no inline styles */
+
+.dashboard-container {
+  padding: 2rem;
+}
+
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.dashboard-stat-card {
+  padding: 1.5rem;
+  background-color: #ffffff !important;
+}
+
+.dark .dashboard-stat-card {
+  background-color: #252235 !important;
+}
+
+.dashboard-stat-label {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-stat-value {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+}
+
+.dashboard-chart-card {
+  padding: 2rem;
+  background-color: #ffffff !important;
+}
+
+.dark .dashboard-chart-card {
+  background-color: #252235 !important;
+}
+
+.dashboard-chart-title {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  margin-bottom: 2rem;
+}
+
+.dashboard-table-card {
+  padding: 2rem;
+  margin-top: 2rem;
+  background-color: #ffffff !important;
+}
+
+.dark .dashboard-table-card {
+  background-color: #252235 !important;
+}
+
+.dashboard-table-wrapper {
+  overflow-x: auto;
+}
+
+.dashboard-table {
+  width: 100%;
+}
+
+.dashboard-table-header-row {
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.dashboard-table-header {
+  text-align: left;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.dashboard-table-row {
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.dashboard-table-cell {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  color: hsl(var(--foreground));
+}
+
+.dashboard-view-btn {
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  border-radius: 9999px !important;
+  background-color: #0f1b33 !important;
+  color: white !important;
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+  text-transform: none !important;
+}
+
+.dashboard-view-btn:hover {
+  background-color: #1a2847 !important;
+}

@@ -39,4 +39,9 @@ class Organisation extends Model
                             ->distinct()
                             ->count('volunteer_id');
     }
+
+    public function opportunities()
+    {
+        return $this->hasMany(Opportunity::class, 'organisation_id');
+    }
 }

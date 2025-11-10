@@ -106,7 +106,13 @@ class OpportunityController extends Controller
         return response()->json(['message'=>'Opportunity Deleted Successfuly'], 200);
     }
 
-    
+    public function ongoing(Request $request){
+        $currentDate = now();
+        $opportunities = Opportunity::where('start_date', '<=', $currentDate)
+                                    ->where('end_date', '>=', $currentDate)
+                                    ->get();
+        return response()->json($opportunities, 200);
+    }
 
 
 }

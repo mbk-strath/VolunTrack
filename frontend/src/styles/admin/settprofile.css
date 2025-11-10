@@ -1,0 +1,178 @@
+/* === Container === */
+.settings-profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
+  margin: 80px auto;
+  padding: 40px 50px;
+  box-sizing: border-box;
+  color: #f1f5f9;
+  background-color: #fff;
+  border: 1px solid #1e293b;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* === Avatar Section === */
+.profile-avatar-section {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 25px;
+  margin-bottom: 40px;
+}
+
+/* Avatar Wrapper */
+.avatar-wrapper {
+  position: relative;
+}
+
+/* Avatar Circle */
+.avatar-placeholder {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 2px solid #e5e7eb;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Avatar image preview */
+.avatar-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Placeholder + symbol when no avatar */
+.avatar-initial {
+  color: #475569;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Camera icon overlay */
+.camera-icon {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: #1e293b;
+  color: white;
+  border-radius: 50%;
+  font-size: 14px;
+  padding: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.camera-icon:hover {
+  background: #334155;
+}
+
+/* === Avatar Buttons === */
+.avatar-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.avatar-buttons button {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+/* Update button */
+.avatar-buttons button:first-child {
+  background: linear-gradient(90deg, #003399, #0066ff);
+  color: white;
+}
+
+.avatar-buttons button:first-child:hover {
+  opacity: 0.9;
+}
+
+/* Delete button */
+.avatar-buttons button:last-child {
+  background-color: #1e293b;
+  color: #cbd5e1;
+}
+
+.avatar-buttons button:last-child:hover {
+  background-color: #334155;
+}
+
+/* === Profile Form === */
+.profile-details-form {
+  width: 100%;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* Two-column layout */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.form-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field label {
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 5px;
+}
+
+.form-field input {
+  padding: 10px;
+  border: none;
+  border-bottom: 1px solid #475569;
+  background: transparent;
+  color: #f1f5f9;
+  outline: none;
+}
+
+.form-field input::placeholder {
+  color: #94a3b8;
+}
+
+.form-field input:focus {
+  border-color: #60a5fa;
+}
+
+/* === Save Button === */
+.save-changes-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.save-changes-section button {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #003399, #0066ff);
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.save-changes-section button:hover {
+  opacity: 0.9;
+}

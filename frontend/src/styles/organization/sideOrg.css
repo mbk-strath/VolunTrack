@@ -1,0 +1,32 @@
+.dash-icon-org {
+  color: #0f172a;
+  font-size: 24px;
+}
+
+.sideElementsOrg {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  text-decoration: none;
+  padding: 10px;
+}
+
+.sideElementsOrg.active {
+  border-top: 1px solid #0f172a;
+  border-bottom: 1px solid#0f172a;
+  border-right: 4px solid #0f172a;
+  border-bottom-right-radius: 25px;
+  border-top-right-radius: 25px;
+}
+
+.sideElementsOrg:hover {
+  border-top: 1px solid #0f172a;
+  border-bottom: 1px solid #0f172a;
+  border-right: 4px solid #0f172a;
+  border-bottom-right-radius: 25px;
+  border-top-right-radius: 25px;
+}
+
+.sideElementsOrg p {
+  color: black;
+}

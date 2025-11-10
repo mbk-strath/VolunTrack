@@ -1,0 +1,107 @@
+/* Container */
+.history-container-org {
+  display: flex;
+  padding-left: 5%;
+  padding-top: 8%;
+  background-color: #f9fafb;
+  padding-bottom: 8%;
+}
+
+/* Card */
+.history-card-org {
+  background-color: #fff;
+  border-radius: 15px;
+  width: 80%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 25px 30px;
+}
+
+/* Title */
+.history-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* List container */
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Each event */
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f3f4f6;
+  border-radius: 10px;
+  padding: 15px 20px;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.history-item:hover {
+  background-color: #e5e7eb;
+  transform: translateY(-2px);
+}
+
+/* Left side text */
+.event-title {
+  font-weight: 600;
+  font-size: 16px;
+  color: #222;
+  margin-bottom: 5px;
+}
+
+.event-date {
+  font-size: 13px;
+  color: #666;
+}
+
+/* Status chips */
+.status-chip {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  text-transform: capitalize;
+  min-width: 90px;
+  text-align: center;
+}
+
+/* Color variants */
+.status-chip.primary {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status-chip.warning {
+  background-color: #fef9c3;
+  color: #854d0e;
+}
+
+.status-chip.success {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-chip.error {
+  background-color: #dfbdbe;
+  color: #b91a1d;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .history-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .status-chip {
+    align-self: flex-end;
+  }
+}

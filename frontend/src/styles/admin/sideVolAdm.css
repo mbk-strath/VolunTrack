@@ -1,0 +1,32 @@
+.sideElementsAdm {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  text-decoration: none;
+  padding: 10px;
+}
+
+.sideElementsAdm.active {
+  border-top: 1px solid #1E3A8A;
+  border-bottom: 1px solid #1E3A8A;
+  border-right: 4px solid #1E3A8A;
+  border-bottom-right-radius: 25px;
+  border-top-right-radius: 25px;
+}
+
+.sideElementsAdm:hover {
+  border-top: 1px solid #1E3A8A;
+  border-bottom: 1px solid #1E3A8A;
+  border-right: 4px solid #1E3A8A;
+  border-bottom-right-radius: 25px;
+  border-top-right-radius: 25px;
+}
+
+.sideElementsAdm p {
+  color: black;
+}
+
+.adm-dash-icon {
+  font-size: 30px;
+  color: #1E3A8A;
+}

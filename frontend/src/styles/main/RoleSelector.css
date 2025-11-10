@@ -1,0 +1,42 @@
+.role-container {
+  background-color: #111;
+  color: #fff;
+  padding: 2rem;
+  border-radius: 16px;
+  max-width: 400px;
+  margin: 2rem auto;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.role-container h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.role-container p {
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.role-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin: 1.5rem 0;
+  align-items: flex-start;
+}
+
+.role-options label {
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.google-login {
+  margin-top: 1rem;
+}
+
+.select-warning {
+  color: #ff5555;
+  font-size: 0.85rem;
+}

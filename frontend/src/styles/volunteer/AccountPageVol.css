@@ -1,0 +1,87 @@
+.passwordReset {
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  margin-top: 30px;
+  border-radius: 20px;
+  width: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delAcc,
+.logAcc {
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  padding: 5%;
+  border-radius: 20px;
+}
+
+.delAcc button {
+  padding: 12px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border: none;
+  border-radius: 10px;
+  background-color: #b91a1d;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logAcc button {
+  padding: 12px;
+  padding-left: 9%;
+  padding-right: 9%;
+  border: none;
+  border-radius: 10px;
+  background-color: #b91a1d;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.delAcc button:hover,
+.logAcc button:hover {
+  background-color: #b91a1dc4;
+}
+.passwordReset form {
+  width: 80%;
+  padding: 5%;
+}
+
+.logs {
+  width: 70%;
+  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.passwordReset label {
+  color: rgba(0, 0, 0, 0.786);
+  width: 90%;
+  margin-top: 10px;
+}
+
+.passwordReset label input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+
+@media screen and (max-width: 940px) {
+  .passwordReset,
+  .logs {
+    width: 90%;
+  }
+}

@@ -106,5 +106,7 @@ class OpportunityController extends Controller
         return response()->json(['message'=>'Opportunity Deleted Successfuly'], 200);
     }
 
+    
+
 
 }

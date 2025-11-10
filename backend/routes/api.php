@@ -50,6 +50,7 @@ Route::middleware('auth:sanctum', 'role:admin')->group(function(){
     Route::get('/all-participations', [ParticipationController::class, 'list']);
     Route::get('/all-notifications', [NotificationController::class, 'list']);
     Route::get('/all-reviews', [ReviewController::class, 'list']);
+    Route::get('/ongoing-opportunities', [OpportunityController::class, 'ongoing']);
     
 });
 

@@ -18,4 +18,34 @@ class Volunteer extends Model
         'location',     
         'profile_image',
     ];
+
+    protected $appends = ['total_applications', 'total_hours','total_completed_opportunities'];
+    public function getTotalApplicationsAttribute()
+    {
+        return $this->totalApplications();
+    }
+    public function totalApplications()
+    {
+        return $this->hasMany(Application::class, 'volunteer_id')->count();
+    }
+
+    public function getTotalHoursAttribute()
+    {
+        return $this->totalHours();
+    }
+    public function totalHours()
+    {
+        return $this->hasMany(Participation::class, 'volunteer_id')->sum('total_hours');
+    }
+
+    public function getTotalCompletedOpportunitiesAttribute()
+    {
+        return $this->totalCompletedOpportunities();
+    }
+    public function totalCompletedOpportunities()
+    {
+        return $this->hasMany(Participation::class, 'volunteer_id')
+                    ->where('end_date', '<', now())
+                    ->count();
+    }
 }

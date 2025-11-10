@@ -1,0 +1,44 @@
+h1 {
+  font-size: 1.8em;
+  margin-bottom: 20px;
+}
+.org-card {
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.org-info {
+  flex: 1;
+}
+.status {
+  color: #ffc107;
+  font-weight: 600;
+}
+
+.org-card .btns button {
+  width: 150px;
+}
+
+.btn-approve {
+  background-color: #000;
+  color: white;
+}
+
+.btn-view {
+  background: #eeeeee;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  color: black;
+}
+
+.OrganisationsPage {
+  padding-top: 6%;
+  background-color: #f0f2f5;
+  min-height: 100vh;
+  padding-left: 30px;
+  padding-right: 30px;
+}

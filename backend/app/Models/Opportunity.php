@@ -25,7 +25,7 @@ class Opportunity extends Model
 
     protected $appends = ['attendance_rate'];
 
-    public function attendanceRate()
+    public function getAttendanceRateAttribute()
     {
         $applications = Application::where('opportunity_id', $this->id)->get()->count();
         $participations = Participation::where('opportunity_id', $this->id)->get()->count();

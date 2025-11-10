@@ -24,7 +24,13 @@ import AdminReports from "./pages/admin/AdminReports";
 import AdminEvents from "./pages/admin/AdminEvents";
 import AdminHome from "./pages/admin/AdminHome";
 import VerifyUser from "./components/main/VerifyUser";
-
+import DashboardLayoutOrganization from "../layouts/DashboardLayoutOrganization";
+import SettingsOrg from "./pages/organization/settingsOrg";
+import DashboardOrg from "./pages/organization/dashboardOrg";
+import OpportunitiesOrg from "./pages/organization/opportunitiesOrg";
+import ApplicationsOrg from "./pages/organization/applicationsOrg";
+import MessagesOrg from "./pages/organization/messagesOrg";
+import HistoryOrg from "./pages/organization/historyOrg";
 function App() {
   return (
     <div className="main">
@@ -56,6 +62,17 @@ function App() {
             <Route path="organisations" element={<AdminOrganisations />} />
             <Route path="reports" element={<AdminReports />} />
             <Route path="events" element={<AdminEvents />} />
+          </Route>
+          <Route
+            path="/dashboard/organization"
+            element={<DashboardLayoutOrganization />}
+          >
+            <Route index element={<DashboardOrg />} />
+            <Route path="opportunities" element={<OpportunitiesOrg />} />
+            <Route path="applications" element={<ApplicationsOrg />} />
+            <Route path="messages" element={<MessagesOrg />} />
+            <Route path="history" element={<HistoryOrg />} />
+            <Route path="settings" element={<SettingsOrg />} />
           </Route>
         </Routes>
       </Router>

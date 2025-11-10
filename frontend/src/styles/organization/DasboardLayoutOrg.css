@@ -1,0 +1,16 @@
+/* Layout specific styles */
+
+.layout-container {
+  min-height: 100vh;
+  background-color: #E9EBF8;
+}
+
+.dark .layout-container {
+  background-color: #191725;
+}
+
+.layout-main {
+  margin-left: 20rem;
+  padding-top: 5rem;
+  min-height: 100vh;
+}

@@ -1,0 +1,73 @@
+/* Applications page specific styles - no inline styles */
+
+.applications-container {
+  padding: 2rem;
+}
+
+.applications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.application-card {
+  padding: 1.5rem;
+  background-color: #ffffff !important;
+}
+
+.dark .application-card {
+  background-color: #252235 !important;
+}
+
+.application-content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.application-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.application-position {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+}
+
+.application-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.application-info-item {
+  color: hsl(var(--foreground));
+}
+
+.application-label {
+  font-weight: 500;
+}
+
+.application-cv-btn {
+  margin-top: 1rem;
+}
+
+.btn-success {
+  background-color: hsl(var(--success)) !important;
+  color: hsl(var(--success-foreground)) !important;
+}
+
+.btn-success:hover {
+  background-color: hsl(var(--success) / 0.9) !important;
+}
+
+.application-actions {
+  display: flex;
+  gap: 0.75rem;
+}

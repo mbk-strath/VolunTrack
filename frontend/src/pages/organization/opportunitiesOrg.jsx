@@ -14,8 +14,7 @@ const opportunities = [
     deadline: "12/06/2026",
     benefits: "None",
     skills: "React, TypeScript",
-    description:
-      "We are looking for a frontend developer to help build our new volunteer platform.",
+    description: "We are looking for a frontend developer to help build our new volunteer platform.",
   },
   {
     id: 2,
@@ -28,8 +27,7 @@ const opportunities = [
     deadline: "14/06/2026",
     benefits: "Free lunch",
     skills: "Node.js, Express",
-    description:
-      "We are looking for a backend developer to help build our new volunteer platform.",
+    description: "We are looking for a backend developer to help build our new volunteer platform.",
   },
 ];
 
@@ -49,44 +47,35 @@ const OpportunitiesOrg = () => {
                   <h3 className="opportunity-title">{opportunity.title}</h3>
                   <div className="opportunity-info-list">
                     <p className="opportunity-info-item">
-                      <span className="opportunity-info-label">Volunteers Needed:</span>{" "}
-                      {opportunity.volunteers}
+                      <span className="opportunity-info-label">Volunteers Needed:</span> {opportunity.volunteers}
                     </p>
                     <p className="opportunity-info-item">
-                      <span className="opportunity-info-label">Hours:</span>{" "}
-                      {opportunity.hours}
+                      <span className="opportunity-info-label">Hours:</span> {opportunity.hours}
                     </p>
                     <p className="opportunity-info-item">
-                      <span className="opportunity-info-label">Start Date:</span>{" "}
-                      {opportunity.startDate}
+                      <span className="opportunity-info-label">Start Date:</span> {opportunity.startDate}
                     </p>
                     <p className="opportunity-info-item">
-                      <span className="opportunity-info-label">End Date:</span>{" "}
-                      {opportunity.endDate}
+                      <span className="opportunity-info-label">End Date:</span> {opportunity.endDate}
                     </p>
                     <p className="opportunity-info-item">
-                      <span className="opportunity-info-label">Location:</span>{" "}
-                      {opportunity.location}
+                      <span className="opportunity-info-label">Location:</span> {opportunity.location}
                     </p>
                     <p className="opportunity-info-item">
-                      <span className="opportunity-info-label">Deadline:</span>{" "}
-                      {opportunity.deadline}
+                      <span className="opportunity-info-label">Deadline:</span> {opportunity.deadline}
                     </p>
                     <p className="opportunity-info-item">
-                      <span className="opportunity-info-label">Benefits:</span>{" "}
-                      {opportunity.benefits}
+                      <span className="opportunity-info-label">Benefits:</span> {opportunity.benefits}
                     </p>
                     <p className="opportunity-info-item">
-                      <span className="opportunity-info-label">Skills:</span>{" "}
-                      {opportunity.skills}
+                      <span className="opportunity-info-label">Skills:</span> {opportunity.skills}
                     </p>
                     <p className="opportunity-info-item">
-                      <span className="opportunity-info-label">Description:</span>{" "}
-                      {opportunity.description}
+                      <span className="opportunity-info-label">Description:</span> {opportunity.description}
                     </p>
                   </div>
                 </div>
-                <Button
+                <Button 
                   onClick={() => handleApply(opportunity.id)}
                   variant="contained"
                   className="opportunity-apply-btn"

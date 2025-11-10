@@ -1,0 +1,132 @@
+/* Settings page specific styles - no inline styles */
+
+.settings-container {
+  padding: 2rem;
+}
+
+.settings-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1.5rem;
+}
+
+.settings-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.settings-tab-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: hsl(var(--muted-foreground));
+}
+
+.settings-tab-btn:hover {
+  background-color: hsl(var(--muted));
+}
+
+.settings-tab-active {
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+}
+
+.settings-tab-icon {
+  height: 1.25rem;
+  width: 1.25rem;
+}
+
+.settings-tab-label {
+  font-weight: 500;
+}
+
+.settings-content {
+  width: 100%;
+}
+
+.settings-card {
+  padding: 2rem;
+  background-color: #ffffff !important;
+}
+
+.dark .settings-card {
+  background-color: #252235 !important;
+}
+
+.settings-title {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: hsl(var(--foreground));
+}
+
+.settings-description {
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 1.5rem;
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.settings-form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.settings-form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-form-field-full {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: hsl(var(--foreground));
+  font-size: 0.875rem;
+}
+
+.settings-input {
+  margin-top: 0.5rem;
+}
+
+.settings-save-btn {
+  width: 100%;
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  text-transform: none !important;
+}
+
+.settings-account-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.settings-danger-btn {
+  text-transform: none !important;
+}
+
+.settings-logout-btn {
+  text-transform: none !important;
+}

@@ -1,0 +1,58 @@
+.create-dialog-paper {
+  border-radius: 0.75rem !important;
+  background-color: var(--card, #fff);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.create-dialog-title {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  position: relative;
+  padding-right: 6rem !important;
+}
+
+.cv-checkbox {
+  position: absolute !important;
+  right: 2rem;
+  top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--muted-foreground, #444);
+}
+
+.create-dialog-content {
+  padding: 1.5rem !important;
+}
+
+.create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rounded-input .MuiOutlinedInput-root {
+  border-radius: 9999px !important;
+}
+
+.rounded-textarea .MuiOutlinedInput-root {
+  border-radius: 1rem !important;
+}
+
+.create-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.btn-create {
+  background-color: #0f1b33 !important;
+  color: #fff !important;
+  border-radius: 9999px !important;
+  padding: 0.75rem 3rem !important;
+  text-transform: none !important;
+  font-size: 1rem !important;
+}
+
+.btn-create:hover {
+  background-color: #1a2847 !important;
+}

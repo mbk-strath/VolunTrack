@@ -45,6 +45,8 @@ Route::post('/reset-password', [\App\Http\Controllers\UserController::class, 'pa
 Route::middleware('auth:sanctum', 'role:admin')->group(function(){
     Route::get('/all-users', [UserController::class, 'list']);
     Route::get('/all-memberships', [MembershipController::class, 'list']);
+    Route::get('/active-memberships', [MembershipController::class, 'listActive']);
+    Route::get('/verified-organisations', [MembershipController::class, 'verifiedOrganisations']);
     Route::get('/all-images', [GalleryController::class, 'list']);
     Route::get('/all-applications', [ApplicationController::class, 'list']);
     Route::get('/all-participations', [ParticipationController::class, 'list']);

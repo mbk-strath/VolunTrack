@@ -24,7 +24,8 @@ class ParticipationController extends Controller
 {
     public function list(){
         $participations = Participation::all();
-        return response()->json($participations, 200);
+        $total_participations = $participations->count();
+        return response()->json(['participations' => $participations, 'total_participations' => $total_participations], 200);
     }
 
     public function getParticipation($id){
@@ -39,9 +40,11 @@ class ParticipationController extends Controller
         $user = $request->user();
         $volunteer = MembershipService::getMembership($user);
         $participations = Participation::where('volunteer_id', $volunteer->id)->get();
+        $total_participations = $participations->count();
         $totalHours = $participations->sum('total_hours');
         return response()->json([
             'participations' => $participations,
+            'total_participations' => $total_participations,
             'total_hours' => $totalHours
         ], 200);
 
@@ -49,7 +52,8 @@ class ParticipationController extends Controller
 
     public function oppParticipations($opportunity_id){
         $participations = Participation::where('opportunity_id', $opportunity_id)->get();
-        return response()->json($participations, 200);
+        $total_participations = $participations->count();
+        return response()->json(['participations' => $participations, 'total_participations' => $total_participations], 200);
     }
 
     public function create(Request $request){

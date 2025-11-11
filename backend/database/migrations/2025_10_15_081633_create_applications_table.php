@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('volunteer_id')->nullable()->constrained('volunteers')->onDelete('set null');
             $table->foreignId('opportunity_id')->constrained('opportunities')->onDelete('cascade');
+            $table->string('CV_path')->nullable();
             $table->date('application_date');
             $table->string('status')->default('active'); 
             $table->timestamps();

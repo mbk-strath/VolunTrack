@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('schedule');
             $table->string('benefits')->nullable();
             $table->date('application_deadline');
+            $table->boolean('cv_required')->default(false);
             $table->string('location');
             $table->timestamps();
         });

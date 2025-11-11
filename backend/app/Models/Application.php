@@ -20,7 +20,8 @@ class Application extends Model
     public function getVolunteerNameAttribute()
     {
         $volunteer = Volunteer::find($this->volunteer_id);
-        return $volunteer ? $volunteer->name : null;
+        $user = User::find($volunteer->user_id);
+        return $user ? $user->name : null;
     }
     public function getOpportunityTitleAttribute()
     {

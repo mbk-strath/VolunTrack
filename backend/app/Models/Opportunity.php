@@ -20,16 +20,68 @@ class Opportunity extends Model
         'schedule',
         'location',
         'benefits',
+        'cv_required',
         'application_deadline',
     ];
+
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'application_deadline' => 'date',
+    ];
+
+    public function organisation()
+    {
+        return $this->belongsTo(Organisation::class, 'organisation_id');
+    }
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class, 'opportunity_id');
+    }
+
+    public function participations()
+    {
+        return $this->hasMany(Participation::class, 'opportunity_id');
+    }
+
+    public function gallery()
+    {
+        return $this->hasMany(Gallery::class, 'org_id', 'organisation_id');
+    }
 
     protected $appends = ['attendance_rate'];
 
     public function getAttendanceRateAttribute()
     {
-        $applications = Application::where('opportunity_id', $this->id)->get()->count();
-        $participations = Participation::where('opportunity_id', $this->id)->get()->count();
-        $attendanceRate = $participations / $applications * 100;
-        return $attendanceRate;
+        // Calculate total hours for this opportunity (duration from start_date to end_date)
+        $startDate = \Carbon\Carbon::parse($this->start_date);
+        $endDate = \Carbon\Carbon::parse($this->end_date);
+        $totalOpportunityHours = $startDate->diffInHours($endDate);
+        
+        if ($totalOpportunityHours <= 0) {
+            return 0;
+        }
+        
+        // Get all participations for this opportunity
+        $participations = Participation::where('opportunity_id', $this->id)->get();
+        
+        // Sum total hours attended (from all participations)
+        $totalHoursAttended = 0;
+        foreach ($participations as $participation) {
+            if (!empty($participation->check_in) && !empty($participation->check_out)) {
+                $checkIn = \Carbon\Carbon::parse($participation->check_in);
+                $checkOut = \Carbon\Carbon::parse($participation->check_out);
+                $totalHoursAttended += $checkOut->diffInHours($checkIn);
+            }
+        }
+        
+        // Calculate expected total hours (num_volunteers_needed * opportunity hours)
+        $expectedTotalHours = $this->num_volunteers_needed * $totalOpportunityHours;
+        
+        // Calculate attendance rate as percentage
+        $attendanceRate = $expectedTotalHours > 0 ? ($totalHoursAttended / $expectedTotalHours) * 100 : 0;
+        
+        return round($attendanceRate, 2);
     }
 }

@@ -1,17 +1,20 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png";
 import { FcGoogle } from "react-icons/fc";
 import "../../styles/main/signup.css";
 import axios from "axios";
 
 function Signup() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     role: "",
   });
+
   const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -62,11 +65,13 @@ function Signup() {
       const data = res.data;
 
       if (data.user || res.status === 201) {
-        setMessage(
-          "Registration successful! Please check your email to verify your account before logging in."
-        );
+        setMessage("Registration successful! Redirecting to login...");
         setFormData({ name: "", email: "", password: "", role: "" });
         setErrors({});
+
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
       } else {
         setErrors({ backend: data.message || "Registration failed" });
       }
@@ -169,6 +174,7 @@ function Signup() {
             Continue with Google
           </button>
         </div>
+
         <p className="noAccount">
           Have an Account?{" "}
           <Link to="/login" className="link">

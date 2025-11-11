@@ -32,7 +32,6 @@ function TopBar() {
       <div className="topRight">
         <FaCalendarCheck />
 
-        {/* Dark mode toggle */}
         <button
           className="dark-toggle"
           onClick={() => setDarkMode((prev) => !prev)}

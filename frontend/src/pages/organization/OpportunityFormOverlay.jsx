@@ -15,20 +15,21 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
     benefits: "",
     description: "",
     deadline: "",
+    checkInTime: "", // ✅ new
+    checkOutTime: "", // ✅ new
     cvRequired: false,
   });
 
-  const [errors, setErrors] = useState({}); // store form errors
+  const [errors, setErrors] = useState({});
 
-  // Populate form when editing existing data
+  // Populate form when editing
   useEffect(() => {
     if (prefillData) {
-      setFormData({
-        ...formData,
+      setFormData((prev) => ({
+        ...prev,
         ...prefillData,
-      });
+      }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefillData]);
 
   const handleChange = (e) => {
@@ -61,6 +62,10 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
     if (!formData.workingHours) newErrors.workingHours = "Schedule is required";
     if (!formData.description)
       newErrors.description = "Description is required";
+    if (!formData.checkInTime)
+      newErrors.checkInTime = "Check-in time is required";
+    if (!formData.checkOutTime)
+      newErrors.checkOutTime = "Check-out time is required";
 
     // Date validations
     if (
@@ -83,7 +88,7 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
       return;
     }
 
-    // Prepare request body
+    // ✅ Prepare request body including check-in/out
     const body = {
       title: formData.opportunityTitle,
       description: formData.description,
@@ -95,6 +100,8 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
       benefits: formData.benefits,
       application_deadline: formData.deadline,
       location: formData.location,
+      check_in_time: formData.checkInTime,
+      check_out_time: formData.checkOutTime,
     };
 
     try {
@@ -146,6 +153,7 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
               CV Required
             </label>
           </div>
+
           <div className="form-grid-overlay">
             <fieldset className="field">
               <legend>Opportunity Title</legend>
@@ -183,6 +191,33 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
               />
               {errors.workingHours && (
                 <span className="field-error">{errors.workingHours}</span>
+              )}
+            </fieldset>
+
+            {/* ✅ New Check-In/Out Inputs */}
+            <fieldset className="field">
+              <legend>Check-In Time</legend>
+              <input
+                type="time"
+                name="checkInTime"
+                value={formData.checkInTime}
+                onChange={handleChange}
+              />
+              {errors.checkInTime && (
+                <span className="field-error">{errors.checkInTime}</span>
+              )}
+            </fieldset>
+
+            <fieldset className="field">
+              <legend>Check-Out Time</legend>
+              <input
+                type="time"
+                name="checkOutTime"
+                value={formData.checkOutTime}
+                onChange={handleChange}
+              />
+              {errors.checkOutTime && (
+                <span className="field-error">{errors.checkOutTime}</span>
               )}
             </fieldset>
 

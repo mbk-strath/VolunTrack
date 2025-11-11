@@ -20,7 +20,6 @@ function PasswordReset() {
     setError("");
     setMessage("");
 
-    // Frontend validation
     if (!user.currentPassword || !user.newPassword || !user.confirmPassword) {
       setError("All fields are required.");
       return;

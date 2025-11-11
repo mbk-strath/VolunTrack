@@ -61,7 +61,6 @@ const AdminOrganisations = () => {
     fetchApplications();
   }, []);
 
-  // 🧠 Conditional UI rendering with spinner
   if (loading)
     return (
       <div className="loading-container">

@@ -23,13 +23,39 @@ class Opportunity extends Model
         'application_deadline',
     ];
 
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'application_deadline' => 'date',
+    ];
+
+    public function organisation()
+    {
+        return $this->belongsTo(Organisation::class, 'organisation_id');
+    }
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class, 'opportunity_id');
+    }
+
+    public function participations()
+    {
+        return $this->hasMany(Participation::class, 'opportunity_id');
+    }
+
+    public function gallery()
+    {
+        return $this->hasMany(Gallery::class, 'org_id', 'organisation_id');
+    }
+
     protected $appends = ['attendance_rate'];
 
     public function getAttendanceRateAttribute()
     {
-        $applications = Application::where('opportunity_id', $this->id)->get()->count();
-        $participations = Participation::where('opportunity_id', $this->id)->get()->count();
-        $attendanceRate = $participations / $applications * 100;
+        $applications = Application::where('opportunity_id', $this->id)->count();
+        $participations = Participation::where('opportunity_id', $this->id)->count();
+        $attendanceRate = $applications > 0 ? ($participations / $applications) * 100 : 0;
         return $attendanceRate;
     }
 }

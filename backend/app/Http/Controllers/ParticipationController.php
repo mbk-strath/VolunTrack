@@ -54,7 +54,7 @@ class ParticipationController extends Controller
 
     public function create(Request $request){
         $data = $request->validate([
-        'volunteer_id' => 'required|string',
+        'volunteer_id' => 'required|integer|exists:volunteers,id',
         'opportunity_id' => 'required|exists:opportunities,id',
         'check_in' => 'nullable|date',
         'check_out' => 'nullable|date|after:check_in',
@@ -69,6 +69,9 @@ class ParticipationController extends Controller
         } else {
             $data['total_hours'] = null;
         }
+
+        $participation = Participation::create($data);
+        return response()->json(['message' => 'Participation created successfully', 'participation' => $participation], 200);
     }
 
     public function delete($id){

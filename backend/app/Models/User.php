@@ -47,6 +47,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_verified' => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     /**
@@ -54,7 +56,9 @@ class User extends Authenticatable
      */
     public function receivedNotifications()
     {
-        return $this->hasMany(Notification::class, 'receiver_id');
+        $user = $this;
+        $notifications = Notification::where('receiver_id', $user->id);
+        return $notifications;
     }
 
     /**
@@ -62,7 +66,8 @@ class User extends Authenticatable
      */
     public function sentNotifications()
     {
-        return $this->hasMany(Notification::class, 'sender_id');
+        $user = $this;
+        return Notification::where('sender_id', $user->id);
     }
 
     /**
@@ -72,5 +77,21 @@ class User extends Authenticatable
     {
         return Notification::where('receiver_id', $this->id)
                           ->orWhere('sender_id', $this->id);
+    }
+
+    /**
+     * Scope a query to only include verified users.
+     */
+    public function scopeVerified($query)
+    {
+        return $query->where('is_verified', true);
+    }
+
+    /**
+     * Scope a query to only include users with a specific role.
+     */
+    public function scopeRole($query, $role)
+    {
+        return $query->where('role', $role);
     }
 }

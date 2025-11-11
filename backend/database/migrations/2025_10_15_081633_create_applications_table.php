@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('volunteer_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('volunteer_id')->nullable()->constrained('volunteers')->onDelete('set null');
             $table->foreignId('opportunity_id')->constrained('opportunities')->onDelete('cascade');
             $table->date('application_date');
             $table->string('status')->default('active'); 

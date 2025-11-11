@@ -730,6 +730,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "location": "Central Park",
         "benefits": "Free lunch, certificate",
         "application_deadline": "2025-10-25",
+        "attendance_rate": 0,
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
@@ -781,9 +782,32 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "location": "Central Park",
         "benefits": "Free lunch, certificate",
         "application_deadline": "2025-10-25",
+        "attendance_rate": 0,
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
+}
+```
+
+---
+
+## Delete Opportunity
+
+**Endpoint:** `DELETE /delete-opportunity/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Organisation or Admin only)
+
+**Path Parameters:**
+
+-   id (integer, required): The opportunity ID
+
+**Response:**
+
+```
+{
+    "message": "Opportunity deleted successfully"
 }
 ```
 
@@ -837,6 +861,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
             "opportunity_id": 1,
             "application_date": "2025-10-20",
             "status": "pending",
+            "volunteer_name": "John Doe",
+            "opportunity_title": "Community Clean-up",
             "created_at": "2025-10-20T10:00:00.000000Z",
             "updated_at": "2025-10-20T10:00:00.000000Z"
         }
@@ -1070,209 +1096,6 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 ---
 
-## List All Reviews
-
-**Endpoint:** `GET /all-reviews`
-
-**Headers:**
-
--   Authorization: Bearer {token} (Admin only)
-
-**Response:**
-
-```
-[
-    {
-        "id": 1,
-        "org_id": 1,
-        "volunteer_id": 1,
-        "rating": 5,
-        "comment": "Great organization to work with!",
-        "created_at": "2025-10-20T10:00:00.000000Z",
-        "updated_at": "2025-10-20T10:00:00.000000Z"
-    }
-]
-```
-
----
-
-## Create Review
-
-**Endpoint:** `POST /create-review`
-
-**Headers:**
-
--   Authorization: Bearer {token} (Volunteer or Admin only)
-
-**Body Parameters:**
-
--   org_id (integer, required): The organisation ID being reviewed
--   rating (mixed, required): Rating value
--   comment (string, optional): Review comment
-
-**Response:**
-
-```
-{
-    "message": "Created Successfully",
-    "review": {
-        "id": 1,
-        "org_id": 1,
-        "volunteer_id": 1,
-        "rating": 5,
-        "comment": "Great organization to work with!",
-        "created_at": "2025-10-20T10:00:00.000000Z",
-        "updated_at": "2025-10-20T10:00:00.000000Z"
-    }
-}
-```
-
----
-
-## Update Review
-
-**Endpoint:** `PUT /update-review/{id}`
-
-**Headers:**
-
--   Authorization: Bearer {token} (Volunteer or Admin only)
-
-**Path Parameters:**
-
--   id (integer, required): The review ID
-
-**Body Parameters:**
-
--   rating (mixed, optional): Updated rating value
--   comment (string, optional): Updated review comment
-
-**Response:**
-
-```
-{
-    "message": "Updated Successfully",
-    "review": {
-        "id": 1,
-        "org_id": 1,
-        "volunteer_id": 1,
-        "rating": 4,
-        "comment": "Good organization to work with!",
-        "created_at": "2025-10-20T10:00:00.000000Z",
-        "updated_at": "2025-10-20T10:00:00.000000Z"
-    }
-}
-```
-
----
-
-## Delete Review
-
-**Endpoint:** `DELETE /delete-review/{id}`
-
-**Headers:**
-
--   Authorization: Bearer {token} (Volunteer or Admin only)
-
-**Path Parameters:**
-
--   id (integer, required): The review ID
-
-**Response:**
-
-```
-{
-    "message": "Deleted Successfully"
-}
-```
-
----
-
-## Get Reviews by Organisation
-
-**Endpoint:** `GET /organisation-reviews/{org_id}`
-
-**Headers:**
-
--   Authorization: Bearer {token} (Organisation or Admin only)
-
-**Path Parameters:**
-
--   org_id (integer, required): The organisation ID
-
-**Response:**
-
-```
-[
-    {
-        "id": 1,
-        "org_id": 1,
-        "volunteer_id": 1,
-        "rating": 5,
-        "comment": "Great organization to work with!",
-        "created_at": "2025-10-20T10:00:00.000000Z",
-        "updated_at": "2025-10-20T10:00:00.000000Z"
-    }
-]
-```
-
----
-
-## Get Review by ID
-
-**Endpoint:** `GET /get-review/{id}`
-
-**Headers:**
-
--   Authorization: Bearer {token}
-
-**Path Parameters:**
-
--   id (integer, required): The review ID
-
-**Response:**
-
-```
-{
-    "id": 1,
-    "org_id": 1,
-    "volunteer_id": 1,
-    "rating": 5,
-    "comment": "Great organization to work with!",
-    "created_at": "2025-10-20T10:00:00.000000Z",
-    "updated_at": "2025-10-20T10:00:00.000000Z"
-}
-```
-
----
-
-## Get Reviews by Volunteer
-
-**Endpoint:** `POST /my-reviews`
-
-**Headers:**
-
--   Authorization: Bearer {token} (Volunteer or Admin only)
-
-**Body Parameters:**
-
--   volunteer_id (integer, required): The volunteer ID
-
-**Response:**
-
-```
-[
-    {
-        "id": 1,
-        "org_id": 1,
-        "volunteer_id": 1,
-        "rating": 5,
-        "comment": "Great organization to work with!",
-        "created_at": "2025-10-20T10:00:00.000000Z",
-        "updated_at": "2025-10-20T10:00:00.000000Z"
-    }
-]
-```
-
 ---
 
 ## List All Users
@@ -1351,9 +1174,10 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 [
     {
         "id": 1,
-        "organisation_id": 1,
-        "image_path": "path/to/image.jpg",
-        "description": "Gallery image",
+        "org_id": 1,
+        "image_url": "path/to/image.jpg",
+        "caption": "Gallery image",
+        "uploaded_at": "2025-10-20T10:00:00.000000Z",
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
@@ -1435,32 +1259,6 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "sender_id": null,
         "created_at": "2025-10-29T10:00:00.000000Z",
         "updated_at": "2025-10-29T10:00:00.000000Z"
-    }
-]
-```
-
----
-
-## List All Reviews
-
-**Endpoint:** `GET /all-reviews`
-
-**Headers:**
-
--   Authorization: Bearer {token} (Admin only)
-
-**Response:**
-
-```
-[
-    {
-        "id": 1,
-        "org_id": 1,
-        "volunteer_id": 1,
-        "rating": 5,
-        "comment": "Great organization to work with!",
-        "created_at": "2025-10-20T10:00:00.000000Z",
-        "updated_at": "2025-10-20T10:00:00.000000Z"
     }
 ]
 ```
@@ -1606,40 +1404,6 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 ---
 
-## Organisation Reviews
-
-**Endpoint:** `GET /organisation-reviews/{id}`
-
-**Headers:**
-
--   Authorization: Bearer {token} (Organisation or Admin only)
-
-**Path Parameters:**
-
--   id (integer, required): The organisation ID
-
-**Response:**
-
-```
-[
-    {
-        "id": 1,
-        "org_id": 1,
-        "volunteer_id": 1,
-        "rating": 5,
-        "comment": "Great organization to work with!",
-        "created_at": "2025-10-20T10:00:00.000000Z",
-        "updated_at": "2025-10-20T10:00:00.000000Z",
-        "volunteer": {
-            "id": 1,
-            "name": "John Doe"
-        }
-    }
-]
-```
-
----
-
 ## My Applications
 
 **Endpoint:** `GET /my-applications`
@@ -1657,7 +1421,10 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "volunteer_id": 1,
         "opportunity_id": 1,
         "status": "pending",
-        "applied_at": "2025-10-20T10:00:00.000000Z",
+        "application_date": "2025-10-20",
+        "volunteer_name": "John Doe",
+        "opportunity_title": "Community Clean-up",
+        "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z",
         "opportunity": {
             "id": 1,
@@ -1740,88 +1507,6 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         }
     }
 ]
-```
-
----
-
-## Create Review
-
-**Endpoint:** `POST /create-review`
-
-**Headers:**
-
--   Authorization: Bearer {token} (Volunteer or Admin only)
-
-**Body Parameters:**
-
--   org_id (integer, required): The organisation ID
--   rating (integer, required): Rating from 1 to 5
--   comment (string, optional): Review comment
-
-**Response:**
-
-```
-{
-    "message": "Review created successfully",
-    "review": {
-        "id": 1,
-        "org_id": 1,
-        "volunteer_id": 1,
-        "rating": 5,
-        "comment": "Great organization to work with!",
-        "created_at": "2025-10-20T10:00:00.000000Z",
-        "updated_at": "2025-10-20T10:00:00.000000Z"
-    }
-}
-```
-
----
-
-## Update Review
-
-**Endpoint:** `PATCH /update-review/{id}`
-
-**Headers:**
-
--   Authorization: Bearer {token} (Volunteer or Admin only)
-
-**Path Parameters:**
-
--   id (integer, required): The review ID
-
-**Body Parameters:**
-
--   rating (integer, optional): New rating from 1 to 5
--   comment (string, optional): Updated comment
-
-**Response:**
-
-```
-{
-    "message": "Review updated successfully"
-}
-```
-
----
-
-## Delete Review
-
-**Endpoint:** `DELETE /delete-review/{id}`
-
-**Headers:**
-
--   Authorization: Bearer {token} (Volunteer or Admin only)
-
-**Path Parameters:**
-
--   id (integer, required): The review ID
-
-**Response:**
-
-```
-{
-    "message": "Review deleted successfully"
-}
 ```
 
 ---
@@ -1930,9 +1615,196 @@ Returns the image data or URL.
 
 ---
 
-## Get Review by ID
+## List All Evidences
 
-**Endpoint:** `GET /get-review/{id}`
+**Endpoint:** `GET /all-evidences`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Admin only)
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "org_id": 1,
+        "volunteer_id": 1,
+        "rating": 5,
+        "comment": "Great evidence!",
+        "organisation_name": "Example Org",
+        "volunteer_name": "John Doe",
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
+    }
+]
+```
+
+---
+
+## Organisation Evidences
+
+**Endpoint:** `GET /organisation-evidences/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Organisation or Admin only)
+
+**Path Parameters:**
+
+-   id (integer, required): The organisation ID
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "org_id": 1,
+        "volunteer_id": 1,
+        "rating": 5,
+        "comment": "Great evidence!",
+        "organisation_name": "Example Org",
+        "volunteer_name": "John Doe",
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
+    }
+]
+```
+
+---
+
+## My Evidences
+
+**Endpoint:** `POST /my-evidences`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Volunteer or Admin only)
+
+**Body Parameters:**
+
+-   volunteer_id (integer, required): The volunteer ID
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "org_id": 1,
+        "volunteer_id": 1,
+        "rating": 5,
+        "comment": "Great evidence!",
+        "organisation_name": "Example Org",
+        "volunteer_name": "John Doe",
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
+    }
+]
+```
+
+---
+
+## Create Evidence
+
+**Endpoint:** `POST /create-evidence`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Volunteer or Admin only)
+
+**Body Parameters:**
+
+-   org_id (integer, required): The organisation ID
+-   rating (integer, required): Rating value
+-   comment (string, optional): Evidence comment
+
+**Response:**
+
+```
+{
+    "message": "Created Successfully",
+    "evidence": {
+        "id": 1,
+        "org_id": 1,
+        "volunteer_id": 1,
+        "rating": 5,
+        "comment": "Great evidence!",
+        "organisation_name": "Example Org",
+        "volunteer_name": "John Doe",
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
+    }
+}
+```
+
+---
+
+## Update Evidence
+
+**Endpoint:** `PATCH /update-evidence/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Volunteer or Admin only)
+
+**Path Parameters:**
+
+-   id (integer, required): The evidence ID
+
+**Body Parameters:**
+
+-   rating (integer, optional): Updated rating
+-   comment (string, optional): Updated comment
+
+**Response:**
+
+```
+{
+    "message": "Updated Successfully",
+    "evidence": {
+        "id": 1,
+        "org_id": 1,
+        "volunteer_id": 1,
+        "rating": 4,
+        "comment": "Updated evidence!",
+        "organisation_name": "Example Org",
+        "volunteer_name": "John Doe",
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
+    }
+}
+```
+
+---
+
+## Delete Evidence
+
+**Endpoint:** `DELETE /delete-evidence/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Volunteer or Admin only)
+
+**Path Parameters:**
+
+-   id (integer, required): The evidence ID
+
+**Response:**
+
+```
+{
+    "message": "Deleted Successfully"
+}
+```
+
+---
+
+## Get Evidence by ID
+
+**Endpoint:** `GET /get-evidence/{id}`
 
 **Headers:**
 
@@ -1940,7 +1812,7 @@ Returns the image data or URL.
 
 **Path Parameters:**
 
--   id (integer, required): The review ID
+-   id (integer, required): The evidence ID
 
 **Response:**
 
@@ -1950,8 +1822,226 @@ Returns the image data or URL.
     "org_id": 1,
     "volunteer_id": 1,
     "rating": 5,
-    "comment": "Great organization to work with!",
+    "comment": "Great evidence!",
+    "organisation_name": "Example Org",
+    "volunteer_name": "John Doe",
     "created_at": "2025-10-20T10:00:00.000000Z",
     "updated_at": "2025-10-20T10:00:00.000000Z"
 }
 ```
+
+---
+
+## List All Reports
+
+**Endpoint:** `GET /all-reports`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Admin only)
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "user_id": 1,
+        "title": "Issue Report",
+        "description": "Description of the issue",
+        "status": "pending",
+        "user_name": "John Doe",
+        "user_email": "john@example.com",
+        "user_role": "volunteer",
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
+    }
+]
+```
+
+---
+
+## Create Report
+
+**Endpoint:** `POST /create-report`
+
+**Headers:**
+
+-   Authorization: Bearer {token}
+
+**Body Parameters:**
+
+-   title (string, required): Report title
+-   description (string, optional): Report description
+
+**Response:**
+
+```
+{
+    "id": 1,
+    "user_id": 1,
+    "title": "Issue Report",
+    "description": "Description of the issue",
+    "status": "pending",
+    "user_name": "John Doe",
+    "user_email": "john@example.com",
+    "user_role": "volunteer",
+    "created_at": "2025-10-20T10:00:00.000000Z",
+    "updated_at": "2025-10-20T10:00:00.000000Z"
+}
+```
+
+---
+
+## Update Report
+
+**Endpoint:** `PATCH /update-report/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token}
+
+**Path Parameters:**
+
+-   id (integer, required): The report ID
+
+**Body Parameters:**
+
+-   title (string, optional): Updated title
+-   description (string, optional): Updated description
+
+**Response:**
+
+```
+{
+    "id": 1,
+    "user_id": 1,
+    "title": "Updated Issue Report",
+    "description": "Updated description",
+    "status": "pending",
+    "user_name": "John Doe",
+    "user_email": "john@example.com",
+    "user_role": "volunteer",
+    "created_at": "2025-10-20T10:00:00.000000Z",
+    "updated_at": "2025-10-20T10:00:00.000000Z"
+}
+```
+
+---
+
+## Delete Report
+
+**Endpoint:** `DELETE /delete-report/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token}
+
+**Path Parameters:**
+
+-   id (integer, required): The report ID
+
+**Response:**
+
+```
+{
+    "message": "Deleted Successfully"
+}
+```
+
+---
+
+## Get Report by ID
+
+**Endpoint:** `GET /get-report/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token}
+
+**Path Parameters:**
+
+-   id (integer, required): The report ID
+
+**Response:**
+
+```
+{
+    "id": 1,
+    "user_id": 1,
+    "title": "Issue Report",
+    "description": "Description of the issue",
+    "status": "pending",
+    "user_name": "John Doe",
+    "user_email": "john@example.com",
+    "user_role": "volunteer",
+    "created_at": "2025-10-20T10:00:00.000000Z",
+    "updated_at": "2025-10-20T10:00:00.000000Z"
+}
+```
+
+---
+
+## My Reports
+
+**Endpoint:** `GET /my-reports`
+
+**Headers:**
+
+-   Authorization: Bearer {token}
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "user_id": 1,
+        "title": "Issue Report",
+        "description": "Description of the issue",
+        "status": "pending",
+        "user_name": "John Doe",
+        "user_email": "john@example.com",
+        "user_role": "volunteer",
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
+    }
+]
+```
+
+---
+
+## Update Report Status
+
+**Endpoint:** `PATCH /update-report-status/{id}`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Admin only)
+
+**Path Parameters:**
+
+-   id (integer, required): The report ID
+
+**Body Parameters:**
+
+-   status (string, required): New status (pending|resolved|dismissed)
+
+**Response:**
+
+```
+{
+    "id": 1,
+    "user_id": 1,
+    "title": "Issue Report",
+    "description": "Description of the issue",
+    "status": "resolved",
+    "user_name": "John Doe",
+    "user_email": "john@example.com",
+    "user_role": "volunteer",
+    "created_at": "2025-10-20T10:00:00.000000Z",
+    "updated_at": "2025-10-20T10:00:00.000000Z"
+}
+```
+
+---

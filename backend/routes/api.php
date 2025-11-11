@@ -15,6 +15,8 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\ParticipationController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\EvidenceController;
+use App\Http\Controllers\ReportController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -53,6 +55,8 @@ Route::middleware('auth:sanctum', 'role:admin')->group(function(){
     Route::get('/all-notifications', [NotificationController::class, 'list']);
     Route::get('/all-evidences', [EvidenceController::class, 'list']);
     Route::get('/ongoing-opportunities', [OpportunityController::class, 'ongoing']);
+    Route::get('/all-reports', [ReportController::class, 'list']);
+    Route::patch('/update-report-status/{id}', [ReportController::class, 'updateStatus']);
     
 });
 
@@ -114,6 +118,12 @@ Route::middleware('auth:sanctum', 'role:admin,organisation,volunteer')->group(fu
     Route::put('/mark-as-read/{id}', [NotificationController::class, 'markAsRead']);
     //Evidence Controller
     Route::get('get-evidence/{id}', [EvidenceController::class, 'getById']);
+    //Report Controller
+    Route::post('/create-report', [ReportController::class, 'create']);
+    Route::patch('/update-report/{id}', [ReportController::class, 'update']);
+    Route::delete('/delete-report/{id}', [ReportController::class, 'delete']);
+    Route::get('/get-report/{id}', [ReportController::class, 'get']);
+    Route::get('/my-reports', [ReportController::class, 'MyReports']);
 
     //Logout Route
     Route::post('/logout', [\App\Http\Controllers\UserController::class, 'logout']);

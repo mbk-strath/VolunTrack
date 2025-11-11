@@ -44,7 +44,7 @@ class Volunteer extends Model
     }
     public function totalCompletedOpportunities()
     {
-        $Participations = Participations::where('volunteer_id', $this->id)->get();
+        $Participations = Participation::where('volunteer_id', $this->id)->get();
         $Opportunities = Opportunity::whereIn('id', $Participations->pluck('opportunity_id'))->get();
         $Completed = $Opportunities->filter(function ($opportunity) {
             return $opportunity->end_date < now();

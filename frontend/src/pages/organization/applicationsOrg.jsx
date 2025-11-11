@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../../styles/organization/applicationsOrg.css";
 
@@ -6,12 +6,14 @@ const ApplicationsOrg = ({ opportunityId }) => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     const fetchApplications = async () => {
       if (!opportunityId) {
-        setLoading(false);
         setApplications([]);
+        setLoading(false);
         return;
       }
 
@@ -27,12 +29,16 @@ const ApplicationsOrg = ({ opportunityId }) => {
           }
         );
 
-        // Filter only pending applications
-        const pendingApplications = response.data.filter(
-          (app) => app.status.toLowerCase() === "pending"
-        );
+        console.log("API response:", response.data);
 
-        setApplications(pendingApplications);
+        const allApplications = response.data.applications || [];
+
+        // OPTIONAL: filter only pending applications
+        // const pendingApplications = allApplications.filter(
+        //   (app) => app.status?.trim().toLowerCase() === "pending"
+        // );
+
+        setApplications(allApplications);
       } catch (err) {
         console.error("Fetch applications error:", err);
         setError(err.response?.data?.message || "Failed to fetch applications");
@@ -44,10 +50,16 @@ const ApplicationsOrg = ({ opportunityId }) => {
     fetchApplications();
   }, [opportunityId]);
 
+  const handlePopup = (message) => {
+    setPopupMessage(message);
+    setShowPopup(true);
+    setTimeout(() => setShowPopup(false), 2500); // auto-close after 2.5s
+  };
+
   if (loading) return <p>Loading applicants...</p>;
   if (error) return <p className="error">{error}</p>;
   if (!applications || applications.length === 0)
-    return <p className="no-opp">No applicants </p>;
+    return <p className="no-opp">No applicants found</p>;
 
   return (
     <div className="applications-container">
@@ -72,20 +84,55 @@ const ApplicationsOrg = ({ opportunityId }) => {
                     <span className="label">Email:</span>{" "}
                     {app.volunteer?.email || "N/A"}
                   </p>
+                  <p>
+                    <span className="label">Status:</span> {app.status || "N/A"}
+                  </p>
                 </div>
-                <button className="btn-outline">Download CV</button>
+                <button
+                  className="btn-outline"
+                  onClick={() => handlePopup("Download CV not implemented yet")}
+                >
+                  Download CV
+                </button>
               </div>
 
-              {/* Right side buttons */}
               <div className="action-buttons">
-                <button className="btn btn-success">Contact</button>
-                <button className="btn btn-primary">Approve</button>
-                <button className="btn btn-danger">Reject</button>
+                <button
+                  className="btn btn-success"
+                  onClick={() =>
+                    handlePopup("Contact functionality coming soon")
+                  }
+                >
+                  Contact
+                </button>
+                <button
+                  className="btn btn-primary"
+                  onClick={() =>
+                    handlePopup(`Application ID ${app.id} Approved`)
+                  }
+                >
+                  Approve
+                </button>
+                <button
+                  className="btn btn-danger"
+                  onClick={() =>
+                    handlePopup(`Application ID ${app.id} Rejected`)
+                  }
+                >
+                  Reject
+                </button>
               </div>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Popup Overlay */}
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-message">{popupMessage}</div>
+        </div>
+      )}
     </div>
   );
 };

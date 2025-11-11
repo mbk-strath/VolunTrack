@@ -10,35 +10,67 @@ import axios from "axios";
 function HomePage() {
   const [user, setUser] = useState(null);
   const [totalHours, setTotalHours] = useState(0);
+  const [totalApplications, setTotalApplications] = useState(0);
+  const [completedSessions, setCompletedSessions] = useState(0);
+  const [participations, setParticipations] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    if (storedUser) setUser(JSON.parse(storedUser));
 
-    // Fetch total hours
-    const fetchTotalHours = async () => {
+    const token = localStorage.getItem("token");
+
+    const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token"); // make sure token is stored
-        const res = await axios.get(
+        // Fetch volunteer participations for total hours
+        const resHours = await axios.get(
           "http://localhost:8000/api/my-participations",
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
           }
         );
-        if (res.data && res.data.total_hours !== undefined) {
-          setTotalHours(res.data.total_hours);
+        if (resHours.data?.total_hours !== undefined) {
+          setTotalHours(resHours.data.total_hours);
+        }
+
+        // Fetch volunteer applications
+        const resApps = await axios.get(
+          "http://localhost:8000/api/my-applications",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (resApps.data?.applications) {
+          setTotalApplications(resApps.data.applications.length);
+        }
+
+        // Fetch all participations for completed sessions
+        const resAll = await axios.get(
+          "http://localhost:8000/api/all-participations",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (resAll.data?.total_participations !== undefined) {
+          setCompletedSessions(resAll.data.total_participations);
+        }
+
+        // Keep all participations for CheckSystem cards
+        if (resAll.data?.participations) {
+          setParticipations(resAll.data.participations);
         }
       } catch (err) {
-        console.error("Failed to fetch total hours:", err);
+        console.error("Failed to fetch data:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchTotalHours();
+    fetchData();
   }, []);
+
+  if (loading) return <h3 className="no-opp">Loading dashboard...</h3>;
 
   return (
     <div className="homeVolPage">
@@ -55,19 +87,26 @@ function HomePage() {
           <FaLightbulb className="icon" />
           <span className="holder">
             <h4>Total Applications</h4>
-            <p>3</p>
+            <p>{totalApplications}</p>
           </span>
         </div>
         <div className="sessions">
           <SiTicktick className="icon" />
           <span className="holder">
             <h4>Completed Sessions</h4>
-            <p>2</p>
+            <p>{completedSessions}</p>
           </span>
         </div>
       </div>
+
       <div className="section2">
-        <CheckSystem />
+        {/* Only show CheckSystem for approved participations */}
+        {participations
+          .filter((p) => p.status?.trim().toLowerCase() === "approved")
+          .map((p) => (
+            <CheckSystem key={p.id} participation={p} />
+          ))}
+
         <VolunteerHoursChart />
       </div>
     </div>

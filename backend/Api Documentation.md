@@ -276,20 +276,23 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 -   email (string, optional)
 -   phone (string, optional)
 -   gender (string, optional)
--   profile_image (file, optional: for volunteers)
--   org_name (string, optional: for organisations)
+-   password (string, optional)
 -   etc. (depending on user role)
 
 **Response:**
 
 ```
 {
-    "message": "User updated successfully",
-    "user": {
-        "id": 1,
-        "name": "Updated Name",
-        ...
-    }
+    "id": 1,
+    "name": "Updated Name",
+    "email": "updated@example.com",
+    "phone": "1234567890",
+    "gender": "Male",
+    "role": "volunteer",
+    "is_verified": true,
+    "is_active": true,
+    "created_at": "2025-10-20T10:00:00.000000Z",
+    "updated_at": "2025-10-20T10:00:00.000000Z"
 }
 ```
 
@@ -332,6 +335,75 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 	"volunteers": [...]
 }
 ```
+
+---
+
+## List Active Memberships
+
+**Endpoint:** `GET /active-memberships`
+**Headers:**
+
+-   Authorization: Bearer {token} (Admin only)
+
+**Response:**
+
+```
+{
+	"organisations": [...],
+	"volunteers": [...]
+}
+```
+
+**Note:**
+
+-   Only returns active organisations and volunteers (where `is_active: true`)
+
+---
+
+## Verified Organisations
+
+**Endpoint:** `GET /verified-organisations`
+**Headers:**
+
+-   Authorization: Bearer {token} (Admin only)
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "user_id": 1,
+        "org_name": "Example Organisation",
+        "is_verified": true,
+        "is_active": true,
+        ...
+    }
+]
+```
+
+---
+
+## Total Volunteers
+
+**Endpoint:** `GET /total-volunteers`
+**Headers:**
+
+-   Authorization: Bearer {token} (Organisation or Admin only)
+
+**Response:**
+
+```
+{
+	"total_volunteers": 5
+}
+```
+
+**Notes:**
+
+-   For organisations: Returns count of unique volunteers who have applied to their opportunities
+-   For admins: Returns total count of volunteers who have applied to any opportunity
+-   Only counts volunteers with active applications
 
 ---
 
@@ -711,6 +783,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 -   benefits (string, optional): Benefits offered to volunteers
 -   application_deadline (date, required): Deadline for applications (must be before or equal to start_date)
 -   location (string, required): Location of the opportunity
+-   cv_required (boolean, optional): Whether CV is required for applications (default: false)
 
 **Response:**
 
@@ -730,14 +803,13 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "location": "Central Park",
         "benefits": "Free lunch, certificate",
         "application_deadline": "2025-10-25",
+        "cv_required": false,
         "attendance_rate": 0,
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
 }
 ```
-
----
 
 ## Update Opportunity
 
@@ -763,6 +835,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 -   benefits (string, optional): Benefits offered to volunteers
 -   application_deadline (date, optional): Deadline for applications
 -   location (string, optional): Location of the opportunity
+-   cv_required (boolean, optional): Whether CV is required for applications
 
 **Response:**
 
@@ -782,14 +855,13 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "location": "Central Park",
         "benefits": "Free lunch, certificate",
         "application_deadline": "2025-10-25",
-        "attendance_rate": 0,
+        "cv_required": false,
+        "attendance_rate": 75.50,
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
 }
 ```
-
----
 
 ## Delete Opportunity
 
@@ -810,6 +882,32 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
     "message": "Opportunity deleted successfully"
 }
 ```
+
+---
+
+## Total Attendance Rate
+
+**Endpoint:** `GET /total-volunteers`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Organisation or Admin only)
+
+**Response:**
+
+```
+{
+    "attendance_rate": 75.50
+}
+```
+
+**Notes:**
+
+-   Calculates the overall attendance rate across all opportunities for an organisation
+-   Formula: `(Total Hours Attended) / (Expected Total Hours) * 100`
+-   Expected Total Hours = `num_volunteers_needed * (opportunity duration in hours)`
+-   Total Hours Attended = Sum of all participation hours (check_out - check_in)
+-   Rounded to 2 decimal places
 
 ---
 
@@ -836,9 +934,13 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
             "updated_at": "2025-10-20T10:00:00.000000Z"
         }
     ],
-    "message": "Fetch Successlful"
+    "message": "Fetch Successful"
 }
 ```
+
+**Note:**
+
+-   The `list()` method currently does not return `total_applications` count
 
 ---
 
@@ -860,14 +962,14 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
             "volunteer_id": 1,
             "opportunity_id": 1,
             "application_date": "2025-10-20",
+            "CV_path": null,
             "status": "pending",
-            "volunteer_name": "John Doe",
-            "opportunity_title": "Community Clean-up",
             "created_at": "2025-10-20T10:00:00.000000Z",
             "updated_at": "2025-10-20T10:00:00.000000Z"
         }
     ],
-    "message": "Fetch Successlful"
+    "total_applications": 1,
+    "message": "Fetch Successful"
 }
 ```
 
@@ -875,7 +977,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 ## My Applicants
 
-**Endpoint:** `GET /my-applicants/{opportunity_id}`
+**Endpoint:** `GET /my-applicants/{id}`
 
 **Headers:**
 
@@ -883,7 +985,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 **Path Parameters:**
 
--   opportunity_id (integer, required): The opportunity ID
+-   id (integer, required): The opportunity ID
 
 **Response:**
 
@@ -895,12 +997,14 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
             "volunteer_id": 1,
             "opportunity_id": 1,
             "application_date": "2025-10-20",
+            "CV_path": null,
             "status": "pending",
             "created_at": "2025-10-20T10:00:00.000000Z",
             "updated_at": "2025-10-20T10:00:00.000000Z"
         }
     ],
-    "message": "Fetch Successlful"
+    "total_applications": 1,
+    "message": "Fetch Successful"
 }
 ```
 
@@ -914,10 +1018,13 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 -   Authorization: Bearer {token} (Volunteer or Admin only)
 
+**Content-Type:** `multipart/form-data` (for file uploads)
+
 **Body Parameters:**
 
 -   opportunity_id (integer, required): The opportunity ID to apply for
 -   application_date (date, required): Date of application
+-   CV (file, optional): PDF/DOC/DOCX file (max 5MB) - Required if the opportunity has `cv_required: true`
 
 **Response:**
 
@@ -928,6 +1035,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "volunteer_id": 1,
         "opportunity_id": 1,
         "application_date": "2025-10-20",
+        "CV_path": "http://localhost:8000/storage/applications/cvs/cv_filename.pdf",
         "status": "pending",
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
@@ -936,11 +1044,27 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 }
 ```
 
+**Error Cases:**
+
+-   `400`: If a volunteer has already applied for the opportunity
+-   `400`: If CV is required by the opportunity but not provided
+-   `400`: If uploaded file is not a valid document (must be pdf, doc, or docx)
+-   `400`: If file size exceeds 5MB
+-   `404`: If opportunity not found
+
+**Notes:**
+
+-   Accepted file types: PDF, DOC, DOCX
+-   Maximum file size: 5MB
+-   If the opportunity requires a CV (`cv_required: true`), the `CV` file is mandatory
+-   Each volunteer can only apply once per opportunity
+-   CV files are stored securely on the server and accessible via the returned URL
+
 ---
 
 ## Update Application Status
 
-**Endpoint:** `PUT /update-application/{application_id}`
+**Endpoint:** `PATCH /update-application/{id}`
 
 **Headers:**
 
@@ -948,7 +1072,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 **Path Parameters:**
 
--   application_id (integer, required): The application ID
+-   id (integer, required): The application ID
 
 **Body Parameters:**
 
@@ -963,6 +1087,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "volunteer_id": 1,
         "opportunity_id": 1,
         "application_date": "2025-10-20",
+        "CV_path": null,
         "status": "accepted",
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
@@ -984,18 +1109,23 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 **Response:**
 
 ```
-[
-    {
-        "id": 1,
-        "volunteer_id": 1,
-        "opportunity_id": 1,
-        "check_in": "2025-11-01 09:00:00",
-        "check_out": "2025-11-01 17:00:00",
-        "total_hours": 8,
-        "created_at": "2025-11-01T09:00:00.000000Z",
-        "updated_at": "2025-11-01T17:00:00.000000Z"
-    }
-]
+{
+    "participations": [
+        {
+            "id": 1,
+            "volunteer_id": 1,
+            "opportunity_id": 1,
+            "check_in": "2025-11-01 09:00:00",
+            "check_out": "2025-11-01 17:00:00",
+            "total_hours": 8,
+            "volunteer_name": "John Doe",
+            "opportunity_title": "Community Clean-up",
+            "created_at": "2025-11-01T09:00:00.000000Z",
+            "updated_at": "2025-11-01T17:00:00.000000Z"
+        }
+    ],
+    "total_participations": 1
+}
 ```
 
 ---
@@ -1020,10 +1150,13 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
             "check_in": "2025-11-01 09:00:00",
             "check_out": "2025-11-01 17:00:00",
             "total_hours": 8,
+            "volunteer_name": "John Doe",
+            "opportunity_title": "Community Clean-up",
             "created_at": "2025-11-01T09:00:00.000000Z",
             "updated_at": "2025-11-01T17:00:00.000000Z"
         }
     ],
+    "total_participations": 1,
     "total_hours": 8
 }
 ```
@@ -1032,7 +1165,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 ## Opportunity Participations
 
-**Endpoint:** `GET /opportunity-participations/{opportunity_id}`
+**Endpoint:** `GET /opportunity-participations/{id}`
 
 **Headers:**
 
@@ -1040,23 +1173,28 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 **Path Parameters:**
 
--   opportunity_id (integer, required): The opportunity ID
+-   id (integer, required): The opportunity ID
 
 **Response:**
 
 ```
-[
-    {
-        "id": 1,
-        "volunteer_id": 1,
-        "opportunity_id": 1,
-        "check_in": "2025-11-01 09:00:00",
-        "check_out": "2025-11-01 17:00:00",
-        "total_hours": 8,
-        "created_at": "2025-11-01T09:00:00.000000Z",
-        "updated_at": "2025-11-01T17:00:00.000000Z"
-    }
-]
+{
+    "participations": [
+        {
+            "id": 1,
+            "volunteer_id": 1,
+            "opportunity_id": 1,
+            "check_in": "2025-11-01 09:00:00",
+            "check_out": "2025-11-01 17:00:00",
+            "total_hours": 8,
+            "volunteer_name": "John Doe",
+            "opportunity_title": "Community Clean-up",
+            "created_at": "2025-11-01T09:00:00.000000Z",
+            "updated_at": "2025-11-01T17:00:00.000000Z"
+        }
+    ],
+    "total_participations": 1
+}
 ```
 
 ---
@@ -1071,10 +1209,10 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 **Body Parameters:**
 
--   volunteer_id (string, required): The volunteer ID
+-   volunteer_id (integer, required): The volunteer ID
 -   opportunity_id (integer, required): The opportunity ID
--   check_in (datetime, optional): Check-in time
--   check_out (datetime, optional): Check-out time (must be after check_in)
+-   check_in (datetime, optional): Check-in time (ISO 8601 format)
+-   check_out (datetime, optional): Check-out time (ISO 8601 format, must be after check_in)
 
 **Response:**
 
@@ -1088,13 +1226,13 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "check_in": "2025-11-01 09:00:00",
         "check_out": "2025-11-01 17:00:00",
         "total_hours": 8,
+        "volunteer_name": "John Doe",
+        "opportunity_title": "Community Clean-up",
         "created_at": "2025-11-01T09:00:00.000000Z",
-        "updated_at": "2025-11-01T17:00:00.000000Z"
+        "updated_at": "2025-11-01T09:00:00.000000Z"
     }
 }
 ```
-
----
 
 ---
 
@@ -1542,25 +1680,56 @@ Returns the membership data (organisation or volunteer) for the user with the gi
 
 **Endpoint:** `PATCH /update/{id}/`
 
+**Content-Type:** `multipart/form-data` (for file uploads)
+
 **Headers:**
 
 -   Authorization: Bearer {token}
 
 **Path Parameters:**
 
--   id (integer, required): The membership ID
+-   id (integer, required): The user ID
 
 **Body Parameters:**
 
-Depends on the membership type (organisation or volunteer). Similar to registration parameters.
+Depends on the membership type (organisation or volunteer):
+
+**For Organisation:**
+
+-   org_name (string, optional)
+-   description (string, optional)
+-   location (string, optional)
+-   logo (file, optional): Organization logo
+-   etc.
+
+**For Volunteer:**
+
+-   bio (string, optional)
+-   skills (string, optional)
+-   profile_image (file, optional): Volunteer profile image
+-   etc.
 
 **Response:**
 
 ```
 {
-    "message": "Membership updated successfully"
+    "id": 1,
+    "user_id": 1,
+    "org_name": "Example Org",
+    "description": "Organization description",
+    "location": "City, Country",
+    "logo": "path/to/logo.jpg",
+    "is_verified": true,
+    "is_active": true,
+    "created_at": "2025-10-20T10:00:00.000000Z",
+    "updated_at": "2025-10-20T10:00:00.000000Z"
 }
 ```
+
+**Note:**
+
+-   Response object structure varies depending on membership type (Organisation or Volunteer)
+-   File uploads (logo/profile_image) are handled automatically
 
 ---
 

@@ -16,7 +16,7 @@ function ProfilePage() {
   });
 
   const [loading, setLoading] = useState(false);
-  const [alert, setAlert] = useState({ message: "", type: "" }); // success | error
+  const [alert, setAlert] = useState({ message: "", type: "" });
   const [avatarPreview, setAvatarPreview] = useState("");
 
   useEffect(() => {
@@ -61,24 +61,19 @@ function ProfilePage() {
 
     try {
       const storedUser = JSON.parse(localStorage.getItem("user"));
-      const id = storedUser?.id;
+      const userId = storedUser?.id;
       const token = localStorage.getItem("token");
 
-      const formData = new FormData();
-      formData.append("name", user.name);
-      formData.append("email", user.email);
-      formData.append("phone", user.phone);
-      formData.append("gender", user.gender);
-      formData.append("country", user.country);
-      formData.append("bio", user.bio);
-      formData.append("date", user.date);
-      if (user.avatar instanceof File) {
-        formData.append("profile_image", user.avatar);
-      }
+      // ---- Update core user fields ----
+      const userFormData = new FormData();
+      userFormData.append("name", user.name);
+      userFormData.append("email", user.email);
+      userFormData.append("phone", user.phone);
+      userFormData.append("gender", user.gender);
 
-      const res = await axios.patch(
-        `http://localhost:8000/api/update-user/${id}`,
-        formData,
+      const resUser = await axios.patch(
+        `http://localhost:8000/api/update-user/${userId}`,
+        userFormData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -87,22 +82,32 @@ function ProfilePage() {
         }
       );
 
-      const updatedUser = res.data.user || res.data || {};
+      const membershipFormData = new FormData();
+      membershipFormData.append("bio", user.bio);
+      membershipFormData.append("country", user.country);
+      membershipFormData.append("date", user.date);
+      if (user.avatar instanceof File) {
+        membershipFormData.append("profile_image", user.avatar);
+      }
 
-      setUser((prev) => ({
-        name: updatedUser.name || prev.name || "",
-        email: updatedUser.email || prev.email || "",
-        phone: updatedUser.phone || prev.phone || "",
-        gender: updatedUser.gender || prev.gender || "",
-        country: updatedUser.country || prev.country || "",
-        bio: updatedUser.bio || prev.bio || "",
-        avatar: updatedUser.avatar || prev.avatar || "",
-        date: updatedUser.date || prev.date || "",
-      }));
+      const resMembership = await axios.patch(
+        `http://localhost:8000/api/update/${userId}/`,
+        membershipFormData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
-      setAvatarPreview(updatedUser.avatar ? updatedUser.avatar : avatarPreview);
+      const updatedUser = {
+        ...resUser.data,
+        ...resMembership.data,
+      };
 
-      // Save updated user to localStorage
+      setUser((prev) => ({ ...prev, ...updatedUser }));
+      setAvatarPreview(updatedUser.avatar || avatarPreview);
       localStorage.setItem("user", JSON.stringify({ ...user, ...updatedUser }));
 
       showAlert("Profile updated successfully!", "success");
@@ -119,7 +124,6 @@ function ProfilePage() {
 
   return (
     <div className="profilePage">
-      {/* Alert box */}
       {alert.message && (
         <div className={`custom-alert ${alert.type}`}>{alert.message}</div>
       )}
@@ -159,12 +163,22 @@ function ProfilePage() {
             <div className="left-content">
               <label>
                 Full Name
-                <input type="text" name="name" value={user.name} readOnly />
+                <input
+                  type="text"
+                  name="name"
+                  value={user.name}
+                  onChange={handleChange}
+                />
               </label>
 
               <label>
                 Email
-                <input type="email" name="email" value={user.email} readOnly />
+                <input
+                  type="email"
+                  name="email"
+                  value={user.email}
+                  onChange={handleChange}
+                />
               </label>
 
               <label>
@@ -172,7 +186,6 @@ function ProfilePage() {
                 <input
                   type="tel"
                   name="phone"
-                  placeholder="Enter your phone number"
                   value={user.phone || ""}
                   onChange={handleChange}
                 />
@@ -199,7 +212,6 @@ function ProfilePage() {
                   type="text"
                   name="country"
                   value={user.country || ""}
-                  placeholder="Enter your country"
                   onChange={handleChange}
                 />
               </label>

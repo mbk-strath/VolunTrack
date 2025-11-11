@@ -10,11 +10,10 @@ const SettingsOrg = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // --- Editable fields ---
-  const profileFields = [
+  // --- Profile field groups ---
+  const userFields = ["name", "email", "gender", "phone"];
+  const orgFields = [
     "org_name",
-    "email",
-    "phone",
     "country",
     "website",
     "org_type",
@@ -28,7 +27,10 @@ const SettingsOrg = () => {
 
   // --- State for Profile ---
   const [profileData, setProfileData] = useState(
-    profileFields.reduce((acc, field) => ({ ...acc, [field]: "" }), {})
+    [...userFields, ...orgFields].reduce(
+      (acc, field) => ({ ...acc, [field]: "" }),
+      {}
+    )
   );
   const [avatarPreview, setAvatarPreview] = useState(null);
 
@@ -37,21 +39,24 @@ const SettingsOrg = () => {
     contactFields.reduce((acc, field) => ({ ...acc, [field]: "" }), {})
   );
 
-  // Prefill from localStorage
+  // --- Prefill from localStorage ---
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user")) || {};
 
-    // Profile
     setProfileData((prev) => ({
       ...prev,
-      ...profileFields.reduce(
+      ...userFields.reduce(
+        (acc, key) => ({ ...acc, [key]: storedUser[key] || "" }),
+        {}
+      ),
+      ...orgFields.reduce(
         (acc, key) => ({ ...acc, [key]: storedUser[key] || "" }),
         {}
       ),
     }));
+
     setAvatarPreview(storedUser.avatar || "");
 
-    // Contacts
     setContactData((prev) => ({
       ...prev,
       ...contactFields.reduce(
@@ -77,6 +82,7 @@ const SettingsOrg = () => {
     setContactData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // --- Profile Submit Handler (two APIs) ---
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -87,32 +93,49 @@ const SettingsOrg = () => {
       const userId = storedUser?.id;
       const token = localStorage.getItem("token");
 
-      const payload = new FormData();
-      profileFields.forEach((key) => {
-        if (profileData[key]) payload.append(key, profileData[key]);
+      // Prepare userFormData for /update-user/{id}
+      const userForm = new FormData();
+      userFields.forEach((key) => {
+        if (profileData[key]) userForm.append(key, profileData[key]);
       });
       if (profileData.profile_image)
-        payload.append("profile_image", profileData.profile_image);
+        userForm.append("profile_image", profileData.profile_image);
 
-      const res = await axios.patch(
-        `http://localhost:8000/api/update-user/${userId}`,
-        payload,
-        {
+      // Prepare orgPayload for /update/{id}
+      const orgPayload = {};
+      orgFields.forEach((key) => {
+        if (profileData[key]) orgPayload[key] = profileData[key];
+      });
+
+      // Call both APIs
+      const [userRes, orgRes] = await Promise.all([
+        axios.patch(
+          `http://localhost:8000/api/update-user/${userId}`,
+          userForm,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        ),
+        axios.patch(`http://localhost:8000/api/update/${userId}`, orgPayload, {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
           },
-        }
-      );
+        }),
+      ]);
 
-      const updatedUser = res.data.user || res.data;
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ ...storedUser, ...updatedUser })
-      );
+      const updatedUser = {
+        ...storedUser,
+        ...userRes.data.user,
+        ...orgRes.data.organization,
+      };
+
+      localStorage.setItem("user", JSON.stringify(updatedUser));
       setProfileData((prev) => ({ ...prev, ...updatedUser }));
       setAvatarPreview(updatedUser.avatar || avatarPreview);
-      setMessage(res.data.message || "Profile updated successfully!");
+      setMessage("Profile updated successfully!");
     } catch (err) {
       console.error("Update error:", err);
       setMessage(err.response?.data?.message || "Failed to update profile.");
@@ -121,6 +144,7 @@ const SettingsOrg = () => {
     }
   };
 
+  // --- Contact Submit Handler ---
   const handleContactSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -137,9 +161,7 @@ const SettingsOrg = () => {
         `http://localhost:8000/api/update-user/${userId}`,
         payload,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
@@ -180,14 +202,14 @@ const SettingsOrg = () => {
       </div>
 
       <div className="settings-content-org">
-        {/* PROFILE */}
+        {/* PROFILE TAB */}
         {activeTab === "profile" && (
           <div className="settings-card-org prof-org">
-            <h2 className="prof-org-title">Profile</h2>
+            <h2 className="prof-org-title">Organization Profile</h2>
 
             <div className="avatar-section">
               <UserProfile
-                name={profileData.org_name}
+                name={profileData.org_name || "Organization"}
                 avatar={avatarPreview}
                 size={100}
               />
@@ -220,7 +242,7 @@ const SettingsOrg = () => {
             </div>
 
             <form className="form-grid" onSubmit={handleProfileSubmit}>
-              {profileFields.map((key) => (
+              {[...orgFields].map((key) => (
                 <label key={key}>
                   {key
                     .replace("_", " ")
@@ -235,7 +257,7 @@ const SettingsOrg = () => {
               ))}
 
               <button className="save-org" type="submit" disabled={loading}>
-                {loading ? "Saving..." : "Save"}
+                {loading ? "Saving..." : "Save Changes"}
               </button>
             </form>
 
@@ -243,10 +265,10 @@ const SettingsOrg = () => {
           </div>
         )}
 
-        {/* CONTACTS */}
+        {/* CONTACTS TAB */}
         {activeTab === "contacts" && (
           <div className="settings-card-org cont-org">
-            <h2 className="prof-org-title">Contact Personal Details</h2>
+            <h2 className="prof-org-title">Contact Person Details</h2>
 
             <form className="form-column" onSubmit={handleContactSubmit}>
               {contactFields.map((field) => (
@@ -270,7 +292,7 @@ const SettingsOrg = () => {
           </div>
         )}
 
-        {/* ACCOUNT */}
+        {/* ACCOUNT TAB */}
         {activeTab === "account" && <AccountPage />}
       </div>
     </div>

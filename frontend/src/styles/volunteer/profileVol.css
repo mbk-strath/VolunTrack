@@ -126,6 +126,13 @@ label textarea {
   background-color: #f44336;
 }
 
+.grid-update {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem 2rem;
+  width: 100%;
+}
+
 @keyframes fadein {
   from {
     opacity: 0;

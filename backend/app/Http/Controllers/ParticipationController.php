@@ -24,7 +24,8 @@ class ParticipationController extends Controller
 {
     public function list(){
         $participations = Participation::all();
-        return response()->json($participations, 200);
+        $total_participations = $participations->count();
+        return response()->json(['participations' => $participations, 'total_participations' => $total_participations], 200);
     }
 
     public function getParticipation($id){
@@ -39,9 +40,11 @@ class ParticipationController extends Controller
         $user = $request->user();
         $volunteer = MembershipService::getMembership($user);
         $participations = Participation::where('volunteer_id', $volunteer->id)->get();
+        $total_participations = $participations->count();
         $totalHours = $participations->sum('total_hours');
         return response()->json([
             'participations' => $participations,
+            'total_participations' => $total_participations,
             'total_hours' => $totalHours
         ], 200);
 
@@ -49,12 +52,13 @@ class ParticipationController extends Controller
 
     public function oppParticipations($opportunity_id){
         $participations = Participation::where('opportunity_id', $opportunity_id)->get();
-        return response()->json($participations, 200);
+        $total_participations = $participations->count();
+        return response()->json(['participations' => $participations, 'total_participations' => $total_participations], 200);
     }
 
     public function create(Request $request){
         $data = $request->validate([
-        'volunteer_id' => 'required|string',
+        'volunteer_id' => 'required|integer|exists:volunteers,id',
         'opportunity_id' => 'required|exists:opportunities,id',
         'check_in' => 'nullable|date',
         'check_out' => 'nullable|date|after:check_in',
@@ -69,6 +73,9 @@ class ParticipationController extends Controller
         } else {
             $data['total_hours'] = null;
         }
+
+        $participation = Participation::create($data);
+        return response()->json(['message' => 'Participation created successfully', 'participation' => $participation], 200);
     }
 
     public function delete($id){

@@ -14,7 +14,9 @@ use App\Http\Controllers\OpportunityController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\ParticipationController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\EvidenceController;
+use App\Http\Controllers\ReportController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -51,19 +53,24 @@ Route::middleware('auth:sanctum', 'role:admin')->group(function(){
     Route::get('/all-applications', [ApplicationController::class, 'list']);
     Route::get('/all-participations', [ParticipationController::class, 'list']);
     Route::get('/all-notifications', [NotificationController::class, 'list']);
-    Route::get('/all-reviews', [ReviewController::class, 'list']);
+    Route::get('/all-evidences', [EvidenceController::class, 'list']);
     Route::get('/ongoing-opportunities', [OpportunityController::class, 'ongoing']);
+    Route::get('/all-reports', [ReportController::class, 'list']);
+    Route::patch('/update-report-status/{id}', [ReportController::class, 'updateStatus']);
     
 });
 
 ////Admin And Organisation Routes
 Route::middleware('auth:sanctum', 'role:admin,organisation')->group(function(){
+    //Total Volunteers
+    Route::get('/total-volunteers', [MembershipController::class, 'totalVolunteers']);
     //Gallery Controller
     Route::post('/add-image', [GalleryController::class, 'addImage']);
     Route::patch('/update-image/{id}', [GalleryController::class, 'updateImage']);
     Route::delete('/delete-image/{id}', [GalleryController::class, 'deleteImage']);
     //Opportunity Controller
     Route::post('/create-opportunity', [OpportunityController::class, 'create']);
+    Route::get('/my-opportunities', [OpportunityController::class, 'myOpportunities']);
     Route::patch('/update-opportunity/{id}', [OpportunityController::class, 'update']);
     Route::delete('/delete-opportunity/{id}', [OpportunityController::class, 'delete']);
     //Application Controller
@@ -73,8 +80,8 @@ Route::middleware('auth:sanctum', 'role:admin,organisation')->group(function(){
     Route::get('/opportunity-participations/{id}', [ParticipationController::class, 'oppParticipations']);
     Route::post('/add-participation', [ParticipationController::class, 'create']);
     Route::delete('/delete-participation/{id}', [ParticipationController::class, 'delete']);
-    //Review Controller
-    Route::get('/organisation-reviews/{id}', [ReviewController::class, 'getByOrganisation']);
+    //Evidence Controller
+    Route::get('/organisation-evidences/{id}', [EvidenceController::class, 'getByOrganisation']);
 }); 
 
 ///Admin and Volunteer Routes
@@ -85,12 +92,11 @@ Route::middleware('auth:sanctum', 'role:admin,volunteer')->group(function(){
     Route::delete('/delete-application/{id}', [ApplicationController::class, 'delete']);
     //Participation Controller
     Route::get('/my-participations', [ParticipationController::class, 'myParticipations']);
-    //Review Controller
-    Route::post('my-reviews', [ReviewController::class, 'getByVolunteer']);
-    Route::post('/create-review', [ReviewController::class, 'create']);
-    Route::patch('/update-review/{id}', [ReviewController::class, 'update']);
-    Route::delete('/delete-review/{id}', [ReviewController::class, 'delete']);
-
+    //Evidence Controller
+    Route::post('my-evidences', [EvidenceController::class, 'getByVolunteer']);
+    Route::post('/create-evidence', [EvidenceController::class, 'create']);
+    Route::patch('/update-evidence/{id}', [EvidenceController::class, 'update']);
+    Route::delete('/delete-evidence/{id}', [EvidenceController::class, 'delete']);
 });
 
 
@@ -113,8 +119,14 @@ Route::middleware('auth:sanctum', 'role:admin,organisation,volunteer')->group(fu
     Route::get('/my-notifications', [NotificationController::class, 'myNotifications']);
     Route::get('/unread-notifications', [NotificationController::class, 'unread']);
     Route::put('/mark-as-read/{id}', [NotificationController::class, 'markAsRead']);
-    //Review Controller
-    Route::get('get-review/{id}', [ReviewController::class, 'getById']);
+    //Evidence Controller
+    Route::get('get-evidence/{id}', [EvidenceController::class, 'getById']);
+    //Report Controller
+    Route::post('/create-report', [ReportController::class, 'create']);
+    Route::patch('/update-report/{id}', [ReportController::class, 'update']);
+    Route::delete('/delete-report/{id}', [ReportController::class, 'delete']);
+    Route::get('/get-report/{id}', [ReportController::class, 'get']);
+    Route::get('/my-reports', [ReportController::class, 'MyReports']);
 
     //Logout Route
     Route::post('/logout', [\App\Http\Controllers\UserController::class, 'logout']);

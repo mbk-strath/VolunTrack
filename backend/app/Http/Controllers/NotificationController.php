@@ -44,10 +44,23 @@ class NotificationController extends Controller
 
     public function myNotifications(Request $request)
     {
+        \Log::info('myNotifications called');
         $user = $request->user();
+        if (!$user) {
+            \Log::info('User is null');
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+        
+        // Debug
+        \Log::info('User ID: ' . $user->id . ', Role: ' . $user->role);
         
         // Get notifications received by the user
-        $receivedNotifications = $user->receivedNotifications()->get();
+        $query = $user->receivedNotifications();
+        \Log::info('Query: ' . $query->toSql());
+        \Log::info('Bindings: ' . json_encode($query->getBindings()));
+        $receivedNotifications = $query->get();
+        
+        \Log::info('Received notifications count: ' . $receivedNotifications->count());
         
         // Or get all notifications (both sent and received)
         $allNotifications = $user->notifications()->get();

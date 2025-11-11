@@ -174,4 +174,22 @@ class MembershipController extends Controller
         return response()->json($organisations, 200);
     }
 
+    public function totalVolunteers(Request $request)
+    {
+        $user = $request->user();
+        if ($user->role !== 'organisation') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+        $organisation = MembershipService::getMembership($user);
+        $myOpportunities = Opportunity::where('organisation_id', $organisation->id)->pluck('id')->toArray();
+        $myParticipants = Application::whereIn('opportunity_id', $myOpportunities)
+            ->pluck('volunteer_id')
+            ->unique()
+            ->toArray();
+
+        $totalVolunteers = empty($myParticipants)
+            ? 0
+            : Volunteer::whereIn('id', $myParticipants)->count();
+        return response()->json(['total_volunteers' => $totalVolunteers], 200);
+    }
 }

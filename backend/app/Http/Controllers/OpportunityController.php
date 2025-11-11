@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Organisation;
 use App\Models\Volunteer;
 use App\Models\Opportunity;
+use App\Models\Participation;
 use App\Models\OtpCode;
 
 //Resources
@@ -128,5 +129,40 @@ class OpportunityController extends Controller
         return response()->json($opportunities, 200);
     }
 
+    public function totalAttendanceRate(Request $request){
+        $user = $request->user();
+        $organisation = MembershipService::getMembership($user);
+        if($user->role !== 'organisation' || !$organisation){
+            return response()->json(['message' => 'Only organisations can view attendance rates'], 403);
+        }
 
+        $opportunities = Opportunity::where('organisation_id', $organisation->id)->get();
+        $totalExpectedHours = 0;
+        $totalHoursAttended = 0;
+
+        foreach($opportunities as $opportunity){
+            // Calculate total hours for this opportunity
+            $startDate = \Carbon\Carbon::parse($opportunity->start_date);
+            $endDate = \Carbon\Carbon::parse($opportunity->end_date);
+            $opportunityHours = $startDate->diffInHours($endDate);
+            
+            // Expected hours for this opportunity
+            $expectedHours = $opportunity->num_volunteers_needed * $opportunityHours;
+            $totalExpectedHours += $expectedHours;
+            
+            // Get all participations and sum attended hours
+            $participations = Participation::where('opportunity_id', $opportunity->id)->get();
+            foreach ($participations as $participation) {
+                if (!empty($participation->check_in) && !empty($participation->check_out)) {
+                    $checkIn = \Carbon\Carbon::parse($participation->check_in);
+                    $checkOut = \Carbon\Carbon::parse($participation->check_out);
+                    $totalHoursAttended += $checkOut->diffInHours($checkIn);
+                }
+            }
+        }
+
+        $attendanceRate = $totalExpectedHours > 0 ? ($totalHoursAttended / $totalExpectedHours) * 100 : 0;
+
+        return response()->json(['attendance_rate' => round($attendanceRate, 2)], 200);
+    }
 }

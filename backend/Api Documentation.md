@@ -811,8 +811,6 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 }
 ```
 
----
-
 ## Update Opportunity
 
 **Endpoint:** `PATCH /update-opportunity/{id}`
@@ -858,14 +856,12 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "benefits": "Free lunch, certificate",
         "application_deadline": "2025-10-25",
         "cv_required": false,
-        "attendance_rate": 0,
+        "attendance_rate": 75.50,
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
 }
 ```
-
----
 
 ## Delete Opportunity
 
@@ -886,6 +882,32 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
     "message": "Opportunity deleted successfully"
 }
 ```
+
+---
+
+## Total Attendance Rate
+
+**Endpoint:** `GET /total-volunteers`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Organisation or Admin only)
+
+**Response:**
+
+```
+{
+    "attendance_rate": 75.50
+}
+```
+
+**Notes:**
+
+-   Calculates the overall attendance rate across all opportunities for an organisation
+-   Formula: `(Total Hours Attended) / (Expected Total Hours) * 100`
+-   Expected Total Hours = `num_volunteers_needed * (opportunity duration in hours)`
+-   Total Hours Attended = Sum of all participation hours (check_out - check_in)
+-   Rounded to 2 decimal places
 
 ---
 
@@ -1211,15 +1233,6 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
     }
 }
 ```
-
-**Notes:**
-
--   `total_hours` is automatically calculated as the difference in hours between `check_in` and `check_out` (returns 0 if either is missing)
--   The response includes appended attributes: `volunteer_name` and `opportunity_title` for reference
--   If only one or neither timestamp is provided, `total_hours` will be 0
--   Hours are calculated as whole hours (integer), not decimal values
-
----
 
 ---
 

@@ -777,8 +777,10 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 -   description (string, required): Detailed description
 -   required_skills (string, required): Skills needed for the opportunity
 -   num_volunteers_needed (integer, required): Number of volunteers required
--   start_date (date, required): Opportunity start date
+-   start_date (date, required): Opportunity start date (YYYY-MM-DD)
+-   start_time (time, required): Opportunity start time (HH:MM:SS)
 -   end_date (date, required): Opportunity end date (must be after or equal to start_date)
+-   end_time (time, required): Opportunity end time (HH:MM:SS)
 -   schedule (string, required): Schedule/timing information
 -   benefits (string, optional): Benefits offered to volunteers
 -   application_deadline (date, required): Deadline for applications (must be before or equal to start_date)
@@ -798,7 +800,9 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "required_skills": "Physical labor, teamwork",
         "num_volunteers_needed": 10,
         "start_date": "2025-11-01",
+        "start_time": "09:00:00",
         "end_date": "2025-11-01",
+        "end_time": "17:00:00",
         "schedule": "9 AM - 5 PM",
         "location": "Central Park",
         "benefits": "Free lunch, certificate",
@@ -830,7 +834,9 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 -   required_skills (string, optional): Skills needed for the opportunity
 -   num_volunteers_needed (integer, optional): Number of volunteers required
 -   start_date (date, optional): Opportunity start date
+-   start_time (time, optional): Opportunity start time (HH:MM:SS)
 -   end_date (date, optional): Opportunity end date
+-   end_time (time, optional): Opportunity end time (HH:MM:SS)
 -   schedule (string, optional): Schedule/timing information
 -   benefits (string, optional): Benefits offered to volunteers
 -   application_deadline (date, optional): Deadline for applications
@@ -850,7 +856,9 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "required_skills": "Physical labor, teamwork",
         "num_volunteers_needed": 10,
         "start_date": "2025-11-01",
+        "start_time": "09:00:00",
         "end_date": "2025-11-01",
+        "end_time": "17:00:00",
         "schedule": "9 AM - 5 PM",
         "location": "Central Park",
         "benefits": "Free lunch, certificate",

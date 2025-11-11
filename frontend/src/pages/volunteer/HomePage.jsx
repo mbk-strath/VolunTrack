@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import "../../styles/volunteer/homeVol.css";
+import "../../styles/volunteer/HomeVol.css";
 import { Ri24HoursFill } from "react-icons/ri";
 import { FaLightbulb } from "react-icons/fa";
 import { SiTicktick } from "react-icons/si";

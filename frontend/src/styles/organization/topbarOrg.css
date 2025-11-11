@@ -18,6 +18,12 @@
 
 .dark .topbar-container {
   background-color: #191725;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff;
+}
+
+.dark .topbar-icon {
+  color: #ffffff;
 }
 
 .topbar-left {

@@ -56,3 +56,9 @@
 .btn-create:hover {
   background-color: #1a2847 !important;
 }
+
+.dark .create-dialog-paper {
+  background-color: #252235 !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff;
+}

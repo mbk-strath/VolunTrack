@@ -31,12 +31,6 @@ const TopBarOrg = () => {
   return (
     <header className="topbar-container">
       <div className="topbar-left">
-        <div className="topbar-brand">
-          <div className="topbar-logo">
-            <span className="topbar-logo-text">VT</span>
-          </div>
-          <h2 className="topbar-title">VolunTrack</h2>
-        </div>
         <Button 
           className="topbar-create-btn"
           variant="contained"

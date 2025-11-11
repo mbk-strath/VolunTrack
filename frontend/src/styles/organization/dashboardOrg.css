@@ -18,6 +18,12 @@
 
 .dark .dashboard-stat-card {
   background-color: #252235 !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff;
+}
+
+.dark .dashboard-container .dashboard-chart-card .dashboard-chart-title {
+  color: #ffffff;
 }
 
 .dashboard-stat-label {

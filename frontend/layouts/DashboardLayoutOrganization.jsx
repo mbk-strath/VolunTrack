@@ -1,15 +1,19 @@
-import SidebarOrg from "./src/components/organization/sidebarOrg.jsx";
-import TopBarOrg from "./src/components/organization/topBarOrg.jsx";
-import "../../styles/layouts/dashboardLayoutOrganization.css";
+import React from "react";
+import { Outlet } from "react-router-dom";
+import SidebarOrg from "../src/components/organization/sidebarOrg.jsx";
+import TopBarOrg from "../src/components/organization/topbarOrg.jsx";
+import "../src/styles/organization/DashboardLayoutOrg.css";
 
-const DashboardLayoutOrganization = ({ children }) => {
+const DashboardLayoutOrganization = () => {
   return (
     <div className="layout-container">
       <SidebarOrg />
-      <TopBarOrg />
-      <main className="layout-main">
-        {children}
-      </main>
+      <div className="layout-content">
+        <TopBarOrg />
+        <main className="layout-main">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 };

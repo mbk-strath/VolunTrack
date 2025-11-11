@@ -1,26 +1,52 @@
 import { LayoutDashboard, Search, Folder, Clock, MessageSquare, Settings } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import "../../styles/organization/sidebarOrg.css";
+import Logo from "../../assets/logo.png";
+import LogoDark from "../../assets/logo-dark.png";
 
 const SidebarOrg = () => {
   const location = useLocation();
+  const [darkMode, setDarkMode] = useState(false);
+  
+  useEffect(() => {
+    // Check if dark mode is active on mount
+    const isDark = document.documentElement.classList.contains("dark");
+    setDarkMode(isDark);
+    
+    // Listen for dark mode changes
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains("dark");
+      setDarkMode(isDark);
+    });
+    
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"]
+    });
+    
+    return () => observer.disconnect();
+  }, []);
   
   const navItems = [
-    { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
-    { icon: Search, label: "Opportunities", path: "/opportunities" },
-    { icon: Folder, label: "Applications", path: "/applications" },
-    { icon: Clock, label: "History", path: "/history" },
-    { icon: MessageSquare, label: "Messages", path: "/messages" },
-    { icon: Settings, label: "Settings", path: "/settings" },
+    { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard/organization" },
+    { icon: Search, label: "Opportunities", path: "/dashboard/organization/opportunities" },
+    { icon: Folder, label: "Applications", path: "/dashboard/organization/applications" },
+    { icon: Clock, label: "History", path: "/dashboard/organization/history" },
+    { icon: MessageSquare, label: "Messages", path: "/dashboard/organization/messages" },
+    { icon: Settings, label: "Settings", path: "/dashboard/organization/settings" },
   ];
 
   return (
     <aside className="sidebar-container">
-      <div className="sidebar-header">
+      <div>
         <div className="sidebar-logo">
-          <span className="sidebar-logo-text">VT</span>
+          {darkMode ? (
+            <img src={Logo} alt="VolunTrack Logo" className="sidebar-logo-image" />
+          ) : (
+            <img src={LogoDark} alt="VolunTrack Logo" className="sidebar-logo-image" />
+          )}
         </div>
-        <h1 className="sidebar-title">VolunTrack</h1>
       </div>
       
       <nav className="sidebar-nav">

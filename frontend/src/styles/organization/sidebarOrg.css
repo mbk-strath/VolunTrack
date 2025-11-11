@@ -16,6 +16,8 @@
 
 .dark .sidebar-container {
   background-color: #191725;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff;
 }
 
 .sidebar-header {
@@ -28,14 +30,18 @@
 }
 
 .sidebar-logo {
-  width: 4rem;
-  height: 4rem;
-  border-radius: 9999px;
-  background-color: #1e5a8e;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  width: 100%;
+  max-width: 180px;
+  height: auto;
+  margin-bottom: 2rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.sidebar-logo-image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
 .sidebar-logo-text {
@@ -51,6 +57,11 @@
   font-weight: 700;
   color: hsl(var(--foreground));
   letter-spacing: -0.025em;
+}
+
+.sidebar-title:hover {
+  background-color: #191725;
+  color: #ffffff;
 }
 
 .sidebar-nav {

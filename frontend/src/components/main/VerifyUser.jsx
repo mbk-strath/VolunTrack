@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 function VerifyUser() {
-  const { id } = useParams(); // get USER_ID from URL
+  const { id } = useParams();
   const navigate = useNavigate();
   const [message, setMessage] = useState("Verifying your account...");
 
@@ -12,9 +12,9 @@ function VerifyUser() {
       .then((data) => {
         if (data.message === "User verified successfully") {
           setMessage("Your account is verified! Redirecting to login...");
-          setTimeout(() => navigate("/login"), 2000); // redirect after 2s
+          setTimeout(() => navigate("/login"), 2000);
         } else {
-          setMessage(data.message); // e.g., already verified or not found
+          setMessage(data.message);
         }
       })
       .catch(() => setMessage("Something went wrong. Try again."));

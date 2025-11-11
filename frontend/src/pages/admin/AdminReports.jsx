@@ -9,7 +9,6 @@ const AdminReports = () => {
     <div className="ReportsPage">
       <h2>Flagged Reports</h2>
 
-      {/* Report Card 1 */}
       <div className="rep-card">
         <div className="rep-info">
           <strong>Linda Opollo reported for Spamming</strong>
@@ -26,7 +25,6 @@ const AdminReports = () => {
         </div>
       </div>
 
-      {/* Report Card 2 */}
       <div className="rep-card">
         <div className="rep-info">
           <strong>Linda Opollo reported for Spamming</strong>

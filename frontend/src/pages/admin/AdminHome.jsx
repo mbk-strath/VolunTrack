@@ -20,11 +20,9 @@ const data = [
 const AdminHome = () => {
   return (
     <div className="admin-container">
-      {/* Main content area */}
       <div className="admin-content">
         <h3 className="section-title">Platform Overview</h3>
 
-        {/* Metric Cards */}
         <div className="metrics-container">
           <div className="metric-card">
             <p>Active Volunteers</p>
@@ -40,7 +38,6 @@ const AdminHome = () => {
           </div>
         </div>
 
-        {/* Chart Section */}
         <div className="chart-container">
           <ResponsiveContainer width="100%" height={300}>
             <BarChart

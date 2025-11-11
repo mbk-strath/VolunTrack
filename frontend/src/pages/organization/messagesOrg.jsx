@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../../styles/volunteer/MessagesPage.css";
 
-const API_BASE_URL = "http://127.0.0.1:8000/api"; // ✅ Update this if needed
+const API_BASE_URL = "http://127.0.0.1:8000/api";
 
 const MessagesOrg = () => {
   const [messages, setMessages] = useState([]);
@@ -22,7 +22,6 @@ const MessagesOrg = () => {
         },
       });
 
-      // ✅ Safely extract notifications
       const data = Array.isArray(res.data)
         ? res.data
         : res.data.notifications || [];
@@ -30,7 +29,7 @@ const MessagesOrg = () => {
       setMessages(data);
     } catch (error) {
       console.error("Error fetching notifications:", error);
-      setMessages([]); // ✅ Ensure messages is always an array
+      setMessages([]);
     } finally {
       setLoading(false);
     }

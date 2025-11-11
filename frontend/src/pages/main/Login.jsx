@@ -54,22 +54,19 @@ function Login() {
       const data = res.data;
       console.log("Login API response:", data);
 
-      // Admin login: direct
       if (data.user && data.token) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
         const role = (data.user.role || "").trim().toLowerCase();
         if (role === "admin") navigate("/dashboard/admin");
-        else if (role === "volunteer")
-          navigate("/two-factor"); // volunteer needs OTP
+        else if (role === "volunteer") navigate("/two-factor");
         else if (role === "organisation" || role === "organization")
-          navigate("/two-factor"); // org needs OTP
+          navigate("/two-factor");
         else navigate("/");
         return;
       }
 
-      // OTP login (volunteer/org)
       if (data.message === "OTP sent to email") {
         sessionStorage.setItem("otp_user_email", formData.email);
         navigate("/two-factor");

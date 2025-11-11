@@ -13,6 +13,7 @@ class Application extends Model
         'volunteer_id',
         'opportunity_id',
         'application_date',
+        'CV_path',
         'status'
     ];
 

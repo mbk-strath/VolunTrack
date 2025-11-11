@@ -20,6 +20,7 @@ class Opportunity extends Model
         'schedule',
         'location',
         'benefits',
+        'cv_required',
         'application_deadline',
     ];
 

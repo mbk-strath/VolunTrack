@@ -36,6 +36,18 @@ class OpportunityController extends Controller
         return response()->json($opportunity, 200);
     }
 
+    public function myOpportunities(Request $request){
+        $user = $request->user();
+        $organisation = MembershipService::getMembership($user);
+        if($user->role !== 'organisation' || !$organisation){
+            return response()->json(['message' => 'Only organisations can view their opportunities'], 403);
+        }
+
+        $opportunities = Opportunity::where('organisation_id', $organisation->id)->get();
+        $total_opportunities = $opportunities->count();
+        return response()->json(['opportunities' => $opportunities, 'total_opportunities' => $total_opportunities], 200);
+    }
+
     public function create(Request $request){
         $user = $request->user();
         $organisation = MembershipService::getMembership($user);
@@ -54,6 +66,7 @@ class OpportunityController extends Controller
             'benefits' => 'nullable|string|max:255',
             'application_deadline' => 'required|date|before_or_equal:start_date',
             'location' => 'required|string|max:255',
+            'cv_required' => 'sometimes|boolean',
         ]);
         $data ['organisation_id'] = $organisation->id;
 
@@ -84,6 +97,7 @@ class OpportunityController extends Controller
             'benefits' => 'nullable|string|max:255',
             'application_deadline' => 'sometimes|required|date|before_or_equal:start_date',
             'location' => 'sometimes|required|string|max:255',
+            'cv_required' => 'sometimes|boolean',
         ]);
 
         $opportunity->update($data);

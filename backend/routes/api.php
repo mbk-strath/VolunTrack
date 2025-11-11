@@ -62,12 +62,15 @@ Route::middleware('auth:sanctum', 'role:admin')->group(function(){
 
 ////Admin And Organisation Routes
 Route::middleware('auth:sanctum', 'role:admin,organisation')->group(function(){
+    //Total Volunteers
+    Route::get('/total-volunteers', [MembershipController::class, 'totalVolunteers']);
     //Gallery Controller
     Route::post('/add-image', [GalleryController::class, 'addImage']);
     Route::patch('/update-image/{id}', [GalleryController::class, 'updateImage']);
     Route::delete('/delete-image/{id}', [GalleryController::class, 'deleteImage']);
     //Opportunity Controller
     Route::post('/create-opportunity', [OpportunityController::class, 'create']);
+    Route::get('/my-opportunities', [OpportunityController::class, 'myOpportunities']);
     Route::patch('/update-opportunity/{id}', [OpportunityController::class, 'update']);
     Route::delete('/delete-opportunity/{id}', [OpportunityController::class, 'delete']);
     //Application Controller

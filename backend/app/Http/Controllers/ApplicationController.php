@@ -42,7 +42,7 @@ class ApplicationController extends Controller
     public function myApplicants(Request $request, $id){
         $user = request()->user();
         $organisation = MembershipService::getMembership($user);
-        if(!$user->role == 'organisation' || !$organisation){
+        if($user->role !== 'organisation' || !$organisation){
             return response()->json(['message'=>"Unauthorized"],403);
         }
         $applications = Application::where('opportunity_id',$id)->get();
@@ -52,7 +52,7 @@ class ApplicationController extends Controller
     public function apply(Request $request){
         $user = request()->user();
         $volunteer = MembershipService::getMembership($user);
-        if(!$user->role == 'volunteer' || !$volunteer){
+        if($user->role !== 'volunteer' || !$volunteer){
             return response()->json(['message'=>"Unauthorized"],403);
         }
         $data = $request->validate([
@@ -71,7 +71,7 @@ class ApplicationController extends Controller
     public function updateStatus(Request $request, $applicationId){
         $user = request()->user();
         $organisation = MembershipService::getMembership($user);
-        if(!$user->role == 'organisation' || !$organisation){
+        if($user->role !== 'organisation' || !$organisation){
             return response()->json(['message'=>"Unauthorized"],403);
         }
         $data = $request->validate([
@@ -89,7 +89,7 @@ class ApplicationController extends Controller
     public function delete(Request $request, $id){
         $user = request()->user();
         $volunteer = MembershipService::getMembership($user);
-        if(!$user->role == 'volunteer' || !$volunteer){
+        if($user->role !== 'volunteer' || !$volunteer){
             return response()->json(['message'=>"Unauthorized"],403);
         }
         $application = Application::find($id);

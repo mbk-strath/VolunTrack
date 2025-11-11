@@ -28,6 +28,11 @@ class Organisation extends Model
         'target_beneficiary',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     // returns the count of unique volunteers across all opportunities of this organisation
     public function uniqueVolunteerCount()
     {
@@ -43,5 +48,10 @@ class Organisation extends Model
     public function opportunities()
     {
         return $this->hasMany(Opportunity::class, 'organisation_id');
+    }
+
+    public function gallery()
+    {
+        return $this->hasMany(Gallery::class, 'org_id');
     }
 }

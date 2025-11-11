@@ -21,19 +21,24 @@ class Report extends Model
         'user_role',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function getUserNameAttribute()
     {
-        $user = $this->belongsTo(User::class, 'user_id');
+        $user = $this->user;
         return $user ? $user->name : null;
     }
     public function getUserEmailAttribute()
     {
-        $user = $this->belongsTo(User::class, 'user_id');
+        $user = $this->user;
         return $user ? $user->email : null;
     }
     public function getUserRoleAttribute()
     {
-        $user = $this->belongsTo(User::class, 'user_id');
+        $user = $this->user;
         return $user ? $user->role : null;
     }
 

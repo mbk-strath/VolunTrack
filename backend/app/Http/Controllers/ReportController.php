@@ -30,22 +30,26 @@ class ReportController extends Controller
         if(!$report){
             return response()->json(['message' => 'Report not found'], 404);
         }
-        if ($request->user()->role == 'admin' ){
+        $user = $request->user();
+        if ($user->role === 'admin' || $report->user_id === $user->id) {
             return response()->json($report);
         }
-        if ($report->user_id !== $request->user()->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-        return response()->json($report);
+        return response()->json(['message' => 'Unauthorized'], 403);
     }
 
     public function create(Request $request){
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+        
         $report = Report::create([
             'user_id' => $request->user()->id,
-            'title' => $request->input('title'),    
-            'description' => $request->input('description') ?? null,
+            'title' => $data['title'],    
+            'description' => $data['description'] ?? null,
+            'status' => 'pending',
         ]);
-        return response()->json($report);
+        return response()->json($report, 200);
     }
 
     public function update(Request $request, $id){
@@ -53,9 +57,16 @@ class ReportController extends Controller
         if(!$report){
             return response()->json(['message' => 'Report not found'], 404);
         }
-        $report->update($request->only(['title', 'description']));
-        return response()->json($report);
+        
+        $data = $request->validate([
+            'title' => 'sometimes|required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+        
+        $report->update($data);
+        return response()->json($report, 200);
     }
+    
     public function delete($id){
         $report = Report::find($id);
         if(!$report){

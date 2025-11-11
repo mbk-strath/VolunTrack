@@ -103,9 +103,10 @@ class EvidenceController extends Controller
         return response()->json($evidence, 200);
     }
 
-    public function getByVolunteer($volunteer_id)
+    public function getByVolunteer(Request $request)
     {
-        $evidences = Evidence::where('volunteer_id', $volunteer_id)->get();
+        $volunteer = MembershipService::getMembership($request->user());
+        $evidences = Evidence::where('volunteer_id', $volunteer->id)->get();
         return response()->json($evidences, 200);
     }
 }

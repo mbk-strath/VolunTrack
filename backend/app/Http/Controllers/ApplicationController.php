@@ -31,9 +31,11 @@ class ApplicationController extends Controller
     }
 
     $applications = Application::where('volunteer_id', $volunteer->id)->get();
+    $total_applications = $applications->count();
 
     return response()->json([
         'applications' => $applications,
+        'total_applications' => $total_applications,
         'message' => 'Fetch Successful'
     ], 200);
 }
@@ -46,7 +48,8 @@ class ApplicationController extends Controller
             return response()->json(['message'=>"Unauthorized"],403);
         }
         $applications = Application::where('opportunity_id',$id)->get();
-        return response()->json(['applications'=>$applications,"message"=>"Fetch Successlful"],200);
+        $total_applications = $applications->count();
+        return response()->json(['applications'=>$applications, 'total_applications' => $total_applications, "message"=>"Fetch Successlful"],200);
     }
 
     public function apply(Request $request){

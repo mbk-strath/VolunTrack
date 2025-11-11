@@ -276,20 +276,23 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 -   email (string, optional)
 -   phone (string, optional)
 -   gender (string, optional)
--   profile_image (file, optional: for volunteers)
--   org_name (string, optional: for organisations)
+-   password (string, optional)
 -   etc. (depending on user role)
 
 **Response:**
 
 ```
 {
-    "message": "User updated successfully",
-    "user": {
-        "id": 1,
-        "name": "Updated Name",
-        ...
-    }
+    "id": 1,
+    "name": "Updated Name",
+    "email": "updated@example.com",
+    "phone": "1234567890",
+    "gender": "Male",
+    "role": "volunteer",
+    "is_verified": true,
+    "is_active": true,
+    "created_at": "2025-10-20T10:00:00.000000Z",
+    "updated_at": "2025-10-20T10:00:00.000000Z"
 }
 ```
 
@@ -836,9 +839,13 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
             "updated_at": "2025-10-20T10:00:00.000000Z"
         }
     ],
-    "message": "Fetch Successlful"
+    "message": "Fetch Successful"
 }
 ```
+
+**Note:**
+
+-   The `list()` method currently does not return `total_applications` count
 
 ---
 
@@ -861,13 +868,12 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
             "opportunity_id": 1,
             "application_date": "2025-10-20",
             "status": "pending",
-            "volunteer_name": "John Doe",
-            "opportunity_title": "Community Clean-up",
             "created_at": "2025-10-20T10:00:00.000000Z",
             "updated_at": "2025-10-20T10:00:00.000000Z"
         }
     ],
-    "message": "Fetch Successlful"
+    "total_applications": 1,
+    "message": "Fetch Successful"
 }
 ```
 
@@ -875,7 +881,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 ## My Applicants
 
-**Endpoint:** `GET /my-applicants/{opportunity_id}`
+**Endpoint:** `GET /my-applicants/{id}`
 
 **Headers:**
 
@@ -883,7 +889,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 **Path Parameters:**
 
--   opportunity_id (integer, required): The opportunity ID
+-   id (integer, required): The opportunity ID
 
 **Response:**
 
@@ -900,7 +906,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
             "updated_at": "2025-10-20T10:00:00.000000Z"
         }
     ],
-    "message": "Fetch Successlful"
+    "total_applications": 1,
+    "message": "Fetch Successful"
 }
 ```
 
@@ -940,7 +947,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 ## Update Application Status
 
-**Endpoint:** `PUT /update-application/{application_id}`
+**Endpoint:** `PATCH /update-application/{id}`
 
 **Headers:**
 
@@ -948,7 +955,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 **Path Parameters:**
 
--   application_id (integer, required): The application ID
+-   id (integer, required): The application ID
 
 **Body Parameters:**
 
@@ -984,18 +991,21 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 **Response:**
 
 ```
-[
-    {
-        "id": 1,
-        "volunteer_id": 1,
-        "opportunity_id": 1,
-        "check_in": "2025-11-01 09:00:00",
-        "check_out": "2025-11-01 17:00:00",
-        "total_hours": 8,
-        "created_at": "2025-11-01T09:00:00.000000Z",
-        "updated_at": "2025-11-01T17:00:00.000000Z"
-    }
-]
+{
+    "participations": [
+        {
+            "id": 1,
+            "volunteer_id": 1,
+            "opportunity_id": 1,
+            "check_in": "2025-11-01 09:00:00",
+            "check_out": "2025-11-01 17:00:00",
+            "total_hours": 8.0,
+            "created_at": "2025-11-01T09:00:00.000000Z",
+            "updated_at": "2025-11-01T17:00:00.000000Z"
+        }
+    ],
+    "total_participations": 1
+}
 ```
 
 ---
@@ -1019,12 +1029,13 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
             "opportunity_id": 1,
             "check_in": "2025-11-01 09:00:00",
             "check_out": "2025-11-01 17:00:00",
-            "total_hours": 8,
+            "total_hours": 8.0,
             "created_at": "2025-11-01T09:00:00.000000Z",
             "updated_at": "2025-11-01T17:00:00.000000Z"
         }
     ],
-    "total_hours": 8
+    "total_participations": 1,
+    "total_hours": 8.0
 }
 ```
 
@@ -1032,7 +1043,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 ## Opportunity Participations
 
-**Endpoint:** `GET /opportunity-participations/{opportunity_id}`
+**Endpoint:** `GET /opportunity-participations/{id}`
 
 **Headers:**
 
@@ -1040,23 +1051,26 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 **Path Parameters:**
 
--   opportunity_id (integer, required): The opportunity ID
+-   id (integer, required): The opportunity ID
 
 **Response:**
 
 ```
-[
-    {
-        "id": 1,
-        "volunteer_id": 1,
-        "opportunity_id": 1,
-        "check_in": "2025-11-01 09:00:00",
-        "check_out": "2025-11-01 17:00:00",
-        "total_hours": 8,
-        "created_at": "2025-11-01T09:00:00.000000Z",
-        "updated_at": "2025-11-01T17:00:00.000000Z"
-    }
-]
+{
+    "participations": [
+        {
+            "id": 1,
+            "volunteer_id": 1,
+            "opportunity_id": 1,
+            "check_in": "2025-11-01 09:00:00",
+            "check_out": "2025-11-01 17:00:00",
+            "total_hours": 8.0,
+            "created_at": "2025-11-01T09:00:00.000000Z",
+            "updated_at": "2025-11-01T17:00:00.000000Z"
+        }
+    ],
+    "total_participations": 1
+}
 ```
 
 ---
@@ -1071,10 +1085,10 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 **Body Parameters:**
 
--   volunteer_id (string, required): The volunteer ID
+-   volunteer_id (integer, required): The volunteer ID
 -   opportunity_id (integer, required): The opportunity ID
--   check_in (datetime, optional): Check-in time
--   check_out (datetime, optional): Check-out time (must be after check_in)
+-   check_in (datetime, optional): Check-in time (ISO 8601 format)
+-   check_out (datetime, optional): Check-out time (ISO 8601 format, must be after check_in)
 
 **Response:**
 
@@ -1087,12 +1101,17 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "opportunity_id": 1,
         "check_in": "2025-11-01 09:00:00",
         "check_out": "2025-11-01 17:00:00",
-        "total_hours": 8,
+        "total_hours": 8.0,
         "created_at": "2025-11-01T09:00:00.000000Z",
-        "updated_at": "2025-11-01T17:00:00.000000Z"
+        "updated_at": "2025-11-01T09:00:00.000000Z"
     }
 }
 ```
+
+**Notes:**
+
+-   If both `check_in` and `check_out` are provided, `total_hours` is automatically calculated and rounded to 2 decimal places
+-   If only one or neither timestamp is provided, `total_hours` will be null
 
 ---
 
@@ -1542,25 +1561,56 @@ Returns the membership data (organisation or volunteer) for the user with the gi
 
 **Endpoint:** `PATCH /update/{id}/`
 
+**Content-Type:** `multipart/form-data` (for file uploads)
+
 **Headers:**
 
 -   Authorization: Bearer {token}
 
 **Path Parameters:**
 
--   id (integer, required): The membership ID
+-   id (integer, required): The user ID
 
 **Body Parameters:**
 
-Depends on the membership type (organisation or volunteer). Similar to registration parameters.
+Depends on the membership type (organisation or volunteer):
+
+**For Organisation:**
+
+-   org_name (string, optional)
+-   description (string, optional)
+-   location (string, optional)
+-   logo (file, optional): Organization logo
+-   etc.
+
+**For Volunteer:**
+
+-   bio (string, optional)
+-   skills (string, optional)
+-   profile_image (file, optional): Volunteer profile image
+-   etc.
 
 **Response:**
 
 ```
 {
-    "message": "Membership updated successfully"
+    "id": 1,
+    "user_id": 1,
+    "org_name": "Example Org",
+    "description": "Organization description",
+    "location": "City, Country",
+    "logo": "path/to/logo.jpg",
+    "is_verified": true,
+    "is_active": true,
+    "created_at": "2025-10-20T10:00:00.000000Z",
+    "updated_at": "2025-10-20T10:00:00.000000Z"
 }
 ```
+
+**Note:**
+
+-   Response object structure varies depending on membership type (Organisation or Volunteer)
+-   File uploads (logo/profile_image) are handled automatically
 
 ---
 

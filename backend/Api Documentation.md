@@ -246,11 +246,20 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 ```
 {
-    // Organisation or Volunteer data
+    // Organisation example
     "id": 1,
     "user_id": 1,
     "org_name": "Example Org",
-    ...
+    "org_type": "Non-profit",
+    "reg_no": "123456",
+    "website": "https://example.com",
+    "logo": "path/to/logo.jpg",
+    "country": "Kenya",
+    "city": "Nairobi",
+    "focus_area": "Education",
+    "is_active": true,
+    "created_at": "2025-10-20T10:00:00.000000Z",
+    "updated_at": "2025-10-20T10:00:00.000000Z"
 }
 ```
 
@@ -375,9 +384,16 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "id": 1,
         "user_id": 1,
         "org_name": "Example Organisation",
-        "is_verified": true,
+        "org_type": "Non-profit",
+        "reg_no": "123456",
+        "website": "https://example.com",
+        "logo": "path/to/logo.jpg",
+        "country": "Kenya",
+        "city": "Nairobi",
+        "focus_area": "Education",
         "is_active": true,
-        ...
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
     }
 ]
 ```
@@ -1288,16 +1304,13 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "user_id": 1,
         "org_name": "Example Org",
         "org_type": "Non-profit",
-        "registration_number": "123456",
+        "reg_no": "123456",
         "website": "https://example.com",
+        "logo": "path/to/logo.jpg",
         "country": "Kenya",
         "city": "Nairobi",
-        "street_address": "123 Main St",
-        "operating_region": "Nairobi",
-        "mission_statement": "To help the community",
         "focus_area": "Education",
-        "target_beneficiary": "Children",
-        "logo": "path/to/logo.jpg",
+        "is_active": true,
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
@@ -1678,7 +1691,16 @@ Returns the membership data (organisation or volunteer) for the user with the gi
     "id": 1,
     "user_id": 1,
     "org_name": "Example Org",
-    ...
+    "org_type": "Non-profit",
+    "reg_no": "123456",
+    "website": "https://example.com",
+    "logo": "path/to/logo.jpg",
+    "country": "Kenya",
+    "city": "Nairobi",
+    "focus_area": "Education",
+    "is_active": true,
+    "created_at": "2025-10-20T10:00:00.000000Z",
+    "updated_at": "2025-10-20T10:00:00.000000Z"
 }
 ```
 
@@ -1705,10 +1727,14 @@ Depends on the membership type (organisation or volunteer):
 **For Organisation:**
 
 -   org_name (string, optional)
--   description (string, optional)
--   location (string, optional)
+-   org_type (string, optional)
+-   reg_no (string, optional)
+-   website (string, optional)
 -   logo (file, optional): Organization logo
--   etc.
+-   country (string, optional)
+-   city (string, optional)
+-   focus_area (string, optional)
+-   is_active (boolean, optional)
 
 **For Volunteer:**
 
@@ -1724,10 +1750,13 @@ Depends on the membership type (organisation or volunteer):
     "id": 1,
     "user_id": 1,
     "org_name": "Example Org",
-    "description": "Organization description",
-    "location": "City, Country",
+    "org_type": "Non-profit",
+    "reg_no": "123456",
+    "website": "https://example.com",
     "logo": "path/to/logo.jpg",
-    "is_verified": true,
+    "country": "Kenya",
+    "city": "Nairobi",
+    "focus_area": "Education",
     "is_active": true,
     "created_at": "2025-10-20T10:00:00.000000Z",
     "updated_at": "2025-10-20T10:00:00.000000Z"

@@ -17,7 +17,6 @@ function ResetPassword() {
     setError("");
     setMessage("");
 
-    // Basic client-side validation
     if (!otp || !newPassword || !confirmPassword) {
       setError("All fields are required");
       return;

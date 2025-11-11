@@ -53,7 +53,6 @@ const AdminUsers = () => {
     fetchUsers();
   }, []);
 
-  // 🧠 Loading spinner
   if (loading)
     return (
       <div className="loading-container">
@@ -68,7 +67,6 @@ const AdminUsers = () => {
     <div className="UsersPage">
       <h2 className="page-title">User Management</h2>
 
-      {/* Tabs */}
       <div className="tabs-container">
         <button
           className={`tab-btn ${activeTab === "volunteers" ? "active" : ""}`}
@@ -84,7 +82,6 @@ const AdminUsers = () => {
         </button>
       </div>
 
-      {/* Volunteers Table */}
       {activeTab === "volunteers" && (
         <div className="table-container">
           <table className="users-table">
@@ -152,7 +149,6 @@ const AdminUsers = () => {
         </div>
       )}
 
-      {/* Organisations Table */}
       {activeTab === "organisations" && (
         <div className="table-container org">
           <table className="users-table">

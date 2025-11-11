@@ -9,10 +9,8 @@ const TwoFactorPage = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Get email from sessionStorage
   const email = sessionStorage.getItem("otp_user_email");
 
-  // Redirect to login if email is missing
   useEffect(() => {
     if (!email) {
       navigate("/login");
@@ -39,11 +37,9 @@ const TwoFactorPage = () => {
         return;
       }
 
-      // Save user + token
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      // Navigate based on role
       const role = (data.user.role || "").trim().toLowerCase();
       switch (role) {
         case "volunteer":

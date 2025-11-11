@@ -5,7 +5,6 @@ import "../../styles/admin/settprofile.css";
 const AdminSettingsProfile = () => {
   const [avatar, setAvatar] = useState(null);
 
-  // Handle avatar image upload
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -13,14 +12,13 @@ const AdminSettingsProfile = () => {
     }
   };
 
-  // Handle delete avatar
   const handleDeleteAvatar = () => {
     setAvatar(null);
   };
 
   return (
     <div className="settings-profile-container">
-      {/* Avatar Section */}
+      =
       <div className="profile-avatar-section">
         <div className="avatar-wrapper">
           <div className="avatar-placeholder">
@@ -30,7 +28,6 @@ const AdminSettingsProfile = () => {
               <div className="avatar-circle"></div>
             )}
 
-            {/* Hidden File Input */}
             <input
               type="file"
               id="avatarInput"
@@ -39,23 +36,21 @@ const AdminSettingsProfile = () => {
               style={{ display: "none" }}
             />
 
-            {/* Camera Icon Overlay */}
             <label htmlFor="avatarInput" className="camera-icon">
               <FaCamera />
             </label>
           </div>
         </div>
 
-        {/* Avatar Action Buttons */}
         <div className="avatar-buttons">
-          <button onClick={() => document.getElementById("avatarInput").click()}>
+          <button
+            onClick={() => document.getElementById("avatarInput").click()}
+          >
             Update Avatar
           </button>
           <button onClick={handleDeleteAvatar}>Delete Avatar</button>
         </div>
       </div>
-
-      {/* Profile Details Form */}
       <form className="profile-details-form">
         <div className="form-row">
           <div className="form-field">
@@ -90,7 +85,6 @@ const AdminSettingsProfile = () => {
           </div>
         </div>
 
-        {/* Save Button */}
         <div className="save-changes-section">
           <button type="submit">Save Changes</button>
         </div>

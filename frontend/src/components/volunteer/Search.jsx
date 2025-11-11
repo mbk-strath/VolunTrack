@@ -19,10 +19,10 @@ function Search({ onSearch, onFilter }) {
         className="search"
       />
       <button onClick={handleSearch}>
-        <FaSearch /> {/* search icon */}
+        <FaSearch />
       </button>
       <button onClick={onFilter}>
-        <FaFilter /> {/* filter icon */}
+        <FaFilter />
       </button>
     </div>
   );

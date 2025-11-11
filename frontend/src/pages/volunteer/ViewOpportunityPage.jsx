@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import OpportunityCard from "../../components/volunteer/OpportunityCard";
 import "../../styles/volunteer/OpportunityVol.css";
-import Facebook from "../../assets/facebook.jpg"; // fallback image
+import Facebook from "../../assets/facebook.jpg";
 
 function ViewOpportunityPage() {
   const [opportunities, setOpportunities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Overlay state
   const [selectedOpportunity, setSelectedOpportunity] = useState(null);
   const [overlayLoading, setOverlayLoading] = useState(false);
   const [overlayError, setOverlayError] = useState("");
@@ -83,7 +82,7 @@ function ViewOpportunityPage() {
       setOverlayMessage(
         res.data.message || "Application submitted successfully!"
       );
-      setApplied(true); // disable Apply button after success
+      setApplied(true);
     } catch (err) {
       console.error("Application error:", err);
       setOverlayMessage(
@@ -113,7 +112,6 @@ function ViewOpportunityPage() {
         />
       ))}
 
-      {/* Overlay */}
       {selectedOpportunity && (
         <div className="overlay">
           <div className="overlay-content">
@@ -158,7 +156,6 @@ function ViewOpportunityPage() {
                   {selectedOpportunity.application_deadline}
                 </p>
 
-                {/* Apply Button */}
                 <button
                   className="apply-btn"
                   onClick={handleApply}
@@ -167,7 +164,6 @@ function ViewOpportunityPage() {
                   {applied ? "Applied" : "Apply"}
                 </button>
 
-                {/* Inline Message */}
                 {overlayMessage && (
                   <p className="overlay-message">{overlayMessage}</p>
                 )}

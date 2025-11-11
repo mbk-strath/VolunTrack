@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../../styles/volunteer/MessagesPage.css";
 
-const API_BASE_URL = "http://127.0.0.1:8000/api"; // ✅ Update this if needed
+const API_BASE_URL = "http://127.0.0.1:8000/api";
 
 const MessagesPage = () => {
   const [messages, setMessages] = useState([]);
@@ -12,7 +12,6 @@ const MessagesPage = () => {
 
   const token = localStorage.getItem("token");
 
-  /** 🔹 Fetch notifications */
   const fetchNotifications = async () => {
     try {
       setLoading(true);
@@ -22,7 +21,6 @@ const MessagesPage = () => {
         },
       });
 
-      // ✅ Safely extract notifications
       const data = Array.isArray(res.data)
         ? res.data
         : res.data.notifications || [];
@@ -36,7 +34,6 @@ const MessagesPage = () => {
     }
   };
 
-  /** 🔹 Mark as read */
   const markAsRead = async (id) => {
     try {
       await axios.put(`${API_BASE_URL}/mark-as-read/${id}`, null, {
@@ -56,7 +53,6 @@ const MessagesPage = () => {
     }
   };
 
-  /** 🔹 Send a new notification */
   const sendMessage = async (e) => {
     e.preventDefault();
     try {
@@ -83,7 +79,6 @@ const MessagesPage = () => {
     }
   };
 
-  /** 🔹 On page load */
   useEffect(() => {
     fetchNotifications();
   }, []);

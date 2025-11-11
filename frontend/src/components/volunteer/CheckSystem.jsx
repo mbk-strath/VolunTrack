@@ -5,12 +5,10 @@ function CheckSystem() {
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
-    // Update every second
     const interval = setInterval(() => {
       setTime(new Date());
     }, 1000);
 
-    // cleanup
     return () => clearInterval(interval);
   }, []);
   return (

@@ -55,7 +55,6 @@ function TopBarOrg() {
         />
       </div>
 
-      {/* Render CreateOpportunity if showCreate is true */}
       {showCreate && (
         <OpportunityFormOverlay onClose={() => setShowCreate(false)} />
       )}

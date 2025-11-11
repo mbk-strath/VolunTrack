@@ -4,7 +4,6 @@ import UserProfile from "../../components/main/UserProfile";
 import axios from "axios";
 
 function ProfilePage() {
-  // Initialize all fields to prevent controlled/uncontrolled issues
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -20,7 +19,6 @@ function ProfilePage() {
   const [alert, setAlert] = useState({ message: "", type: "" }); // success | error
   const [avatarPreview, setAvatarPreview] = useState("");
 
-  // Load user from localStorage on mount
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -39,13 +37,11 @@ function ProfilePage() {
     }
   }, []);
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle avatar file input
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -54,13 +50,11 @@ function ProfilePage() {
     }
   };
 
-  // Show temporary alert
   const showAlert = (message, type = "success") => {
     setAlert({ message, type });
     setTimeout(() => setAlert({ message: "", type: "" }), 3000);
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -70,7 +64,6 @@ function ProfilePage() {
       const id = storedUser?.id;
       const token = localStorage.getItem("token");
 
-      // Prepare FormData for file upload
       const formData = new FormData();
       formData.append("name", user.name);
       formData.append("email", user.email);
@@ -83,7 +76,6 @@ function ProfilePage() {
         formData.append("profile_image", user.avatar);
       }
 
-      // Send PATCH request
       const res = await axios.patch(
         `http://localhost:8000/api/update-user/${id}`,
         formData,
@@ -97,7 +89,6 @@ function ProfilePage() {
 
       const updatedUser = res.data.user || res.data || {};
 
-      // Merge API response with current state to ensure all fields stay controlled
       setUser((prev) => ({
         name: updatedUser.name || prev.name || "",
         email: updatedUser.email || prev.email || "",

@@ -9,7 +9,7 @@ const ManageOpportunities = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch all opportunities using Axios
+  // Fetch all opportunities
   useEffect(() => {
     const fetchOpportunities = async () => {
       setLoading(true);
@@ -72,14 +72,26 @@ const ManageOpportunities = () => {
     setEditingOpportunity(null);
   };
 
+  // ✅ Updated delete handler using the correct API
   const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this opportunity?"
+    );
+    if (!confirmDelete) return;
+
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:8000/api/opportunities/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.delete(
+        `http://localhost:8000/api/delete-opportunity/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      alert(response.data.message || "Opportunity deleted successfully");
       setOpportunities((prev) => prev.filter((op) => op.id !== id));
     } catch (err) {
+      console.error("Delete error:", err);
       setError(err.response?.data?.message || "Failed to delete opportunity");
     }
   };

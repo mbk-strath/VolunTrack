@@ -54,6 +54,10 @@ option {
   flex-direction: column;
 }
 
+.signupForm input {
+  color: white;
+}
+
 input:focus,
 select:focus {
   outline: none;
@@ -66,6 +70,15 @@ select:focus {
 .flex {
   display: flex;
   justify-content: space-between;
+}
+
+.errors {
+  color: red;
+}
+
+.successMessage {
+  color: rgb(12, 193, 12);
+  font-size: 14px;
 }
 
 @media screen and (max-width: 1024px) {

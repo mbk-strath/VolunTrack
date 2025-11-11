@@ -21,6 +21,8 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->string('schedule');
+            $table->time('start_time');
+            $table->time('end_time');
             $table->string('benefits')->nullable();
             $table->date('application_deadline');
             $table->boolean('cv_required')->default(false);

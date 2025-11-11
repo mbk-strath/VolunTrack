@@ -18,6 +18,8 @@ class Opportunity extends Model
         'start_date',
         'end_date',
         'schedule',
+        'start_time',
+        'end_time',
         'location',
         'benefits',
         'cv_required',
@@ -54,10 +56,10 @@ class Opportunity extends Model
 
     public function getAttendanceRateAttribute()
     {
-        // Calculate total hours for this opportunity (duration from start_date to end_date)
-        $startDate = \Carbon\Carbon::parse($this->start_date);
-        $endDate = \Carbon\Carbon::parse($this->end_date);
-        $totalOpportunityHours = $startDate->diffInHours($endDate);
+        // Calculate total hours for this opportunity using start_date/start_time and end_date/end_time
+        $startDateTime = \Carbon\Carbon::parse("{$this->start_date} {$this->start_time}");
+        $endDateTime = \Carbon\Carbon::parse("{$this->end_date} {$this->end_time}");
+        $totalOpportunityHours = $startDateTime->diffInHours($endDateTime);
         
         if ($totalOpportunityHours <= 0) {
             return 0;

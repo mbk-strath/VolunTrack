@@ -141,10 +141,10 @@ class OpportunityController extends Controller
         $totalHoursAttended = 0;
 
         foreach($opportunities as $opportunity){
-            // Calculate total hours for this opportunity
-            $startDate = \Carbon\Carbon::parse($opportunity->start_date);
-            $endDate = \Carbon\Carbon::parse($opportunity->end_date);
-            $opportunityHours = $startDate->diffInHours($endDate);
+            // Calculate total hours for this opportunity using start_date/start_time and end_date/end_time
+            $startDateTime = \Carbon\Carbon::parse("{$opportunity->start_date} {$opportunity->start_time}");
+            $endDateTime = \Carbon\Carbon::parse("{$opportunity->end_date} {$opportunity->end_time}");
+            $opportunityHours = $startDateTime->diffInHours($endDateTime);
             
             // Expected hours for this opportunity
             $expectedHours = $opportunity->num_volunteers_needed * $opportunityHours;

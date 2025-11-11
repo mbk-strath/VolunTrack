@@ -80,7 +80,7 @@ The API will be available at `http://127.0.0.1:8000`
 
 **Cache Issues**: Run `php artisan config:clear && php artisan config:cache` if configuration changes don't take effect
 
-**Database issues**: Incase of conflicting migrations or new migrations or modifications on the old migrations. Run `php migrate:fresh`
+**Database issues**: Incase of conflicting migrations or new migrations or modifications on the old migrations. Run `php artisan migrate:fresh`
 
 **Image Storage Issues**: Make sure your storage/app/public directory is linked to public/storage by running `php artisan storage:link`
 

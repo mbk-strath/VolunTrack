@@ -39,7 +39,7 @@ class OpportunityController extends Controller
     public function create(Request $request){
         $user = $request->user();
         $organisation = MembershipService::getMembership($user);
-        if(!$user->role === 'organisation' || !$organisation){
+        if($user->role !== 'organisation' || !$organisation){
             return response()->json(['message' => 'Only organisations can create opportunities'], 403);
         }
 
@@ -64,7 +64,7 @@ class OpportunityController extends Controller
     public function update(Request $request, $id){
         $user = $request->user();
         $organisation = MembershipService::getMembership($user);
-        if(!$user->role === 'organisation' || !$organisation){
+        if($user->role !== 'organisation' || !$organisation){
             return response()->json(['message' => 'Only organisations can update opportunities'], 403);
         }
 
@@ -93,7 +93,7 @@ class OpportunityController extends Controller
     public function delete(Request $request, $id){
         $user = $request->user();
         $organisation = MembershipService::getMembership($user);
-        if(!$user->role === 'organisation' || !$organisation){
+        if($user->role !== 'organisation' || !$organisation){
             return response()->json(['message' => 'Only organisations can delete opportunities'], 403);
         }
 

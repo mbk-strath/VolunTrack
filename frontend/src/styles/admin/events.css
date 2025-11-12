@@ -5,6 +5,17 @@
   padding-left: 30px;
   padding-right: 30px;
 }
+.no-events {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;        /* centers vertically */
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: black;
+  text-align: center;
+}
+
 h1 {
   font-size: 1.5em;
   margin-bottom: 20px;

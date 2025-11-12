@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "../../styles/admin/home.css";
 import {
   ResponsiveContainer,
@@ -11,13 +12,53 @@ import {
   Legend,
 } from "recharts";
 
-const data = [
-  { name: "Volunteers", count: 1200 },
-  { name: "Organizations", count: 87 },
-  { name: "Events", count: 30 },
-];
-
 const AdminHome = () => {
+  const [stats, setStats] = useState({
+    volunteers: 0,
+    organisations: 0,
+    events: 0,
+  });
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    // Fetch all memberships (volunteers + organisations)
+    axios
+      .get("https://your-api.com/all-memberships", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        const volunteersCount = res.data.volunteers?.length || 0;
+        const organisationsCount = res.data.organisations?.length || 0;
+        setStats((prev) => ({
+          ...prev,
+          volunteers: volunteersCount,
+          organisations: organisationsCount,
+        }));
+      })
+      .catch((err) => console.error("Error fetching memberships:", err));
+
+    // Fetch all events (opportunities)
+    axios
+      .get("https://your-api.com/all-opportunities", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        const eventsCount = Array.isArray(res.data) ? res.data.length : 0;
+        setStats((prev) => ({
+          ...prev,
+          events: eventsCount,
+        }));
+      })
+      .catch((err) => console.error("Error fetching opportunities:", err));
+  }, []);
+
+  const data = [
+    { name: "Volunteers", count: stats.volunteers },
+    { name: "Organizations", count: stats.organisations },
+    { name: "Events", count: stats.events },
+  ];
+
   return (
     <div className="admin-container">
       <div className="admin-content">
@@ -26,15 +67,15 @@ const AdminHome = () => {
         <div className="metrics-container">
           <div className="metric-card">
             <p>Active Volunteers</p>
-            <h2>1200</h2>
+            <h2>{stats.volunteers}</h2>
           </div>
           <div className="metric-card">
             <p>Verified Organisations</p>
-            <h2>87</h2>
+            <h2>{stats.organisations}</h2>
           </div>
           <div className="metric-card">
             <p>Ongoing Events</p>
-            <h2>30</h2>
+            <h2>{stats.events}</h2>
           </div>
         </div>
 

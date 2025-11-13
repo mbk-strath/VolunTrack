@@ -14,18 +14,12 @@ class Organisation extends Model
         'user_id',
         'org_name',
         'org_type',
-        'registration_number',
-        'email',
-        'phone',
+        'reg_no',
         'website',
         'logo',
         'country',
         'city',
-        'street_address',
-        'operating_region',
-        'mission_statement',
         'focus_area',
-        'target_beneficiary',
     ];
 
     public function user()

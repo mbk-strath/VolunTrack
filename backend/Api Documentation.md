@@ -246,11 +246,20 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 ```
 {
-    // Organisation or Volunteer data
+    // Organisation example
     "id": 1,
     "user_id": 1,
     "org_name": "Example Org",
-    ...
+    "org_type": "Non-profit",
+    "reg_no": "123456",
+    "website": "https://example.com",
+    "logo": "path/to/logo.jpg",
+    "country": "Kenya",
+    "city": "Nairobi",
+    "focus_area": "Education",
+    "is_active": true,
+    "created_at": "2025-10-20T10:00:00.000000Z",
+    "updated_at": "2025-10-20T10:00:00.000000Z"
 }
 ```
 
@@ -375,9 +384,16 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "id": 1,
         "user_id": 1,
         "org_name": "Example Organisation",
-        "is_verified": true,
+        "org_type": "Non-profit",
+        "reg_no": "123456",
+        "website": "https://example.com",
+        "logo": "path/to/logo.jpg",
+        "country": "Kenya",
+        "city": "Nairobi",
+        "focus_area": "Education",
         "is_active": true,
-        ...
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
     }
 ]
 ```
@@ -777,8 +793,10 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 -   description (string, required): Detailed description
 -   required_skills (string, required): Skills needed for the opportunity
 -   num_volunteers_needed (integer, required): Number of volunteers required
--   start_date (date, required): Opportunity start date
+-   start_date (date, required): Opportunity start date (YYYY-MM-DD)
+-   start_time (time, required): Opportunity start time (HH:MM:SS)
 -   end_date (date, required): Opportunity end date (must be after or equal to start_date)
+-   end_time (time, required): Opportunity end time (HH:MM:SS)
 -   schedule (string, required): Schedule/timing information
 -   benefits (string, optional): Benefits offered to volunteers
 -   application_deadline (date, required): Deadline for applications (must be before or equal to start_date)
@@ -798,7 +816,9 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "required_skills": "Physical labor, teamwork",
         "num_volunteers_needed": 10,
         "start_date": "2025-11-01",
+        "start_time": "09:00:00",
         "end_date": "2025-11-01",
+        "end_time": "17:00:00",
         "schedule": "9 AM - 5 PM",
         "location": "Central Park",
         "benefits": "Free lunch, certificate",
@@ -830,7 +850,9 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 -   required_skills (string, optional): Skills needed for the opportunity
 -   num_volunteers_needed (integer, optional): Number of volunteers required
 -   start_date (date, optional): Opportunity start date
+-   start_time (time, optional): Opportunity start time (HH:MM:SS)
 -   end_date (date, optional): Opportunity end date
+-   end_time (time, optional): Opportunity end time (HH:MM:SS)
 -   schedule (string, optional): Schedule/timing information
 -   benefits (string, optional): Benefits offered to volunteers
 -   application_deadline (date, optional): Deadline for applications
@@ -850,7 +872,9 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "required_skills": "Physical labor, teamwork",
         "num_volunteers_needed": 10,
         "start_date": "2025-11-01",
+        "start_time": "09:00:00",
         "end_date": "2025-11-01",
+        "end_time": "17:00:00",
         "schedule": "9 AM - 5 PM",
         "location": "Central Park",
         "benefits": "Free lunch, certificate",
@@ -1280,16 +1304,13 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "user_id": 1,
         "org_name": "Example Org",
         "org_type": "Non-profit",
-        "registration_number": "123456",
+        "reg_no": "123456",
         "website": "https://example.com",
+        "logo": "path/to/logo.jpg",
         "country": "Kenya",
         "city": "Nairobi",
-        "street_address": "123 Main St",
-        "operating_region": "Nairobi",
-        "mission_statement": "To help the community",
         "focus_area": "Education",
-        "target_beneficiary": "Children",
-        "logo": "path/to/logo.jpg",
+        "is_active": true,
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
@@ -1670,7 +1691,16 @@ Returns the membership data (organisation or volunteer) for the user with the gi
     "id": 1,
     "user_id": 1,
     "org_name": "Example Org",
-    ...
+    "org_type": "Non-profit",
+    "reg_no": "123456",
+    "website": "https://example.com",
+    "logo": "path/to/logo.jpg",
+    "country": "Kenya",
+    "city": "Nairobi",
+    "focus_area": "Education",
+    "is_active": true,
+    "created_at": "2025-10-20T10:00:00.000000Z",
+    "updated_at": "2025-10-20T10:00:00.000000Z"
 }
 ```
 
@@ -1697,10 +1727,14 @@ Depends on the membership type (organisation or volunteer):
 **For Organisation:**
 
 -   org_name (string, optional)
--   description (string, optional)
--   location (string, optional)
+-   org_type (string, optional)
+-   reg_no (string, optional)
+-   website (string, optional)
 -   logo (file, optional): Organization logo
--   etc.
+-   country (string, optional)
+-   city (string, optional)
+-   focus_area (string, optional)
+-   is_active (boolean, optional)
 
 **For Volunteer:**
 
@@ -1716,10 +1750,13 @@ Depends on the membership type (organisation or volunteer):
     "id": 1,
     "user_id": 1,
     "org_name": "Example Org",
-    "description": "Organization description",
-    "location": "City, Country",
+    "org_type": "Non-profit",
+    "reg_no": "123456",
+    "website": "https://example.com",
     "logo": "path/to/logo.jpg",
-    "is_verified": true,
+    "country": "Kenya",
+    "city": "Nairobi",
+    "focus_area": "Education",
     "is_active": true,
     "created_at": "2025-10-20T10:00:00.000000Z",
     "updated_at": "2025-10-20T10:00:00.000000Z"

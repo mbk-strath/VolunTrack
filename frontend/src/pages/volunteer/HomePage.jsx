@@ -23,41 +23,36 @@ function HomePage() {
 
     const fetchData = async () => {
       try {
-        const resHours = await axios.get(
+        // ✅ Fetch volunteer's participations
+        const resPart = await axios.get(
           "http://localhost:8000/api/my-participations",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        if (resHours.data?.total_hours !== undefined) {
-          setTotalHours(resHours.data.total_hours);
+
+        if (resPart.data) {
+          setTotalHours(resPart.data.total_hours || 0);
+          setCompletedSessions(resPart.data.total_participations || 0);
+          setParticipations(resPart.data.participations || []);
         }
 
+        // ✅ Fetch volunteer's applications
         const resApps = await axios.get(
           "http://localhost:8000/api/my-applications",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
+
         if (resApps.data?.applications) {
           setTotalApplications(resApps.data.applications.length);
         }
-
-        const resAll = await axios.get(
-          "http://localhost:8000/api/all-participations",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-        if (resAll.data?.total_participations !== undefined) {
-          setCompletedSessions(resAll.data.total_participations);
-        }
-
-        if (resAll.data?.participations) {
-          setParticipations(resAll.data.participations);
-        }
       } catch (err) {
-        console.error("Failed to fetch data:", err);
+        console.error(
+          "Failed to fetch data:",
+          err.response?.data || err.message
+        );
       } finally {
         setLoading(false);
       }
@@ -71,6 +66,7 @@ function HomePage() {
   return (
     <div className="homeVolPage">
       <h2 className="username">Welcome {user ? user.name : "Volunteer"}</h2>
+
       <div className="header">
         <div className="hours">
           <Ri24HoursFill className="icon" />

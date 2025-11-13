@@ -11,11 +11,10 @@ const VolunteerTable = () => {
   const [selectedVolunteer, setSelectedVolunteer] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  // ✅ Fetch all participations from backend
   useEffect(() => {
     const fetchParticipations = async () => {
       try {
-        const token = localStorage.getItem("token"); // assuming token is stored in localStorage
+        const token = localStorage.getItem("token");
         const response = await axios.get("/api/all-participations", {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -79,7 +78,6 @@ const VolunteerTable = () => {
         </CardContent>
       </Card>
 
-      {/* Volunteer History Dialog */}
       {selectedVolunteer && (
         <VolunteerHistoryDialog
           open={dialogOpen}

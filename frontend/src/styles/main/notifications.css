@@ -1,0 +1,99 @@
+.notifications-page {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 5% 20px;
+  font-family: Arial, sans-serif;
+}
+
+.notifications-page h1 {
+  text-align: center;
+  color: #333;
+}
+
+.filter-tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.filter-tabs button {
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.filter-tabs button.active {
+  background: linear-gradient(90deg, #0f172a 0%, #003973 100%);
+  color: white;
+}
+
+.send-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.send-form input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.send-form button {
+  background: #0f172a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.notification-item {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 5px solid #007bff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-item.read {
+  border-left-color: #aaa;
+  opacity: 0.7;
+}
+
+.message {
+  margin: 0;
+  font-weight: 600;
+  color: #333;
+}
+
+.meta {
+  color: #666;
+  font-size: 0.85em;
+}
+
+.mark-read-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.empty {
+  text-align: center;
+  color: #888;
+}

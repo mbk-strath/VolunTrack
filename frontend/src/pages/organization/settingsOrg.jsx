@@ -62,7 +62,7 @@ const SettingsOrg = () => {
     }));
 
     setAvatarPreview(storedUser.logo || "");
-  }, []);
+  });
 
   // --- Handlers ---
   const handleProfileChange = (e) => {
@@ -121,7 +121,6 @@ const SettingsOrg = () => {
     }
   };
 
-  // --- Contact Form Submit ---
   const handleContactSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -158,7 +157,6 @@ const SettingsOrg = () => {
     }
   };
 
-  // --- Tabs ---
   const tabs = [
     { id: "profile", label: "Profile", icon: <User /> },
     { id: "contacts", label: "Contacts", icon: <Users /> },
@@ -181,7 +179,6 @@ const SettingsOrg = () => {
       </div>
 
       <div className="settings-content-org">
-        {/* PROFILE TAB */}
         {activeTab === "profile" && (
           <div className="settings-card-org prof-org">
             <h2 className="prof-org-title">Organization Profile</h2>

@@ -32,10 +32,11 @@ import DashboardOrg from "./pages/organization/dashboardOrg";
 import ManageOpportunities from "./pages/organization/ManageOpportunities";
 import ApplicationsOrg from "./pages/organization/applicationsOrg";
 import HistoryOrg from "./pages/organization/historyOrg";
-import MessagesOrg from "./pages/organization/messagesOrg";
+import NotificationsPage from "./pages/main/NotificationsPage";
 import SettingsOrg from "./pages/organization/settingsOrg";
 import OpportunityApplicantsPage from "./pages/organization/OpportunityApplicantsPage";
 import VolunteerTable from "./pages/organization/VolunteerTable";
+import OtherDetailsPage from "./pages/volunteer/OtherDetailsPage";
 function App() {
   return (
     <div className="main">
@@ -54,11 +55,12 @@ function App() {
           <Route path="/dashboard/volunteer" element={<DashboardLayoutVol />}>
             <Route index element={<HomePage />} />
             <Route path="history" element={<HistoryPage />} />
-            <Route path="messages" element={<MessagesPage />} />
+            <Route path="messages" element={<NotificationsPage />} />
             <Route path="applications" element={<ApplicationHistoryPage />} />
             <Route path="opportunities" element={<ViewOpportunityPage />} />
             <Route path="settings" element={<SettingsVolPage />}>
               <Route index element={<ProfilePage />} />
+              <Route path="other-details" element={<OtherDetailsPage />} />
               <Route path="account" element={<AccountPage />} />
             </Route>
           </Route>
@@ -87,7 +89,7 @@ function App() {
               element={<ApplicationsOrg />}
             />
 
-            <Route path="messages" element={<MessagesOrg />} />
+            <Route path="messages" element={<NotificationsPage />} />
             <Route path="history" element={<HistoryOrg />} />
             <Route path="settings" element={<SettingsOrg />} />
             <Route path="applicants" element={<VolunteerTable />} />

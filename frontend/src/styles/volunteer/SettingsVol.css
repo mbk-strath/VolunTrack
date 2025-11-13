@@ -29,7 +29,7 @@
   width: 100%;
 }
 
-.btn {
+.btn-sett {
   text-decoration: none;
   width: 90%;
   padding-top: 10px;
@@ -43,7 +43,7 @@
 }
 
 .settingVolNav .btn:hover,
-.btn.active {
+.btn-sett.active {
   border-top: none;
   border-bottom: none;
   border-right: none;

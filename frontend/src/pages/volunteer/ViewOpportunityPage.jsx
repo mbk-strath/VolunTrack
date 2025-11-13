@@ -16,7 +16,7 @@ function ViewOpportunityPage() {
   const [showApplyModal, setShowApplyModal] = useState(false);
 
   const [appliedOpportunities, setAppliedOpportunities] = useState([]);
-  const [overlayMessage, setOverlayMessage] = useState(""); // Pop-up message
+  const [overlayMessage, setOverlayMessage] = useState("");
 
   // Fetch all opportunities
   useEffect(() => {
@@ -52,12 +52,19 @@ function ViewOpportunityPage() {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        const appliedIds = res.data.map((app) => app.opportunity_id);
+
+        // Safely handle API response
+        const applicationsArray = Array.isArray(res.data)
+          ? res.data
+          : res.data.applications || [];
+
+        const appliedIds = applicationsArray.map((app) => app.opportunity_id);
         setAppliedOpportunities(appliedIds);
       } catch (err) {
         console.error("Failed to fetch applied opportunities:", err);
       }
     };
+
     fetchAppliedOpportunities();
   }, []);
 

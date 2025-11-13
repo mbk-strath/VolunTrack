@@ -9,15 +9,10 @@ function ProfilePage() {
     email: "",
     phone: "",
     gender: "",
-    country: "",
-    bio: "",
-    avatar: "",
-    date: "",
   });
 
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState({ message: "", type: "" });
-  const [avatarPreview, setAvatarPreview] = useState("");
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -28,26 +23,13 @@ function ProfilePage() {
         email: parsedUser.email || "",
         phone: parsedUser.phone || "",
         gender: parsedUser.gender || "",
-        country: parsedUser.country || "",
-        bio: parsedUser.bio || "",
-        avatar: parsedUser.avatar || "",
-        date: parsedUser.date || "",
       });
-      setAvatarPreview(parsedUser.avatar || "");
     }
   }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setUser((prev) => ({ ...prev, avatar: file }));
-      setAvatarPreview(URL.createObjectURL(file));
-    }
   };
 
   const showAlert = (message, type = "success") => {
@@ -64,16 +46,15 @@ function ProfilePage() {
       const userId = storedUser?.id;
       const token = localStorage.getItem("token");
 
-      // ---- Update core user fields ----
-      const userFormData = new FormData();
-      userFormData.append("name", user.name);
-      userFormData.append("email", user.email);
-      userFormData.append("phone", user.phone);
-      userFormData.append("gender", user.gender);
+      const formData = new FormData();
+      formData.append("name", user.name);
+      formData.append("email", user.email);
+      formData.append("phone", user.phone);
+      formData.append("gender", user.gender);
 
-      const resUser = await axios.patch(
+      const res = await axios.patch(
         `http://localhost:8000/api/update-user/${userId}`,
-        userFormData,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -82,33 +63,12 @@ function ProfilePage() {
         }
       );
 
-      const membershipFormData = new FormData();
-      membershipFormData.append("bio", user.bio);
-      membershipFormData.append("country", user.country);
-      membershipFormData.append("date", user.date);
-      if (user.avatar instanceof File) {
-        membershipFormData.append("profile_image", user.avatar);
-      }
-
-      const resMembership = await axios.patch(
-        `http://localhost:8000/api/update/${userId}/`,
-        membershipFormData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      const updatedUser = {
-        ...resUser.data,
-        ...resMembership.data,
-      };
-
+      const updatedUser = res.data.user || res.data;
       setUser((prev) => ({ ...prev, ...updatedUser }));
-      setAvatarPreview(updatedUser.avatar || avatarPreview);
-      localStorage.setItem("user", JSON.stringify({ ...user, ...updatedUser }));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ ...storedUser, ...updatedUser })
+      );
 
       showAlert("Profile updated successfully!", "success");
     } catch (err) {
@@ -131,113 +91,55 @@ function ProfilePage() {
       <div className="profile">
         <UserProfile
           name={user.name || "User"}
-          avatar={avatarPreview}
+          avatar={user.avatar || ""}
           className="prof"
           size={100}
         />
-
-        <input
-          type="file"
-          id="avatarInput"
-          style={{ display: "none" }}
-          accept="image/*"
-          onChange={handleAvatarChange}
-        />
-
-        <button onClick={() => document.getElementById("avatarInput").click()}>
-          Update Avatar
-        </button>
-        <button
-          onClick={() => {
-            setUser((prev) => ({ ...prev, avatar: "" }));
-            setAvatarPreview("");
-          }}
-        >
-          Delete Avatar
-        </button>
       </div>
 
-      <form onSubmit={handleSubmit}>
-        <div className="fit">
-          <div className="flex">
-            <div className="left-content">
-              <label>
-                Full Name
-                <input
-                  type="text"
-                  name="name"
-                  value={user.name}
-                  onChange={handleChange}
-                />
-              </label>
+      <form onSubmit={handleSubmit} className="form-column">
+        <label>
+          Full Name
+          <input
+            type="text"
+            name="name"
+            value={user.name}
+            onChange={handleChange}
+          />
+        </label>
 
-              <label>
-                Email
-                <input
-                  type="email"
-                  name="email"
-                  value={user.email}
-                  onChange={handleChange}
-                />
-              </label>
+        <label>
+          Email
+          <input
+            type="email"
+            name="email"
+            value={user.email}
+            onChange={handleChange}
+          />
+        </label>
 
-              <label>
-                Phone Number
-                <input
-                  type="tel"
-                  name="phone"
-                  value={user.phone || ""}
-                  onChange={handleChange}
-                />
-              </label>
-            </div>
+        <label>
+          Phone Number
+          <input
+            type="tel"
+            name="phone"
+            value={user.phone || ""}
+            onChange={handleChange}
+          />
+        </label>
 
-            <div className="right-content">
-              <label>
-                Gender
-                <select
-                  name="gender"
-                  value={user.gender || ""}
-                  onChange={handleChange}
-                >
-                  <option value="">Select...</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-              </label>
-
-              <label>
-                Country
-                <input
-                  type="text"
-                  name="country"
-                  value={user.country || ""}
-                  onChange={handleChange}
-                />
-              </label>
-
-              <label>
-                Date of Birth
-                <input
-                  type="date"
-                  name="date"
-                  value={user.date || ""}
-                  onChange={handleChange}
-                />
-              </label>
-            </div>
-          </div>
-
-          <label className="bio">
-            Bio
-            <textarea
-              name="bio"
-              value={user.bio || ""}
-              placeholder="Tell us about yourself..."
-              onChange={handleChange}
-            ></textarea>
-          </label>
-        </div>
+        <label>
+          Gender
+          <select
+            name="gender"
+            value={user.gender || ""}
+            onChange={handleChange}
+          >
+            <option value="">Select...</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </label>
 
         <button className="save" type="submit" disabled={loading}>
           {loading ? "Saving..." : "Save Changes"}

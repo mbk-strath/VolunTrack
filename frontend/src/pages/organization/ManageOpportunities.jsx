@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import OpportunityFormOverlay from "./OpportunityFormOverlay";
 import "../../styles/organization/opportunitiesOrg.css";
+import { useNavigate } from "react-router-dom"; // ✅ Add this
 
 const ManageOpportunities = () => {
   const [opportunities, setOpportunities] = useState([]);
   const [editingOpportunity, setEditingOpportunity] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // ✅ Add this
 
   // Fetch all opportunities
   useEffect(() => {
@@ -35,6 +37,8 @@ const ManageOpportunities = () => {
           volunteers: op.num_volunteers_needed,
           startDate: op.start_date,
           endDate: op.end_date,
+          startTime: op.start_time,
+          endTime: op.end_time,
           workingHours: op.schedule,
           location: op.location,
           benefits: op.benefits,
@@ -72,7 +76,7 @@ const ManageOpportunities = () => {
     setEditingOpportunity(null);
   };
 
-  // ✅ Updated delete handler using the correct API
+  // ✅ Delete opportunity
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this opportunity?"
@@ -94,6 +98,10 @@ const ManageOpportunities = () => {
       console.error("Delete error:", err);
       setError(err.response?.data?.message || "Failed to delete opportunity");
     }
+  };
+
+  const handleViewApplicants = (id) => {
+    navigate(`/dashboard/organization/opportunities/my-applicants/${id}`);
   };
 
   return (
@@ -129,6 +137,12 @@ const ManageOpportunities = () => {
                   <strong>End Date:</strong> {opportunity.endDate}
                 </p>
                 <p>
+                  <strong>Start Time:</strong> {opportunity.startTime}
+                </p>
+                <p>
+                  <strong>End Time:</strong> {opportunity.endTime}
+                </p>
+                <p>
                   <strong>Location:</strong> {opportunity.location}
                 </p>
                 <p>
@@ -159,6 +173,13 @@ const ManageOpportunities = () => {
                   onClick={() => handleDelete(opportunity.id)}
                 >
                   Delete
+                </button>
+
+                <button
+                  className="view-btn"
+                  onClick={() => handleViewApplicants(opportunity.id)}
+                >
+                  View Applicants
                 </button>
               </div>
             </div>

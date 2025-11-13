@@ -65,7 +65,9 @@ function Signup() {
       const data = res.data;
 
       if (data.user || res.status === 201) {
-        setMessage("Registration successful! Redirecting to login...");
+        setMessage(
+          "Registration successful! Check your email to verify account! Redirecting to login..."
+        );
         setFormData({ name: "", email: "", password: "", role: "" });
         setErrors({});
 

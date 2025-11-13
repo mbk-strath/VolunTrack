@@ -1,0 +1,92 @@
+.dialog {
+  width: 70%;
+  margin-left: 25%;
+}
+
+.dialog-paper {
+  background-color: var(--card, #fff);
+  border-radius: 0.75rem !important;
+  padding: 1rem;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.dialog-title {
+  font-size: 1.5rem !important;
+  font-weight: 700 !important;
+  color: var(--foreground, #111);
+}
+
+.dialog-content {
+  margin-top: 0.5rem;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.history-entry {
+  border: 1px solid var(--border, #e5e7eb);
+  background-color: var(--card, #fff);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.history-details p {
+  color: var(--foreground, #111);
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+}
+
+.label {
+  font-weight: 600;
+}
+
+.status {
+  font-weight: 600;
+}
+
+/* Example status colors */
+.status.success {
+  color: #16a34a;
+}
+.status.warning {
+  color: #eab308;
+}
+.status.error {
+  color: #dc2626;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5rem;
+  gap: 1rem;
+}
+
+.btn-navy {
+  background-color: #1e3a8a !important;
+  color: #fff !important;
+}
+
+.btn-navy:hover {
+  background-color: #1d4ed8 !important;
+}
+
+.btn-success {
+  background-color: #16a34a !important;
+  color: #fff !important;
+}
+
+.btn-success:hover {
+  background-color: #15803d !important;
+}
+
+.dark .dialog-paper {
+  background-color: background-color #191725;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff;
+}

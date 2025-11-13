@@ -34,6 +34,8 @@ import ApplicationsOrg from "./pages/organization/applicationsOrg";
 import HistoryOrg from "./pages/organization/historyOrg";
 import MessagesOrg from "./pages/organization/messagesOrg";
 import SettingsOrg from "./pages/organization/settingsOrg";
+import OpportunityApplicantsPage from "./pages/organization/OpportunityApplicantsPage";
+import VolunteerTable from "./pages/organization/VolunteerTable";
 function App() {
   return (
     <div className="main">
@@ -69,7 +71,7 @@ function App() {
             <Route path="events" element={<AdminEvents />} />
             <Route path="settings" element={<AdminSettings />}>
               <Route path="account" element={<AccountPage />} />
-              <Route path="profile" element={<AdminSettingsProfile />} />
+              <Route index element={<AdminSettingsProfile />} />
             </Route>
           </Route>
 
@@ -79,10 +81,16 @@ function App() {
           >
             <Route index element={<DashboardOrg />} />
             <Route path="opportunities" element={<ManageOpportunities />} />
-            <Route path="applications" element={<ApplicationsOrg />} />
+
+            <Route
+              path="opportunities/my-applicants/:id"
+              element={<ApplicationsOrg />}
+            />
+
             <Route path="messages" element={<MessagesOrg />} />
             <Route path="history" element={<HistoryOrg />} />
             <Route path="settings" element={<SettingsOrg />} />
+            <Route path="applicants" element={<VolunteerTable />} />
           </Route>
         </Routes>
       </Router>

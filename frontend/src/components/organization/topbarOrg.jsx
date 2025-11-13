@@ -27,7 +27,6 @@ function TopBarOrg() {
       <div className="topLeft">
         <IoMenuSharp className="menu" />
 
-        {/* Your existing button — now functional */}
         <button className="create" onClick={() => setShowCreate(true)}>
           Create Opportunity
         </button>

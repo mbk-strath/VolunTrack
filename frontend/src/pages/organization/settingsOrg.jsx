@@ -10,7 +10,7 @@ const SettingsOrg = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // --- Profile field groups ---
+  // --- Field groups ---
   const userFields = ["name", "email", "gender", "phone"];
   const orgFields = [
     "org_name",
@@ -21,23 +21,21 @@ const SettingsOrg = () => {
     "address",
     "reg_number",
     "focus_areas",
+    "logo",
   ];
-
   const contactFields = ["name", "email", "phone", "role"];
 
-  // --- State for Profile ---
+  // --- State ---
   const [profileData, setProfileData] = useState(
     [...userFields, ...orgFields].reduce(
       (acc, field) => ({ ...acc, [field]: "" }),
       {}
     )
   );
-  const [avatarPreview, setAvatarPreview] = useState(null);
-
-  // --- State for Contacts ---
   const [contactData, setContactData] = useState(
     contactFields.reduce((acc, field) => ({ ...acc, [field]: "" }), {})
   );
+  const [avatarPreview, setAvatarPreview] = useState(null);
 
   // --- Prefill from localStorage ---
   useEffect(() => {
@@ -55,8 +53,6 @@ const SettingsOrg = () => {
       ),
     }));
 
-    setAvatarPreview(storedUser.avatar || "");
-
     setContactData((prev) => ({
       ...prev,
       ...contactFields.reduce(
@@ -64,12 +60,14 @@ const SettingsOrg = () => {
         {}
       ),
     }));
+
+    setAvatarPreview(storedUser.logo || "");
   }, []);
 
   // --- Handlers ---
   const handleProfileChange = (e) => {
     const { name, value, files } = e.target;
-    if (files) {
+    if (files && files[0]) {
       setProfileData((prev) => ({ ...prev, [name]: files[0] }));
       setAvatarPreview(URL.createObjectURL(files[0]));
     } else {
@@ -82,7 +80,7 @@ const SettingsOrg = () => {
     setContactData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // --- Profile Submit Handler (two APIs) ---
+  // --- Profile Form Submit ---
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -93,58 +91,37 @@ const SettingsOrg = () => {
       const userId = storedUser?.id;
       const token = localStorage.getItem("token");
 
-      // Prepare userFormData for /update-user/{id}
-      const userForm = new FormData();
-      userFields.forEach((key) => {
-        if (profileData[key]) userForm.append(key, profileData[key]);
-      });
-      if (profileData.profile_image)
-        userForm.append("profile_image", profileData.profile_image);
-
-      // Prepare orgPayload for /update/{id}
-      const orgPayload = {};
-      orgFields.forEach((key) => {
-        if (profileData[key]) orgPayload[key] = profileData[key];
+      const allowedOrgFields = orgFields;
+      const formData = new FormData();
+      allowedOrgFields.forEach((key) => {
+        if (profileData[key]) formData.append(key, profileData[key]);
       });
 
-      // Call both APIs
-      const [userRes, orgRes] = await Promise.all([
-        axios.patch(
-          `http://localhost:8000/api/update-user/${userId}`,
-          userForm,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        ),
-        axios.patch(`http://localhost:8000/api/update/${userId}`, orgPayload, {
+      const res = await axios.patch(
+        `http://localhost:8000/api/update/${userId}`,
+        formData,
+        {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
           },
-        }),
-      ]);
+        }
+      );
 
-      const updatedUser = {
-        ...storedUser,
-        ...userRes.data.user,
-        ...orgRes.data.organization,
-      };
-
+      const updatedUser = { ...storedUser, ...res.data };
       localStorage.setItem("user", JSON.stringify(updatedUser));
       setProfileData((prev) => ({ ...prev, ...updatedUser }));
-      setAvatarPreview(updatedUser.avatar || avatarPreview);
+      setAvatarPreview(updatedUser.logo || avatarPreview);
       setMessage("Profile updated successfully!");
     } catch (err) {
-      console.error("Update error:", err);
+      console.error("Profile update error:", err);
       setMessage(err.response?.data?.message || "Failed to update profile.");
     } finally {
       setLoading(false);
     }
   };
 
-  // --- Contact Submit Handler ---
+  // --- Contact Form Submit ---
   const handleContactSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -156,12 +133,13 @@ const SettingsOrg = () => {
       const token = localStorage.getItem("token");
 
       const payload = { ...contactData };
-
       const res = await axios.patch(
         `http://localhost:8000/api/update-user/${userId}`,
         payload,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -173,13 +151,14 @@ const SettingsOrg = () => {
       setContactData((prev) => ({ ...prev, ...updatedUser }));
       setMessage(res.data.message || "Contacts updated successfully!");
     } catch (err) {
-      console.error("Update error:", err);
+      console.error("Contact update error:", err);
       setMessage(err.response?.data?.message || "Failed to update contacts.");
     } finally {
       setLoading(false);
     }
   };
 
+  // --- Tabs ---
   const tabs = [
     { id: "profile", label: "Profile", icon: <User /> },
     { id: "contacts", label: "Contacts", icon: <Users /> },
@@ -215,7 +194,7 @@ const SettingsOrg = () => {
               />
               <input
                 type="file"
-                name="profile_image"
+                name="logo"
                 accept="image/*"
                 style={{ display: "none" }}
                 id="avatarInput"
@@ -229,10 +208,7 @@ const SettingsOrg = () => {
                 </button>
                 <button
                   onClick={() => {
-                    setProfileData((prev) => ({
-                      ...prev,
-                      profile_image: null,
-                    }));
+                    setProfileData((prev) => ({ ...prev, logo: null }));
                     setAvatarPreview("");
                   }}
                 >
@@ -242,19 +218,21 @@ const SettingsOrg = () => {
             </div>
 
             <form className="form-grid" onSubmit={handleProfileSubmit}>
-              {[...orgFields].map((key) => (
-                <label key={key}>
-                  {key
-                    .replace("_", " ")
-                    .replace(/\b\w/g, (c) => c.toUpperCase())}
-                  <input
-                    name={key}
-                    placeholder={`Enter ${key.replace("_", " ")}`}
-                    value={profileData[key] || ""}
-                    onChange={handleProfileChange}
-                  />
-                </label>
-              ))}
+              {orgFields
+                .filter((key) => key !== "logo")
+                .map((key) => (
+                  <label key={key}>
+                    {key
+                      .replace("_", " ")
+                      .replace(/\b\w/g, (c) => c.toUpperCase())}
+                    <input
+                      name={key}
+                      placeholder={`Enter ${key.replace("_", " ")}`}
+                      value={profileData[key] || ""}
+                      onChange={handleProfileChange}
+                    />
+                  </label>
+                ))}
 
               <button className="save-org" type="submit" disabled={loading}>
                 {loading ? "Saving..." : "Save Changes"}
@@ -265,7 +243,7 @@ const SettingsOrg = () => {
           </div>
         )}
 
-        {/* CONTACTS TAB */}
+        {/* CONTACT TAB */}
         {activeTab === "contacts" && (
           <div className="settings-card-org cont-org">
             <h2 className="prof-org-title">Contact Person Details</h2>

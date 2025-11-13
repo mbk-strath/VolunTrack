@@ -71,7 +71,7 @@ function App() {
             <Route path="events" element={<AdminEvents />} />
             <Route path="settings" element={<AdminSettings />}>
               <Route path="account" element={<AccountPage />} />
-              <Route path="profile" element={<AdminSettingsProfile />} />
+              <Route index element={<AdminSettingsProfile />} />
             </Route>
           </Route>
 

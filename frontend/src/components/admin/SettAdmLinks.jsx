@@ -4,12 +4,11 @@ import { FaUserCircle, FaLock } from "react-icons/fa";
 import { ImProfile } from "react-icons/im";
 import "../../styles/admin/settadmlinks.css";
 
-
 function SettAdmLinks() {
   return (
     <div className="settingVolNav">
       <NavLink
-        to="/dashboard/admin/settings/profile"
+        to="/dashboard/admin/settings"
         end
         className={({ isActive }) => (isActive ? "btn active" : "btn")}
       >

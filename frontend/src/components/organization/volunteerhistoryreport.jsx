@@ -17,6 +17,43 @@ const VolunteerHistoryDialog = ({
   history,
 }) => {
   const handleDownload = () => {
+    if (!history || history.length === 0) {
+      toast.error("No history to download");
+      return;
+    }
+
+    const headers = [
+      "Date",
+      "Opportunity",
+      "Check-In",
+      "Check-Out",
+      "Total Hours",
+      "Status",
+    ];
+    const rows = history.map((entry) => [
+      entry.date,
+      entry.opportunity,
+      entry.checkIn,
+      entry.checkOut,
+      entry.totalHours,
+      entry.status,
+    ]);
+
+    let csvContent = "";
+    csvContent += headers.join(",") + "\n";
+    rows.forEach((row) => {
+      csvContent += row.join(",") + "\n";
+    });
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `${volunteerName}_history.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
     toast.success("Report downloaded successfully");
   };
 
@@ -26,6 +63,7 @@ const VolunteerHistoryDialog = ({
       onClose={() => onOpenChange(false)}
       maxWidth="lg"
       fullWidth
+      className="dialog"
       PaperProps={{ className: "dialog-paper" }}
     >
       <DialogTitle className="dialog-title">

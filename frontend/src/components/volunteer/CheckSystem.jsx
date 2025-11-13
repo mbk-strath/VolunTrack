@@ -17,7 +17,7 @@ function CheckSystem({ participation }) {
 
   const handleCheckIn = async () => {
     const token = localStorage.getItem("token");
-    const now = new Date().toISOString().slice(0, 19); // "YYYY-MM-DDTHH:MM:SS"
+    const now = new Date().toISOString().slice(0, 19);
     try {
       setLoading(true);
       const res = await axios.post(

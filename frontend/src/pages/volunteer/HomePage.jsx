@@ -23,7 +23,6 @@ function HomePage() {
 
     const fetchData = async () => {
       try {
-        // Fetch volunteer participations for total hours
         const resHours = await axios.get(
           "http://localhost:8000/api/my-participations",
           {
@@ -34,7 +33,6 @@ function HomePage() {
           setTotalHours(resHours.data.total_hours);
         }
 
-        // Fetch volunteer applications
         const resApps = await axios.get(
           "http://localhost:8000/api/my-applications",
           {
@@ -45,7 +43,6 @@ function HomePage() {
           setTotalApplications(resApps.data.applications.length);
         }
 
-        // Fetch all participations for completed sessions
         const resAll = await axios.get(
           "http://localhost:8000/api/all-participations",
           {
@@ -56,7 +53,6 @@ function HomePage() {
           setCompletedSessions(resAll.data.total_participations);
         }
 
-        // Keep all participations for CheckSystem cards
         if (resAll.data?.participations) {
           setParticipations(resAll.data.participations);
         }
@@ -100,7 +96,6 @@ function HomePage() {
       </div>
 
       <div className="section2">
-        {/* Only show CheckSystem for approved participations */}
         {participations
           .filter((p) => p.status?.trim().toLowerCase() === "approved")
           .map((p) => (

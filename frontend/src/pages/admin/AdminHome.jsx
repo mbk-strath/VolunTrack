@@ -22,7 +22,6 @@ const AdminHome = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    // Fetch all memberships (volunteers + organisations)
     axios
       .get("https://your-api.com/all-memberships", {
         headers: { Authorization: `Bearer ${token}` },
@@ -38,7 +37,6 @@ const AdminHome = () => {
       })
       .catch((err) => console.error("Error fetching memberships:", err));
 
-    // Fetch all events (opportunities)
     axios
       .get("https://your-api.com/all-opportunities", {
         headers: { Authorization: `Bearer ${token}` },

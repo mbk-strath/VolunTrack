@@ -8,27 +8,6 @@ body::-webkit-scrollbar {
   width: 0; /* width of the scrollbar */
 }
 
-@font-face {
-  font-family: "Roboto Slab";
-  src: url("./assets/fonts/RobotoSlab-Regular.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Roboto Slab";
-  src: url("./assets/fonts/RobotoSlab-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Roboto Slab";
-  src: url("./assets/fonts/RobotoSlab-Light.ttf") format("truetype");
-  font-weight: 400;
-  font-style: italic;
-}
-
 html,
 body,
 #root {
@@ -40,9 +19,6 @@ body,
 
 ::-webkit-scrollbar {
   width: 0;
-}
-
-#root {
 }
 
 .logo {

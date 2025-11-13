@@ -70,17 +70,17 @@ const DashboardOrg = () => {
       <div className="highlights">
         <div className="summary-card">
           <h3>Total Volunteers</h3>
-          <p>1200</p>
+          <p>1</p>
         </div>
 
         <div className="summary-card">
           <h3>Attendance Rate</h3>
-          <p>87%</p>
+          <p>0%</p>
         </div>
 
         <div className="summary-card">
           <h3>Ongoing Events</h3>
-          <p>30</p>
+          <p>1</p>
         </div>
       </div>
 

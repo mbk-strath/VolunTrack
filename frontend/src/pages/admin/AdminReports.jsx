@@ -21,15 +21,12 @@ const AdminReports = () => {
         setLoading(true);
         setError("");
 
-        const response = await axios.get(
-          "http://localhost:8000/api/all-reports",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await axios.get("http://localhost:8000/api/all-reports", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
 
         console.log("Fetched reports:", response.data);
 
@@ -46,9 +43,7 @@ const AdminReports = () => {
         if (err.response) {
           setError(`Server Error: ${err.response.status}`);
         } else if (err.request) {
-          setError(
-            "No response from server. Check your backend or CORS settings."
-          );
+          setError("No response from server. Check your backend or CORS settings.");
         } else {
           setError(`Error: ${err.message}`);
         }
@@ -90,9 +85,7 @@ const AdminReports = () => {
             <br />
             <strong>Status:</strong>{" "}
             <span
-              className={`status-adm ${
-                report.status?.toLowerCase() || "pending"
-              }`}
+              className={`status-adm ${report.status?.toLowerCase() || "pending"}`}
             >
               {report.status || "Pending"}
             </span>

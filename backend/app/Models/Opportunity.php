@@ -18,6 +18,8 @@ class Opportunity extends Model
         'start_date',
         'end_date',
         'schedule',
+        'start_time',
+        'end_time',
         'location',
         'benefits',
         'cv_required',
@@ -53,35 +55,31 @@ class Opportunity extends Model
     protected $appends = ['attendance_rate'];
 
     public function getAttendanceRateAttribute()
-    {
-        // Calculate total hours for this opportunity (duration from start_date to end_date)
-        $startDate = \Carbon\Carbon::parse($this->start_date);
-        $endDate = \Carbon\Carbon::parse($this->end_date);
-        $totalOpportunityHours = $startDate->diffInHours($endDate);
-        
-        if ($totalOpportunityHours <= 0) {
-            return 0;
-        }
-        
-        // Get all participations for this opportunity
-        $participations = Participation::where('opportunity_id', $this->id)->get();
-        
-        // Sum total hours attended (from all participations)
-        $totalHoursAttended = 0;
-        foreach ($participations as $participation) {
-            if (!empty($participation->check_in) && !empty($participation->check_out)) {
-                $checkIn = \Carbon\Carbon::parse($participation->check_in);
-                $checkOut = \Carbon\Carbon::parse($participation->check_out);
-                $totalHoursAttended += $checkOut->diffInHours($checkIn);
-            }
-        }
-        
-        // Calculate expected total hours (num_volunteers_needed * opportunity hours)
-        $expectedTotalHours = $this->num_volunteers_needed * $totalOpportunityHours;
-        
-        // Calculate attendance rate as percentage
-        $attendanceRate = $expectedTotalHours > 0 ? ($totalHoursAttended / $expectedTotalHours) * 100 : 0;
-        
-        return round($attendanceRate, 2);
+{
+    if (!$this->start_date || !$this->start_time || !$this->end_date || !$this->end_time) {
+        return 0;
     }
+
+    $startDateTime = \Carbon\Carbon::parse($this->start_date->format('Y-m-d') . ' ' . $this->start_time);
+    $endDateTime   = \Carbon\Carbon::parse($this->end_date->format('Y-m-d') . ' ' . $this->end_time);
+
+    $totalOpportunityHours = $startDateTime->diffInHours($endDateTime);
+
+    if ($totalOpportunityHours <= 0) return 0;
+
+    $participations = $this->participations()->get();
+
+    $totalHoursAttended = 0;
+    foreach ($participations as $participation) {
+        if (!empty($participation->check_in) && !empty($participation->check_out)) {
+            $checkIn  = \Carbon\Carbon::parse($participation->check_in);
+            $checkOut = \Carbon\Carbon::parse($participation->check_out);
+            $totalHoursAttended += $checkOut->diffInHours($checkIn);
+        }
+    }
+
+    $expectedTotalHours = $this->num_volunteers_needed * $totalOpportunityHours;
+
+    return $expectedTotalHours > 0 ? round(($totalHoursAttended / $expectedTotalHours) * 100, 2) : 0;
+}
 }

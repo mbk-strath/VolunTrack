@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import OpportunityCard from "../../components/volunteer/OpportunityCard";
-import ApplyOpportunityOverlay from "../../components/organization/ApplyOpportunityOverlay";
+import ApplyOpportunityOverlay from "../../components/volunteer/ApplyModal";
 import "../../styles/volunteer/OpportunityVol.css";
 import Facebook from "../../assets/facebook.jpg";
 
@@ -14,20 +14,18 @@ function ViewOpportunityPage() {
   const [overlayLoading, setOverlayLoading] = useState(false);
   const [overlayError, setOverlayError] = useState("");
   const [showApplyModal, setShowApplyModal] = useState(false);
-
   const [appliedOpportunities, setAppliedOpportunities] = useState([]);
   const [overlayMessage, setOverlayMessage] = useState("");
+
+  const token = localStorage.getItem("token");
 
   // Fetch all opportunities
   useEffect(() => {
     const fetchOpportunities = async () => {
       try {
-        const token = localStorage.getItem("token");
         const res = await axios.get(
           "http://localhost:8000/api/all-opportunities",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         setOpportunities(res.data);
       } catch (err) {
@@ -37,23 +35,18 @@ function ViewOpportunityPage() {
         setLoading(false);
       }
     };
-
     fetchOpportunities();
-  }, []);
+  }, [token]);
 
-  // Fetch opportunities the volunteer has already applied to
+  // Fetch applied opportunities
   useEffect(() => {
     const fetchAppliedOpportunities = async () => {
       try {
-        const token = localStorage.getItem("token");
         const res = await axios.get(
           "http://localhost:8000/api/my-applications",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        // Safely handle API response
         const applicationsArray = Array.isArray(res.data)
           ? res.data
           : res.data.applications || [];
@@ -64,9 +57,8 @@ function ViewOpportunityPage() {
         console.error("Failed to fetch applied opportunities:", err);
       }
     };
-
     fetchAppliedOpportunities();
-  }, []);
+  }, [token]);
 
   // Load opportunity details
   const handleViewMore = async (id) => {
@@ -74,12 +66,9 @@ function ViewOpportunityPage() {
     setOverlayError("");
     setSelectedOpportunity(null);
     try {
-      const token = localStorage.getItem("token");
       const res = await axios.get(
         `http://localhost:8000/api/get-opportunity/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setSelectedOpportunity(res.data);
     } catch (err) {
@@ -101,30 +90,10 @@ function ViewOpportunityPage() {
     setShowApplyModal(true);
   };
 
-  const handleNonCVApply = async () => {
-    if (!selectedOpportunity) return;
-    try {
-      const token = localStorage.getItem("token");
-      const today = new Date().toISOString().split("T")[0];
-
-      const res = await axios.post(
-        "http://localhost:8000/api/apply",
-        { opportunity_id: selectedOpportunity.id, application_date: today },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      setOverlayMessage(
-        res.data.message || "Application submitted successfully!"
-      );
-      setAppliedOpportunities((prev) => [...prev, selectedOpportunity.id]);
-    } catch (err) {
-      setOverlayMessage(err.response?.data?.message || "Failed to apply.");
-    }
+  const handleApplied = (message, opportunityId) => {
+    setOverlayMessage(message);
+    setAppliedOpportunities((prev) => [...prev, opportunityId]);
+    setShowApplyModal(false);
   };
 
   if (loading) return <h3 className="no-opp">Loading opportunities...</h3>;
@@ -193,19 +162,36 @@ function ViewOpportunityPage() {
                 </p>
 
                 {/* Apply Button */}
-                {appliedOpportunities.includes(selectedOpportunity.id) ? (
-                  <button className="apply-btn" disabled>
-                    Already Applied
-                  </button>
-                ) : selectedOpportunity.cvRequired ? (
-                  <button className="apply-btn" onClick={openApplyModal}>
-                    Apply
-                  </button>
-                ) : (
-                  <button className="apply-btn" onClick={handleNonCVApply}>
-                    Apply
-                  </button>
-                )}
+                {(() => {
+                  const deadlinePassed =
+                    new Date(selectedOpportunity.application_deadline) <
+                    new Date();
+                  const alreadyApplied = appliedOpportunities.includes(
+                    selectedOpportunity.id
+                  );
+
+                  if (alreadyApplied) {
+                    return (
+                      <button className="apply-btn" disabled>
+                        Already Applied
+                      </button>
+                    );
+                  }
+
+                  if (deadlinePassed) {
+                    return (
+                      <button className="apply-btn" disabled>
+                        Deadline Passed
+                      </button>
+                    );
+                  }
+
+                  return (
+                    <button className="apply-btn" onClick={openApplyModal}>
+                      Apply
+                    </button>
+                  );
+                })()}
 
                 {/* Pop-up message */}
                 {overlayMessage && (
@@ -228,15 +214,11 @@ function ViewOpportunityPage() {
       {/* CV Upload Modal */}
       {showApplyModal && selectedOpportunity && (
         <ApplyOpportunityOverlay
-          onClose={() => setShowApplyModal(false)}
           opportunity={selectedOpportunity}
-          onApplied={(msg) => {
-            setOverlayMessage(msg);
-            setAppliedOpportunities((prev) => [
-              ...prev,
-              selectedOpportunity.id,
-            ]);
-          }}
+          onClose={() => setShowApplyModal(false)}
+          onApplied={(message) =>
+            handleApplied(message, selectedOpportunity.id)
+          }
         />
       )}
     </div>

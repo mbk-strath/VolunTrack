@@ -13,6 +13,10 @@ const ApplicationsOrg = () => {
   const [popupMessage, setPopupMessage] = useState("");
   const [showPopup, setShowPopup] = useState(false);
 
+  // Track notification sent status per application
+  const [notificationSent, setNotificationSent] = useState({});
+
+  // Fetch applications for this opportunity
   useEffect(() => {
     if (!opportunityId) {
       setLoading(false);
@@ -25,6 +29,12 @@ const ApplicationsOrg = () => {
 
       try {
         const token = localStorage.getItem("token");
+
+        if (!token) {
+          setError("You are not authenticated. Please login again.");
+          setLoading(false);
+          return;
+        }
 
         const response = await axios.get(
           `http://localhost:8000/api/my-applicants/${opportunityId}`,
@@ -43,12 +53,14 @@ const ApplicationsOrg = () => {
     fetchApplications();
   }, [opportunityId]);
 
+  // Popup handler
   const handlePopup = (message) => {
     setPopupMessage(message);
     setShowPopup(true);
     setTimeout(() => setShowPopup(false), 2500);
   };
 
+  // Download CV
   const handleDownloadCV = (cvPath) => {
     if (!cvPath) {
       handlePopup("No CV uploaded for this applicant");
@@ -58,7 +70,7 @@ const ApplicationsOrg = () => {
     window.open(fileUrl, "_blank");
   };
 
-  // ✅ Update application status & send notification
+  // Approve/Reject & send notifications
   const updateApplicationStatus = async (
     applicationId,
     status,
@@ -67,14 +79,19 @@ const ApplicationsOrg = () => {
     try {
       const token = localStorage.getItem("token");
 
-      // 1️⃣ Update status
+      if (!token) {
+        handlePopup("You are not authenticated. Please login again.");
+        return;
+      }
+
+      // 1️⃣ Update application status in backend
       const response = await axios.patch(
         `http://localhost:8000/api/update-application/${applicationId}`,
         { status },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // Update local state
+      // 2️⃣ Update local state
       setApplications((prev) =>
         prev.map((app) =>
           app.id === applicationId
@@ -83,30 +100,42 @@ const ApplicationsOrg = () => {
         )
       );
 
-      handlePopup(response.data.message || `Application ${status}`);
-
-      // 2️⃣ Send notification to volunteer
+      // 3️⃣ Prepare notification message
       const messageText =
         status === "accepted"
           ? "Your application has been approved"
           : "Your application has been rejected";
 
-      await axios.post(
-        "http://localhost:8000/api/send-notification",
-        {
-          message: messageText,
-          receiver_id: volunteerId,
-          channel: "in_app", // or "email" if you want
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
+      // 4️⃣ Send notifications via in-app + email
+      const channels = ["in_app", "email"];
+      await Promise.all(
+        channels.map((channel) =>
+          axios.post(
+            "http://localhost:8000/api/send-notification",
+            {
+              message: messageText,
+              receiver_id: volunteerId,
+              channel,
+            },
+            { headers: { Authorization: `Bearer ${token}` } }
+          )
+        )
       );
 
-      console.log("Notification sent to volunteer:", volunteerId);
+      // 5️⃣ Mark notification sent
+      setNotificationSent((prev) => ({ ...prev, [applicationId]: true }));
+
+      handlePopup(response.data.message || `Application ${status}`);
+      console.log(
+        `Notifications sent to volunteer ${volunteerId} via: ${channels.join(
+          ", "
+        )}`
+      );
     } catch (err) {
-      console.error("Error updating status or sending notification:", err);
+      console.error("Error updating status or sending notifications:", err);
       handlePopup(
         err.response?.data?.message ||
-          "Failed to update status / send notification"
+          "Failed to update status / send notifications"
       );
     }
   };
@@ -175,7 +204,9 @@ const ApplicationsOrg = () => {
                   }
                   disabled={app.status === "accepted"}
                 >
-                  Approve
+                  {notificationSent[app.id] && app.status === "accepted"
+                    ? "Approved ✔"
+                    : "Approve"}
                 </button>
 
                 {/* Reject */}
@@ -190,7 +221,9 @@ const ApplicationsOrg = () => {
                   }
                   disabled={app.status === "rejected"}
                 >
-                  Reject
+                  {notificationSent[app.id] && app.status === "rejected"
+                    ? "Rejected ✖"
+                    : "Reject"}
                 </button>
               </div>
             </div>

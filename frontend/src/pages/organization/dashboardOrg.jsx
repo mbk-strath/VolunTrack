@@ -12,14 +12,16 @@ import "../../styles/organization/dashboardOrg.css";
 
 const DashboardOrg = () => {
   const [chartData, setChartData] = useState([]);
+  const [totalVolunteers, setTotalVolunteers] = useState(0);
+  const [attendanceRate, setAttendanceRate] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
     const fetchOpportunities = async () => {
       try {
-        const token = localStorage.getItem("token");
-
         const oppRes = await axios.get(
           "http://localhost:8000/api/all-opportunities",
           {
@@ -61,7 +63,24 @@ const DashboardOrg = () => {
       }
     };
 
+    const fetchVolunteerStats = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:8000/api/total-volunteers",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        setTotalVolunteers(res.data.total_volunteers || 0);
+        setAttendanceRate(res.data.attendance_rate || 0);
+      } catch (err) {
+        console.error("Error fetching volunteer stats:", err);
+      }
+    };
+
     fetchOpportunities();
+    fetchVolunteerStats();
   }, []);
 
   return (
@@ -70,16 +89,16 @@ const DashboardOrg = () => {
       <div className="highlights">
         <div className="summary-card">
           <h3>Total Volunteers</h3>
-          <p>1</p>
+          <p>{totalVolunteers}</p>
         </div>
 
         <div className="summary-card">
           <h3>Attendance Rate</h3>
-          <p>0%</p>
+          <p>{attendanceRate}%</p>
         </div>
 
         <div className="summary-card">
-          <h3>Ongoing Events</h3>
+          <h3>Total Applications</h3>
           <p>1</p>
         </div>
       </div>
@@ -93,7 +112,6 @@ const DashboardOrg = () => {
         {loading ? (
           <div className="loading-message">
             <p>Loading chart data, please wait...</p>
-            {/* Optional spinner */}
             <div className="spinner"></div>
           </div>
         ) : error ? (

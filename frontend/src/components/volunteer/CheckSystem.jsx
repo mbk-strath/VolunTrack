@@ -4,11 +4,23 @@ import axios from "axios";
 
 function CheckSystem({ participation }) {
   const [time, setTime] = useState(new Date());
-  const [status, setStatus] = useState("Not checked in");
-  const [checkInTime, setCheckInTime] = useState(null);
-  const [checkOutTime, setCheckOutTime] = useState(null);
+  const [status, setStatus] = useState(
+    participation.check_in
+      ? participation.check_out
+        ? "Checked out"
+        : "Checked in"
+      : "Not checked in"
+  );
+  const [checkInTime, setCheckInTime] = useState(
+    participation.check_in || null
+  );
+  const [checkOutTime, setCheckOutTime] = useState(
+    participation.check_out || null
+  );
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const interval = setInterval(() => setTime(new Date()), 1000);
@@ -16,8 +28,10 @@ function CheckSystem({ participation }) {
   }, []);
 
   const handleCheckIn = async () => {
-    const token = localStorage.getItem("token");
+    if (checkInTime) return;
+
     const now = new Date().toISOString().slice(0, 19);
+
     try {
       setLoading(true);
       const res = await axios.post(
@@ -27,10 +41,9 @@ function CheckSystem({ participation }) {
           opportunity_id: participation.opportunity_id,
           check_in: now,
         },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
+
       setCheckInTime(now);
       setStatus("Checked in");
       setMessage(res.data.message || "Checked in successfully!");
@@ -43,12 +56,13 @@ function CheckSystem({ participation }) {
   };
 
   const handleCheckOut = async () => {
-    if (!checkInTime) {
-      setMessage("You must check in first!");
+    if (!checkInTime || checkOutTime) {
+      setMessage(
+        !checkInTime ? "You must check in first!" : "Already checked out!"
+      );
       return;
     }
 
-    const token = localStorage.getItem("token");
     const now = new Date().toISOString().slice(0, 19);
 
     try {
@@ -58,13 +72,12 @@ function CheckSystem({ participation }) {
         {
           volunteer_id: participation.volunteer_id,
           opportunity_id: participation.opportunity_id,
-          check_in: checkInTime, // previously checked in
+          check_in: checkInTime,
           check_out: now,
         },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
+
       setCheckOutTime(now);
       setStatus("Checked out");
       setMessage(res.data.message || "Checked out successfully!");
@@ -78,28 +91,26 @@ function CheckSystem({ participation }) {
 
   return (
     <div className="checkSystem">
+      <h3>{participation.opportunity_title}</h3>
       <h2 className="logtime">
         <FaClock className="icon" /> Logtime
       </h2>
+
       <div className="main">
         <div className="cont">
           <div className="time">
-            <p className="title">Official Check-In Time:</p>
-            <p className="exact">
-              <span>08:00 AM</span>
-            </p>
+            <p className="title">Official Check-In:</p>
+            <p className="exact">08:00 AM</p>
           </div>
           <div className="time">
             <p className="title">Current Time:</p>
-            <p className="exact">
-              <span>{time.toLocaleTimeString()}</span>
-            </p>
+            <p className="exact">{time.toLocaleTimeString()}</p>
           </div>
           {checkInTime && (
             <div className="time">
-              <p className="title">Your Check-In Time:</p>
+              <p className="title">Your Check-In:</p>
               <p className="exact">
-                <span>{new Date(checkInTime).toLocaleTimeString()}</span>
+                {new Date(checkInTime).toLocaleTimeString()}
               </p>
             </div>
           )}
@@ -107,10 +118,8 @@ function CheckSystem({ participation }) {
 
         <div className="cont">
           <div className="time">
-            <p className="title">Official Check-Out Time:</p>
-            <p className="exact">
-              <span>17:00 PM</span>
-            </p>
+            <p className="title">Official Check-Out:</p>
+            <p className="exact">17:00 PM</p>
           </div>
           <div className="time">
             <p className="title">Status:</p>
@@ -118,9 +127,9 @@ function CheckSystem({ participation }) {
           </div>
           {checkOutTime && (
             <div className="time">
-              <p className="title">Your Check-Out Time:</p>
+              <p className="title">Your Check-Out:</p>
               <p className="exact">
-                <span>{new Date(checkOutTime).toLocaleTimeString()}</span>
+                {new Date(checkOutTime).toLocaleTimeString()}
               </p>
             </div>
           )}

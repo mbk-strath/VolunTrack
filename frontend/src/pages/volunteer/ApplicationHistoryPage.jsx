@@ -72,7 +72,7 @@ function ApplicationHistoryPage() {
           <div className="application-holder" key={application.id}>
             <div className="names">
               <h4 className="title">
-                Opportunity Title: {application.opportunity_id}
+                Opportunity Title: {application.opportunity_title}
               </h4>
               <p className="org_name">
                 Application Date: {application.application_date}

@@ -12,54 +12,44 @@ function HomePage() {
   const [totalHours, setTotalHours] = useState(0);
   const [totalApplications, setTotalApplications] = useState(0);
   const [completedSessions, setCompletedSessions] = useState(0);
-  const [participations, setParticipations] = useState([]);
+  const [acceptedApplications, setAcceptedApplications] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) setUser(JSON.parse(storedUser));
 
-    const token = localStorage.getItem("token");
-
     const fetchData = async () => {
       try {
-        // ✅ Fetch volunteer's participations
-        const resPart = await axios.get(
-          "http://localhost:8000/api/my-participations",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        if (resPart.data) {
-          setTotalHours(resPart.data.total_hours || 0);
-          setCompletedSessions(resPart.data.total_participations || 0);
-          setParticipations(resPart.data.participations || []);
-        }
-
-        // ✅ Fetch volunteer's applications
+        // Fetch volunteer's applications
         const resApps = await axios.get(
           "http://localhost:8000/api/my-applications",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        if (resApps.data?.applications) {
-          setTotalApplications(resApps.data.applications.length);
-        }
-      } catch (err) {
-        console.error(
-          "Failed to fetch data:",
-          err.response?.data || err.message
+        const applications = resApps.data?.applications || [];
+        setTotalApplications(applications.length);
+
+        // Only accepted applications
+        const accepted = applications.filter(
+          (a) => a.status?.toLowerCase() === "accepted"
         );
+        setAcceptedApplications(accepted);
+
+        // Compute total hours and completed sessions if backend provides
+        setCompletedSessions(accepted.length);
+        setTotalHours(accepted.reduce((sum, a) => sum + (a.hours || 0), 0));
+      } catch (err) {
+        console.error("Failed to fetch applications:", err.response || err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [token]);
 
   if (loading) return <h3 className="no-opp">Loading dashboard...</h3>;
 
@@ -92,13 +82,15 @@ function HomePage() {
       </div>
 
       <div className="section2">
-        {participations
-          .filter((p) => p.status?.trim().toLowerCase() === "approved")
-          .map((p) => (
-            <CheckSystem key={p.id} participation={p} />
-          ))}
+        {acceptedApplications.length === 0 ? (
+          <p className="no-opp">No accepted applications yet.</p>
+        ) : (
+          acceptedApplications.map((app) => (
+            <CheckSystem key={app.id} participation={app} />
+          ))
+        )}
 
-        <VolunteerHoursChart />
+        <VolunteerHoursChart participations={acceptedApplications} />
       </div>
     </div>
   );

@@ -236,6 +236,11 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 ## Show Membership
 
 **Endpoint:** `GET /get/{id}`
+
+**Path Parameters:**
+
+-   id (integer, required): The user ID
+
 **Headers:**
 
 -   Authorization: Bearer {token}
@@ -244,9 +249,10 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 -   Returns the membership data (organisation or volunteer) for the user with the given ID. For admin, returns an error message since admins have no membership.
 
+**Organisation Example:**
+
 ```
 {
-    // Organisation example
     "id": 1,
     "user_id": 1,
     "org_name": "Example Org",
@@ -258,6 +264,26 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
     "city": "Nairobi",
     "focus_area": "Education",
     "is_active": true,
+    "created_at": "2025-10-20T10:00:00.000000Z",
+    "updated_at": "2025-10-20T10:00:00.000000Z"
+}
+```
+
+**Volunteer Example:**
+
+```
+{
+    "id": 1,
+    "user_id": 1,
+    "country": "Kenya",
+    "bio": "Passionate volunteer",
+    "skills": "Team work, Leadership",
+    "location": "Nairobi",
+    "profile_image": "path/to/profile.jpg",
+    "is_active": true,
+    "total_applications": 3,
+    "total_hours": 24,
+    "total_completed_opportunities": 2,
     "created_at": "2025-10-20T10:00:00.000000Z",
     "updated_at": "2025-10-20T10:00:00.000000Z"
 }
@@ -731,11 +757,15 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "required_skills": "Physical labor, teamwork",
         "num_volunteers_needed": 10,
         "start_date": "2025-11-01",
+        "start_time": "09:00:00",
         "end_date": "2025-11-01",
+        "end_time": "17:00:00",
         "schedule": "9 AM - 5 PM",
         "location": "Central Park",
         "benefits": "Free lunch, certificate",
         "application_deadline": "2025-10-25",
+        "cv_required": false,
+        "attendance_rate": 75.50,
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
@@ -767,11 +797,15 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
     "required_skills": "Physical labor, teamwork",
     "num_volunteers_needed": 10,
     "start_date": "2025-11-01",
+    "start_time": "09:00:00",
     "end_date": "2025-11-01",
+    "end_time": "17:00:00",
     "schedule": "9 AM - 5 PM",
     "location": "Central Park",
     "benefits": "Free lunch, certificate",
     "application_deadline": "2025-10-25",
+    "cv_required": false,
+    "attendance_rate": 75.50,
     "created_at": "2025-10-20T10:00:00.000000Z",
     "updated_at": "2025-10-20T10:00:00.000000Z"
 }
@@ -887,6 +921,51 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 }
 ```
 
+---
+
+## My Opportunities
+
+**Endpoint:** `GET /my-opportunities`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Organisation or Admin only)
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "organisation_id": 1,
+        "title": "Community Clean-up",
+        "description": "Help clean up the local park",
+        "required_skills": "Physical labor, teamwork",
+        "num_volunteers_needed": 10,
+        "start_date": "2025-11-01",
+        "start_time": "09:00:00",
+        "end_date": "2025-11-01",
+        "end_time": "17:00:00",
+        "schedule": "9 AM - 5 PM",
+        "location": "Central Park",
+        "benefits": "Free lunch, certificate",
+        "application_deadline": "2025-10-25",
+        "cv_required": false,
+        "attendance_rate": 75.50,
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
+    }
+]
+```
+
+**Notes:**
+
+-   Returns all opportunities created by the authenticated organisation
+-   For admin users, returns empty array or undefined opportunities
+-   Ordered by creation date
+
+---
+
 ## Delete Opportunity
 
 **Endpoint:** `DELETE /delete-opportunity/{id}`
@@ -906,6 +985,49 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
     "message": "Opportunity deleted successfully"
 }
 ```
+
+---
+
+## Ongoing Opportunities
+
+**Endpoint:** `GET /ongoing-opportunities`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Admin only)
+
+**Response:**
+
+```
+[
+    {
+        "id": 1,
+        "organisation_id": 1,
+        "title": "Community Clean-up",
+        "description": "Help clean up the local park",
+        "required_skills": "Physical labor, teamwork",
+        "num_volunteers_needed": 10,
+        "start_date": "2025-11-01",
+        "start_time": "09:00:00",
+        "end_date": "2025-11-01",
+        "end_time": "17:00:00",
+        "schedule": "9 AM - 5 PM",
+        "location": "Central Park",
+        "benefits": "Free lunch, certificate",
+        "application_deadline": "2025-10-25",
+        "cv_required": false,
+        "attendance_rate": 75.50,
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-10-20T10:00:00.000000Z"
+    }
+]
+```
+
+**Notes:**
+
+-   Returns all opportunities where the current date falls between start_date and end_date
+-   Only includes ongoing opportunities based on today's date
+-   Returns an empty array if no opportunities are currently ongoing
 
 ---
 
@@ -986,8 +1108,10 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
             "volunteer_id": 1,
             "opportunity_id": 1,
             "application_date": "2025-10-20",
-            "CV_path": null,
+            "CV_path": "http://localhost:8000/storage/applications/cvs/cv_filename.pdf",
             "status": "pending",
+            "volunteer_name": "John Doe",
+            "opportunity_title": "Community Clean-up",
             "created_at": "2025-10-20T10:00:00.000000Z",
             "updated_at": "2025-10-20T10:00:00.000000Z"
         }
@@ -1021,8 +1145,10 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
             "volunteer_id": 1,
             "opportunity_id": 1,
             "application_date": "2025-10-20",
-            "CV_path": null,
+            "CV_path": "http://localhost:8000/storage/applications/cvs/cv_12345.pdf",
             "status": "pending",
+            "volunteer_name": "John Doe",
+            "opportunity_title": "Community Clean-up",
             "created_at": "2025-10-20T10:00:00.000000Z",
             "updated_at": "2025-10-20T10:00:00.000000Z"
         }
@@ -1061,6 +1187,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "application_date": "2025-10-20",
         "CV_path": "http://localhost:8000/storage/applications/cvs/cv_filename.pdf",
         "status": "pending",
+        "volunteer_name": "John Doe",
+        "opportunity_title": "Community Clean-up",
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     },
@@ -1257,6 +1385,44 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
     }
 }
 ```
+
+---
+
+## My Trends
+
+**Endpoint:** `GET /my-trends`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Volunteer or Admin only)
+
+**Response:**
+
+```
+{
+    "daily_hour_trends": [
+        {
+            "date": "2025-11-01",
+            "total_hours": 8
+        },
+        {
+            "date": "2025-11-02",
+            "total_hours": 6
+        },
+        {
+            "date": "2025-11-03",
+            "total_hours": 8
+        }
+    ]
+}
+```
+
+**Notes:**
+
+-   Returns daily hour trends for the authenticated volunteer
+-   Aggregates total hours participated per day
+-   Ordered by date in ascending order
+-   Admin users cannot use this endpoint (only volunteers)
 
 ---
 
@@ -1651,22 +1817,32 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 **Response:**
 
 ```
-[
-    {
-        "id": 1,
-        "volunteer_id": 1,
-        "opportunity_id": 1,
-        "participated_at": "2025-10-20T10:00:00.000000Z",
-        "created_at": "2025-10-20T10:00:00.000000Z",
-        "updated_at": "2025-10-20T10:00:00.000000Z",
-        "opportunity": {
+{
+    "participations": [
+        {
             "id": 1,
-            "title": "Community Clean-up",
-            "description": "Help clean up the local park"
+            "volunteer_id": 1,
+            "opportunity_id": 1,
+            "check_in": "2025-10-20 09:00:00",
+            "check_out": "2025-10-20 17:00:00",
+            "total_hours": 8,
+            "volunteer_name": "John Doe",
+            "opportunity_title": "Community Clean-up",
+            "created_at": "2025-10-20T10:00:00.000000Z",
+            "updated_at": "2025-10-20T10:00:00.000000Z"
         }
-    }
-]
+    ],
+    "total_participations": 1,
+    "total_hours": 8
+}
 ```
+
+**Notes:**
+
+-   Returns all participation records for the authenticated volunteer
+-   total_participations: Count of all participations
+-   total_hours: Sum of all hours across all participations
+-   Includes appended attributes (volunteer_name, opportunity_title, total_hours)
 
 ---
 
@@ -1686,6 +1862,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 Returns the membership data (organisation or volunteer) for the user with the given ID.
 
+**Organisation Example:**
+
 ```
 {
     "id": 1,
@@ -1699,6 +1877,26 @@ Returns the membership data (organisation or volunteer) for the user with the gi
     "city": "Nairobi",
     "focus_area": "Education",
     "is_active": true,
+    "created_at": "2025-10-20T10:00:00.000000Z",
+    "updated_at": "2025-10-20T10:00:00.000000Z"
+}
+```
+
+**Volunteer Example:**
+
+```
+{
+    "id": 1,
+    "user_id": 1,
+    "country": "Kenya",
+    "bio": "Passionate volunteer",
+    "skills": "Team work, Leadership",
+    "location": "Nairobi",
+    "profile_image": "path/to/profile.jpg",
+    "is_active": true,
+    "total_applications": 3,
+    "total_hours": 24,
+    "total_completed_opportunities": 2,
     "created_at": "2025-10-20T10:00:00.000000Z",
     "updated_at": "2025-10-20T10:00:00.000000Z"
 }
@@ -1889,10 +2087,6 @@ Returns the image data or URL.
 
 -   Authorization: Bearer {token} (Volunteer or Admin only)
 
-**Body Parameters:**
-
--   volunteer_id (integer, required): The volunteer ID
-
 **Response:**
 
 ```
@@ -1910,6 +2104,11 @@ Returns the image data or URL.
     }
 ]
 ```
+
+**Notes:**
+
+-   Returns evidence records for the authenticated volunteer
+-   Only accessible by the volunteer themselves or admin users
 
 ---
 

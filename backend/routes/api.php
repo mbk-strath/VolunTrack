@@ -92,6 +92,7 @@ Route::middleware('auth:sanctum', 'role:admin,volunteer')->group(function(){
     Route::delete('/delete-application/{id}', [ApplicationController::class, 'delete']);
     //Participation Controller
     Route::get('/my-participations', [ParticipationController::class, 'myParticipations']);
+    Route::get('/my-trends', [ParticipationController::class, 'dailyHourTrends']);
     //Evidence Controller
     Route::post('my-evidences', [EvidenceController::class, 'getByVolunteer']);
     Route::post('/create-evidence', [EvidenceController::class, 'create']);

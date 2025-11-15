@@ -87,4 +87,17 @@ class ParticipationController extends Controller
         return response()->json(['message' => 'Participation deleted'], 200);
     }
 
+    public function dailyHourTrends(Request $request){
+        $user = $request->user();
+        $volunteer = MembershipService::getMembership($user);
+
+        $participations = Participation::where('volunteer_id', $volunteer->id)
+            ->selectRaw('DATE(check_in) as date, SUM(total_hours) as total_hours')
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->get();
+
+        return response()->json(['daily_hour_trends' => $participations], 200);
+    }
+
 }

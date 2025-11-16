@@ -12,7 +12,6 @@ import HomePage from "./pages/volunteer/HomePage";
 import SettingsVolPage from "./pages/volunteer/SettingsVolPage";
 import ProfilePage from "./pages/volunteer/ProfilePage";
 import AccountPage from "./pages/volunteer/AccountPage";
-import MessagesPage from "./pages/volunteer/MessagesPage";
 import HistoryPage from "./pages/volunteer/HistoryPage";
 import ForgotPassword from "./pages/main/ForgotPassword";
 import ResetPassword from "./pages/main/ResetPassword";
@@ -37,6 +36,7 @@ import SettingsOrg from "./pages/organization/settingsOrg";
 import OpportunityApplicantsPage from "./pages/organization/OpportunityApplicantsPage";
 import VolunteerTable from "./pages/organization/VolunteerTable";
 import OtherDetailsPage from "./pages/volunteer/OtherDetailsPage";
+import NotificationsVolPage from "./pages/volunteer/MessagesPage";
 function App() {
   return (
     <div className="main">
@@ -55,7 +55,7 @@ function App() {
           <Route path="/dashboard/volunteer" element={<DashboardLayoutVol />}>
             <Route index element={<HomePage />} />
             <Route path="history" element={<HistoryPage />} />
-            <Route path="messages" element={<NotificationsPage />} />
+            <Route path="messages" element={<NotificationsVolPage />} />
             <Route path="applications" element={<ApplicationHistoryPage />} />
             <Route path="opportunities" element={<ViewOpportunityPage />} />
             <Route path="settings" element={<SettingsVolPage />}>

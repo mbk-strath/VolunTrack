@@ -13,14 +13,19 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('receiver_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignId('sender_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('receiver_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete();
             $table->string('message');
             $table->timestamp('sent_at')->useCurrent();
             $table->boolean('is_read')->default(false);
             $table->timestamp('read_at')->nullable();
             $table->string('channel');
             $table->timestamps();
+
+             // Add index for better query performance
+            $table->index('receiver_id');
+            $table->index('sender_id');
+            $table->index(['receiver_id', 'is_read']);
         });
     }
 

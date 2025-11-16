@@ -766,6 +766,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "application_deadline": "2025-10-25",
         "cv_required": false,
         "attendance_rate": 75.50,
+        "total_applicants": 5,
+        "organisation_name": "Green Initiative",
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
@@ -806,6 +808,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
     "application_deadline": "2025-10-25",
     "cv_required": false,
     "attendance_rate": 75.50,
+    "total_applicants": 5,
+    "organisation_name": "Green Initiative",
     "created_at": "2025-10-20T10:00:00.000000Z",
     "updated_at": "2025-10-20T10:00:00.000000Z"
 }
@@ -859,6 +863,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "application_deadline": "2025-10-25",
         "cv_required": false,
         "attendance_rate": 0,
+        "total_applicants": 0,
+        "organisation_name": "Green Initiative",
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
@@ -915,6 +921,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "application_deadline": "2025-10-25",
         "cv_required": false,
         "attendance_rate": 75.50,
+        "total_applicants": 5,
+        "organisation_name": "Green Initiative",
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
@@ -952,6 +960,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "application_deadline": "2025-10-25",
         "cv_required": false,
         "attendance_rate": 75.50,
+        "total_applicants": 5,
+        "organisation_name": "Green Initiative",
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
@@ -1017,6 +1027,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "application_deadline": "2025-10-25",
         "cv_required": false,
         "attendance_rate": 75.50,
+        "total_applicants": 5,
+        "organisation_name": "Green Initiative",
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }

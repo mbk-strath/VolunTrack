@@ -595,6 +595,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 **Endpoint:** `POST /send-notification`
 
+**Authorization:** Admin or Organisation role only
+
 **Headers:**
 
 -   Authorization: Bearer {token}
@@ -602,26 +604,45 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 **Body Parameters:**
 
 -   message (string, required): Notification message
--   receiver_id (integer, required): ID of the user to receive the notification
--   channel (string, optional): Notification channel (e.g., email, in_app)
--   sent_at (datetime, optional): When the notification was sent
+-   receiver_id (integer, required): ID of the user to receive the notification (must exist)
+-   channel (string, required): Notification channel. Must be one of: `email`, `in_app`, `sms`
 
-**Response:**
+**Response (Success):**
 
 ```
 {
-    "message": "Notification sent successfully",
+    "message": "message sent successfully",
     "notification": {
         "id": 1,
         "message": "Your application has been approved",
         "sent_at": "2025-10-29T10:00:00.000000Z",
         "is_read": false,
         "read_at": null,
-        "channel": "email",
+        "channel": "in_app",
         "receiver_id": 1,
         "sender_id": 2,
         "created_at": "2025-10-29T10:00:00.000000Z",
         "updated_at": "2025-10-29T10:00:00.000000Z"
+    }
+}
+```
+
+**Response (Unauthorized - Non-admin/org user):**
+
+```
+{
+    "error": "Only admins and organisations can send notifications"
+}
+```
+
+**Response (Validation Error):**
+
+```
+{
+    "message": "The given data was invalid.",
+    "errors": {
+        "channel": ["The channel must be one of: email, in_app, sms"],
+        "receiver_id": ["The selected receiver_id is invalid"]
     }
 }
 ```
@@ -636,23 +657,44 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 -   Authorization: Bearer {token}
 
+**Query Parameters:**
+
+-   page (integer, optional): Page number for pagination (default: 1)
+-   per_page (integer, optional): Records per page (default: 15)
+
 **Response:**
 
 ```
-[
-    {
-        "id": 1,
-        "message": "Your application has been approved",
-        "sent_at": "2025-10-29T10:00:00.000000Z",
-        "is_read": false,
-        "read_at": null,
-        "channel": "email",
-        "receiver_id": 1,
-        "sender_id": 2,
-        "created_at": "2025-10-29T10:00:00.000000Z",
-        "updated_at": "2025-10-29T10:00:00.000000Z"
+{
+    "data": [
+        {
+            "id": 1,
+            "message": "Your application has been approved",
+            "sent_at": "2025-10-29T10:00:00.000000Z",
+            "is_read": false,
+            "read_at": null,
+            "channel": "in_app",
+            "receiver_id": 1,
+            "sender_id": 2,
+            "created_at": "2025-10-29T10:00:00.000000Z",
+            "updated_at": "2025-10-29T10:00:00.000000Z"
+        }
+    ],
+    "links": {
+        "first": "http://api.example.com/my-notifications?page=1",
+        "last": "http://api.example.com/my-notifications?page=1",
+        "prev": null,
+        "next": null
+    },
+    "meta": {
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "per_page": 15,
+        "to": 1,
+        "total": 1
     }
-]
+}
 ```
 
 ---
@@ -677,7 +719,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "read_at": null,
         "channel": "in_app",
         "receiver_id": 1,
-        "sender_id": null,
+        "sender_id": 2,
         "created_at": "2025-10-29T10:00:00.000000Z",
         "updated_at": "2025-10-29T10:00:00.000000Z"
     }
@@ -706,33 +748,20 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 }
 ```
 
----
-
-## Get Unread Notifications
-
-**Endpoint:** `GET /unread-notifications`
-
-**Headers:**
-
--   Authorization: Bearer {token}
-
-**Response:**
+**Response (Not Found):**
 
 ```
-[
-    {
-        "id": 1,
-        "message": "New opportunity available",
-        "sent_at": "2025-10-29T10:00:00.000000Z",
-        "is_read": false,
-        "read_at": null,
-        "channel": "in_app",
-        "receiver_id": 1,
-        "sender_id": null,
-        "created_at": "2025-10-29T10:00:00.000000Z",
-        "updated_at": "2025-10-29T10:00:00.000000Z"
-    }
-]
+{
+    "message": "Notification not found"
+}
+```
+
+**Response (Unauthorized - Not receiver):**
+
+```
+{
+    "message": "Unauthorized"
+}
 ```
 
 ---
@@ -1577,27 +1606,58 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 **Endpoint:** `GET /all-notifications`
 
+**Authorization:** Admin only
+
 **Headers:**
 
--   Authorization: Bearer {token} (Admin only)
+-   Authorization: Bearer {token}
+
+**Query Parameters:**
+
+-   page (integer, optional): Page number for pagination (default: 1)
+-   per_page (integer, optional): Records per page (default: 15)
 
 **Response:**
 
 ```
-[
-    {
-        "id": 1,
-        "message": "New opportunity available",
-        "sent_at": "2025-10-29T10:00:00.000000Z",
-        "is_read": false,
-        "read_at": null,
-        "channel": "in_app",
-        "receiver_id": 1,
-        "sender_id": null,
-        "created_at": "2025-10-29T10:00:00.000000Z",
-        "updated_at": "2025-10-29T10:00:00.000000Z"
+{
+    "data": [
+        {
+            "id": 1,
+            "message": "New opportunity available",
+            "sent_at": "2025-10-29T10:00:00.000000Z",
+            "is_read": false,
+            "read_at": null,
+            "channel": "in_app",
+            "receiver_id": 1,
+            "sender_id": 2,
+            "created_at": "2025-10-29T10:00:00.000000Z",
+            "updated_at": "2025-10-29T10:00:00.000000Z"
+        }
+    ],
+    "links": {
+        "first": "http://api.example.com/all-notifications?page=1",
+        "last": "http://api.example.com/all-notifications?page=1",
+        "prev": null,
+        "next": null
+    },
+    "meta": {
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "per_page": 15,
+        "to": 1,
+        "total": 1
     }
-]
+}
+```
+
+**Response (Unauthorized - Non-admin user):**
+
+```
+{
+    "error": "Only admins can view all notifications"
+}
 ```
 
 ---

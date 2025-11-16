@@ -178,8 +178,37 @@ class UserController extends Controller
             return response()->json(['message' => 'User not found'], 404);
         }
 
-        $user->update($request->all());
-        return response()->json($user, 200);
+        // Authorization: User can only update themselves unless they're admin
+        $authenticatedUser = $request->user();
+        if ($authenticatedUser->id !== (int)$id && $authenticatedUser->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized - You can only update your own profile'], 403);
+        }
+
+        // Validate only allowed fields
+        $data = $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $id,
+            'phone' => 'sometimes|string|max:20',
+            'gender' => 'sometimes|string|in:Male,Female,Other,Prefer not to say',
+            'password' => 'sometimes|string|min:8|confirmed',
+        ]);
+
+        // Only admin can update these fields
+        if ($authenticatedUser->role === 'admin') {
+            $data += $request->validate([
+                'role' => 'sometimes|string|in:organisation,volunteer,admin',
+                'is_verified' => 'sometimes|boolean',
+                'is_active' => 'sometimes|boolean',
+            ]);
+        }
+
+        // Hash password if provided
+        if (isset($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+
+        $user->update($data);
+        return response()->json(['message' => 'User updated successfully', 'user' => $user], 200);
     }
 
     public function passwordResetOtp(Request $request){

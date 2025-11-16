@@ -295,7 +295,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 **Endpoint:** `PATCH /update-user/{id}`
 
-**Content-Type:** `multipart/form-data` (for file uploads)
+**Content-Type:** `application/json` (or `application/x-www-form-urlencoded`)
 
 **Headers:**
 
@@ -303,31 +303,160 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 **Path Parameters:**
 
--   id (integer, required): The user ID
+-   id (integer, required): The user ID (must be authenticated user's ID unless you're admin)
 
-**Body Parameters:**
+**Body Parameters (All Optional):**
 
--   name (string, optional)
--   email (string, optional)
--   phone (string, optional)
--   gender (string, optional)
--   password (string, optional)
--   etc. (depending on user role)
+-   name (string, max 255)
+-   email (string, email format, unique)
+-   phone (string, max 20)
+-   gender (string, enum: `Male`, `Female`, `Other`, `Prefer not to say`)
+-   password (string, min 8 characters, requires `password_confirmation` field)
+-   password_confirmation (string, required if password is provided)
 
-**Response:**
+**Admin-Only Parameters:**
+
+-   role (string, enum: `organisation`, `volunteer`, `admin`)
+-   is_verified (boolean)
+-   is_active (boolean)
+
+**Response (Success):**
 
 ```
 {
-    "id": 1,
-    "name": "Updated Name",
-    "email": "updated@example.com",
-    "phone": "1234567890",
-    "gender": "Male",
-    "role": "volunteer",
-    "is_verified": true,
-    "is_active": true,
-    "created_at": "2025-10-20T10:00:00.000000Z",
-    "updated_at": "2025-10-20T10:00:00.000000Z"
+    "message": "User updated successfully",
+    "user": {
+        "id": 1,
+        "name": "Updated Name",
+        "email": "updated@example.com",
+        "phone": "1234567890",
+        "gender": "Male",
+        "role": "volunteer",
+        "is_verified": true,
+        "is_active": true,
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-11-16T10:00:00.000000Z"
+    }
+}
+```
+
+**Response (Unauthorized - Not your own account):**
+
+```
+{
+    "message": "Unauthorized - You can only update your own profile"
+}
+```
+
+**Response (Validation Error):**
+
+```
+{
+    "message": "The given data was invalid.",
+    "errors": {
+        "email": ["The email has already been taken"],
+        "password": ["The password must be at least 8 characters"]
+    }
+}
+```
+
+---
+
+## Update Membership (Volunteer or Organisation)
+
+**Endpoint:** `PATCH /update/{id}/`
+
+**Content-Type:** `multipart/form-data` (required for file uploads)
+
+**Headers:**
+
+-   Authorization: Bearer {token}
+
+**Path Parameters:**
+
+-   id (integer, required): The user ID (must be authenticated user's ID unless you're admin)
+
+**Body Parameters for Volunteer (All Optional):**
+
+-   country (string, max 255)
+-   bio (string, max 1000)
+-   skills (string, max 255)
+-   location (string, max 255)
+-   profile_image (file, image format: jpeg/png/jpg/gif, max 2MB)
+
+**Body Parameters for Organisation (All Optional):**
+
+-   org_name (string, max 255)
+-   org_type (string, max 255)
+-   reg_no (string, max 255, must be unique)
+-   website (string, valid URL format)
+-   country (string, max 255)
+-   city (string, max 255)
+-   focus_area (string, max 255)
+-   logo (file, image format: jpeg/png/jpg/gif, max 2MB)
+
+**Response for Volunteer (Success):**
+
+```
+{
+    "message": "Volunteer updated successfully",
+    "volunteer": {
+        "id": 1,
+        "user_id": 1,
+        "country": "Kenya",
+        "bio": "Passionate about community service",
+        "skills": "Team work, Leadership",
+        "location": "Nairobi",
+        "profile_image": "profile_images/uuid.jpg",
+        "profile_image_url": "http://localhost:8000/storage/profile_images/uuid.jpg",
+        "is_active": true,
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-11-16T10:00:00.000000Z"
+    }
+}
+```
+
+**Response for Organisation (Success):**
+
+```
+{
+    "message": "Organisation updated successfully",
+    "organisation": {
+        "id": 1,
+        "user_id": 1,
+        "org_name": "Red Cross Kenya",
+        "org_type": "NGO",
+        "reg_no": "REG001",
+        "website": "https://redcross.org.ke",
+        "logo": "organisation_logos/uuid.jpg",
+        "logo_url": "http://localhost:8000/storage/organisation_logos/uuid.jpg",
+        "country": "Kenya",
+        "city": "Nairobi",
+        "focus_area": "Humanitarian Aid",
+        "is_active": true,
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-11-16T10:00:00.000000Z"
+    }
+}
+```
+
+**Response (Unauthorized - Not your own account):**
+
+```
+{
+    "message": "Unauthorized - You can only update your own profile"
+}
+```
+
+**Response (Validation Error):**
+
+```
+{
+    "message": "The given data was invalid.",
+    "errors": {
+        "website": ["The website must be a valid URL"],
+        "profile_image": ["The profile_image must be an image"]
+    }
 }
 ```
 

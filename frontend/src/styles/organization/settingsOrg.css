@@ -18,7 +18,7 @@
   gap: 0.75rem;
 }
 
-.tab-btn {
+.tab-btnn {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -27,19 +27,21 @@
   border-bottom-right-radius: 15px;
   font-weight: 500;
   color: black;
-  background: transparent;
+  background: white;
   border: none;
   cursor: pointer;
   transition: all 0.25s ease;
+  border-left: none;
 }
 
-.tab-btn:hover {
+.tab-btnn:hover {
   border-top: 1px solid #0f172a;
   border-right: 2px solid #0f172a;
   border-bottom: 1px solid #0f172a;
+  border-left: none;
 }
 
-.tab-btn.active {
+.tab-btnn.active {
   border-top: 1px solid #0f172a;
   border-right: 3px solid #0f172a;
   border-bottom: 1px solid #0f172a;

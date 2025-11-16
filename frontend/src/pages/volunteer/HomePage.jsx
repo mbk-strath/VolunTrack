@@ -12,7 +12,10 @@ function HomePage() {
   const [totalHours, setTotalHours] = useState(0);
   const [totalApplications, setTotalApplications] = useState(0);
   const [completedSessions, setCompletedSessions] = useState(0);
+
+  // This state will hold the COMBINED data (app + opportunity details)
   const [acceptedApplications, setAcceptedApplications] = useState([]);
+
   const [loading, setLoading] = useState(true);
 
   const token = localStorage.getItem("token");
@@ -23,26 +26,67 @@ function HomePage() {
 
     const fetchData = async () => {
       try {
-        // Fetch volunteer's applications
-        const resApps = await axios.get(
-          "http://localhost:8000/api/my-applications",
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        // --- START OF CHANGES ---
+
+        // 1. Fetch both /my-applications AND /all-opportunities at the same time
+        const [resApps, resOps] = await Promise.all([
+          axios.get("http://localhost:8000/api/my-applications", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          axios.get("http://localhost:8000/api/all-opportunities", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
 
         const applications = resApps.data?.applications || [];
+        const allOpportunities = resOps.data || []; // Your API response structure
+
         setTotalApplications(applications.length);
 
-        // Only accepted applications
+        // 2. Filter for accepted applications
         const accepted = applications.filter(
           (a) => a.status?.toLowerCase() === "accepted"
         );
-        setAcceptedApplications(accepted);
 
-        // Compute total hours and completed sessions if backend provides
-        setCompletedSessions(accepted.length);
-        setTotalHours(accepted.reduce((sum, a) => sum + (a.hours || 0), 0));
+        // 3. Combine the 'app' data with the 'opportunity' data
+        const combinedData = accepted
+          .map((app) => {
+            // Find the full opportunity details for this application
+            const opportunity = allOpportunities.find(
+              (op) => op.id === app.opportunity_id
+            );
+
+            // 4. Create a new object with all the data CheckSystem needs
+            if (opportunity) {
+              return {
+                ...app, // This has check_in, check_out, volunteer_id, etc.
+
+                // This is the NEW data that fixes "Invalid Date"
+                opportunity_title: opportunity.title,
+                opportunity_start_date: opportunity.start_date,
+                opportunity_start_time: opportunity.start_time,
+                opportunity_end_date: opportunity.end_date,
+                opportunity_end_time: opportunity.end_time,
+              };
+            }
+            // Log an error if the opportunity isn't found
+            console.error(
+              `Opportunity not found for application ID: ${app.id}`
+            );
+            return null;
+          })
+          .filter(Boolean); // filter(Boolean) removes any nulls
+
+        // 5. Set the state with the new, complete data
+        setAcceptedApplications(combinedData);
+
+        // --- END OF CHANGES ---
+
+        // Compute total hours and completed sessions
+        setCompletedSessions(combinedData.length); // Use combinedData here
+        setTotalHours(combinedData.reduce((sum, a) => sum + (a.hours || 0), 0)); // Use combinedData here
       } catch (err) {
-        console.error("Failed to fetch applications:", err.response || err);
+        console.error("Failed to fetch data:", err.response || err);
       } finally {
         setLoading(false);
       }
@@ -53,6 +97,7 @@ function HomePage() {
 
   if (loading) return <h3 className="no-opp">Loading dashboard...</h3>;
 
+  // The rest of your file is unchanged.
   return (
     <div className="homeVolPage">
       <h2 className="username">Welcome {user ? user.name : "Volunteer"}</h2>
@@ -83,8 +128,12 @@ function HomePage() {
 
       <div className="section2">
         {acceptedApplications.length === 0 ? (
-          <p className="no-opp">No accepted applications yet.</p>
+          <p className="no-acc">
+            Log System unavailable! No accepted applications yet.
+          </p>
         ) : (
+          // This 'app' object now contains all the date/time data
+          // and the "Invalid Date" error will be gone.
           acceptedApplications.map((app) => (
             <CheckSystem key={app.id} participation={app} />
           ))

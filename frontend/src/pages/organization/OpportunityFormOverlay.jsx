@@ -4,7 +4,6 @@ import "../../styles/organization/opportunityFormOverlay.css";
 
 const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
   const [formData, setFormData] = useState({
-    organizationName: "",
     opportunityTitle: "",
     volunteers: "",
     workingHours: "",
@@ -15,8 +14,8 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
     benefits: "",
     description: "",
     deadline: "",
-    checkInTime: "", // ✅ new
-    checkOutTime: "", // ✅ new
+    start_time: "", // ✅ matches backend
+    end_time: "", // ✅ matches backend
     cvRequired: false,
   });
 
@@ -25,10 +24,21 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
   // Populate form when editing
   useEffect(() => {
     if (prefillData) {
-      setFormData((prev) => ({
-        ...prev,
-        ...prefillData,
-      }));
+      setFormData({
+        opportunityTitle: prefillData.title || "",
+        volunteers: prefillData.num_volunteers_needed || "",
+        workingHours: prefillData.schedule || "",
+        startDate: prefillData.start_date || "",
+        endDate: prefillData.end_date || "",
+        location: prefillData.location || "",
+        skills: prefillData.required_skills || "",
+        benefits: prefillData.benefits || "",
+        description: prefillData.description || "",
+        deadline: prefillData.application_deadline || "",
+        start_time: prefillData.start_time || "",
+        end_time: prefillData.end_time || "",
+        cvRequired: prefillData.cv_required || false,
+      });
     }
   }, [prefillData]);
 
@@ -62,10 +72,8 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
     if (!formData.workingHours) newErrors.workingHours = "Schedule is required";
     if (!formData.description)
       newErrors.description = "Description is required";
-    if (!formData.checkInTime)
-      newErrors.checkInTime = "Check-in time is required";
-    if (!formData.checkOutTime)
-      newErrors.checkOutTime = "Check-out time is required";
+    if (!formData.start_time) newErrors.start_time = "Start time is required";
+    if (!formData.end_time) newErrors.end_time = "End time is required";
 
     // Date validations
     if (
@@ -88,7 +96,6 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
       return;
     }
 
-    // ✅ Prepare request body including check-in/out
     const body = {
       title: formData.opportunityTitle,
       description: formData.description,
@@ -100,8 +107,9 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
       benefits: formData.benefits,
       application_deadline: formData.deadline,
       location: formData.location,
-      check_in_time: formData.checkInTime,
-      check_out_time: formData.checkOutTime,
+      start_time: formData.start_time,
+      end_time: formData.end_time,
+      cv_required: formData.cvRequired,
     };
 
     try {
@@ -142,6 +150,7 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
 
         <form onSubmit={handleSubmit} className="opportunity-form">
           {errors.form && <div className="form-error">{errors.form}</div>}
+
           <div className="form-header">
             <label className="checkbox">
               <input
@@ -194,30 +203,29 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
               )}
             </fieldset>
 
-            {/* ✅ New Check-In/Out Inputs */}
             <fieldset className="field">
-              <legend>Check-In Time</legend>
+              <legend>Start Time</legend>
               <input
                 type="time"
-                name="checkInTime"
-                value={formData.checkInTime}
+                name="start_time"
+                value={formData.start_time}
                 onChange={handleChange}
               />
-              {errors.checkInTime && (
-                <span className="field-error">{errors.checkInTime}</span>
+              {errors.start_time && (
+                <span className="field-error">{errors.start_time}</span>
               )}
             </fieldset>
 
             <fieldset className="field">
-              <legend>Check-Out Time</legend>
+              <legend>End Time</legend>
               <input
                 type="time"
-                name="checkOutTime"
-                value={formData.checkOutTime}
+                name="end_time"
+                value={formData.end_time}
                 onChange={handleChange}
               />
-              {errors.checkOutTime && (
-                <span className="field-error">{errors.checkOutTime}</span>
+              {errors.end_time && (
+                <span className="field-error">{errors.end_time}</span>
               )}
             </fieldset>
 

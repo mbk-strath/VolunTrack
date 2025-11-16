@@ -1,87 +1,90 @@
-.messages-page {
-  padding-top: 10%;
-  margin: auto;
-  font-family: "Poppins", sans-serif;
-  padding-left: 2%;
-  padding-right: 2%;
-  min-height: 90vh;
+.notifications-page {
+  width: 100%;
+  max-width: 800px;
+  margin: 6rem auto;
+  padding: 1rem;
 }
 
-h2 {
-  margin-bottom: 20px;
+.notifications-page h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #333;
 }
 
-.message-card {
-  background: #f8f9fa;
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition: 0.3s;
+.notif-loading,
+.notif-error,
+.notif-empty {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #777;
 }
 
-.message-card.unread {
-  border-left: 5px solid #e09c6d;
-  background: #e8f1ff;
+.notif-error {
+  color: #d9534f;
 }
 
-.message-card.read {
-  background: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0px 4px 25px rgba(0, 0, 0, 0.25);
-}
-
-.message-card button {
-  margin-top: 10px;
-  background: linear-gradient(180deg, #dfbf98 0%, #b88b6a 50%, #e09c6d 100%);
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-left: 2%;
-}
-
-.message-card button:hover {
-  background: #0056b3;
-}
-
-.send-form {
-  margin-top: 40px;
-  border-top: 1px solid #ccc;
-  padding-top: 20px;
-}
-
-.send-form form {
+.notifications-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 20px;
+  gap: 1rem;
 }
 
-.send-form input,
-.send-form textarea {
-  padding: 10px;
+.notification-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem;
+  border-radius: 8px;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  background-color: #fff;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.send-form button {
-  background: linear-gradient(180deg, #dfbf98 0%, #b88b6a 50%, #e09c6d 100%);
-  color: white;
-  border: none;
-  padding: 8px;
-  border-radius: 6px;
+/* This is how you show "unread" items */
+.notification-item.unread {
+  background-color: #f9f9ff;
+  border-left: 5px solid #007bff;
+  font-weight: 600;
+}
+
+/* This is how you show "read" items */
+.notification-item.read {
+  opacity: 0.7;
+  background-color: #fdfdfd;
+}
+
+.notification-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.notification-content p {
+  margin: 0;
+  font-size: 1rem;
+  color: #222;
+}
+
+.notification-date {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: normal;
+}
+
+.btn-mark-read {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: #007bff;
+  background-color: transparent;
+  border: 1px solid #007bff;
+  border-radius: 5px;
   cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap; /* Prevents button from wrapping */
 }
 
-.send-form button:hover {
-  background: linear-gradient(180deg, #e2be93 0%, #b88b6a 50%, #f39e61 100%);
-  color: black;
-}
-
-.no-op {
-  text-align: center;
-  margin-top: 20%;
-  font-size: 2rem;
+.btn-mark-read:hover {
+  background-color: #007bff;
+  color: #fff;
 }

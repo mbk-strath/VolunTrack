@@ -88,16 +88,16 @@ class OpportunityController extends Controller
         }
 
         $data = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
-            'description' => 'sometimes|required|string',
-            'required_skills' => 'sometimes|required|string',
-            'num_volunteers_needed' => 'sometimes|required|integer|min:1',
-            'start_date' => 'sometimes|required|date',
-            'end_date' => 'sometimes|required|date|after_or_equal:start_date',
-            'schedule' => 'sometimes|required|string|max:255',
+            'title' => 'sometimes|string|max:255',
+            'description' => 'sometimes|string',
+            'required_skills' => 'sometimes|string',
+            'num_volunteers_needed' => 'sometimes|integer|min:1',
+            'start_date' => 'sometimes|date',
+            'end_date' => 'sometimes|date|after_or_equal:start_date',
+            'schedule' => 'sometimes|string|max:255',
             'benefits' => 'nullable|string|max:255',
-            'application_deadline' => 'sometimes|required|date|before_or_equal:start_date',
-            'location' => 'sometimes|required|string|max:255',
+            'application_deadline' => 'sometimes|date|before_or_equal:start_date',
+            'location' => 'sometimes|string|max:255',
             'cv_required' => 'sometimes|boolean',
         ]);
 

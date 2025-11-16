@@ -25,18 +25,30 @@ class NotificationController extends Controller
     
     public function list(Request $request)
     {
-        $notification = Notification::all();
-        return response()->json($notification);
+        // Only admins can view all notifications
+        if ($request->user()->role !== 'admin') {
+            return response()->json(['error' => 'Only admins can view all notifications'], 403);
+        }
+
+        $notifications = Notification::paginate(15);
+        return response()->json($notifications);
     }
 
 
     public function create(Request $request){
+        // Check if user has permission to send notifications (admin or organisation)
+        $user = $request->user();
+        if ($user->role !== 'admin' && $user->role !== 'organisation') {
+            return response()->json(['error' => 'Only admins and organisations can send notifications'], 403);
+        }
+
         $data = $request->validate([
             'message' => 'required|string',
-            'channel' => 'required|string',
-            'receiver_id' => 'required|integer',
+            'channel' => 'required|string|in:email,in_app,sms',
+            'receiver_id' => 'required|integer|exists:users,id',
         ]);
-        $data ['sender_id'] = $request->user()->id;
+        
+        $data['sender_id'] = $user->id;
         $notification = Notification::create($data);
         return response()->json(["message"=>"message sent successfully","notification"=>$notification], 201);
     }
@@ -44,31 +56,17 @@ class NotificationController extends Controller
 
     public function myNotifications(Request $request)
     {
-        \Log::info('myNotifications called');
         $user = $request->user();
         if (!$user) {
-            \Log::info('User is null');
             return response()->json(['error' => 'Unauthorized'], 401);
         }
         
-        // Debug
-        \Log::info('User ID: ' . $user->id . ', Role: ' . $user->role);
+        // Get only notifications received by the user with pagination
+        $receivedNotifications = $user->receivedNotifications()
+                                     ->latest('sent_at')
+                                     ->paginate(15);
         
-        // Get notifications received by the user
-        $query = $user->receivedNotifications();
-        \Log::info('Query: ' . $query->toSql());
-        \Log::info('Bindings: ' . json_encode($query->getBindings()));
-        $receivedNotifications = $query->get();
-        
-        \Log::info('Received notifications count: ' . $receivedNotifications->count());
-        
-        // Or get all notifications (both sent and received)
-        $allNotifications = $user->notifications()->get();
-        
-        return response()->json([
-            'received_notifications' => $receivedNotifications,
-            'all_notifications' => $allNotifications
-        ]);
+        return response()->json($receivedNotifications);
     }
 
    

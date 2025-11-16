@@ -295,7 +295,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 **Endpoint:** `PATCH /update-user/{id}`
 
-**Content-Type:** `multipart/form-data` (for file uploads)
+**Content-Type:** `application/json` (or `application/x-www-form-urlencoded`)
 
 **Headers:**
 
@@ -303,31 +303,160 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 **Path Parameters:**
 
--   id (integer, required): The user ID
+-   id (integer, required): The user ID (must be authenticated user's ID unless you're admin)
 
-**Body Parameters:**
+**Body Parameters (All Optional):**
 
--   name (string, optional)
--   email (string, optional)
--   phone (string, optional)
--   gender (string, optional)
--   password (string, optional)
--   etc. (depending on user role)
+-   name (string, max 255)
+-   email (string, email format, unique)
+-   phone (string, max 20)
+-   gender (string, enum: `Male`, `Female`, `Other`, `Prefer not to say`)
+-   password (string, min 8 characters, requires `password_confirmation` field)
+-   password_confirmation (string, required if password is provided)
 
-**Response:**
+**Admin-Only Parameters:**
+
+-   role (string, enum: `organisation`, `volunteer`, `admin`)
+-   is_verified (boolean)
+-   is_active (boolean)
+
+**Response (Success):**
 
 ```
 {
-    "id": 1,
-    "name": "Updated Name",
-    "email": "updated@example.com",
-    "phone": "1234567890",
-    "gender": "Male",
-    "role": "volunteer",
-    "is_verified": true,
-    "is_active": true,
-    "created_at": "2025-10-20T10:00:00.000000Z",
-    "updated_at": "2025-10-20T10:00:00.000000Z"
+    "message": "User updated successfully",
+    "user": {
+        "id": 1,
+        "name": "Updated Name",
+        "email": "updated@example.com",
+        "phone": "1234567890",
+        "gender": "Male",
+        "role": "volunteer",
+        "is_verified": true,
+        "is_active": true,
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-11-16T10:00:00.000000Z"
+    }
+}
+```
+
+**Response (Unauthorized - Not your own account):**
+
+```
+{
+    "message": "Unauthorized - You can only update your own profile"
+}
+```
+
+**Response (Validation Error):**
+
+```
+{
+    "message": "The given data was invalid.",
+    "errors": {
+        "email": ["The email has already been taken"],
+        "password": ["The password must be at least 8 characters"]
+    }
+}
+```
+
+---
+
+## Update Membership (Volunteer or Organisation)
+
+**Endpoint:** `PATCH /update/{id}/`
+
+**Content-Type:** `multipart/form-data` (required for file uploads)
+
+**Headers:**
+
+-   Authorization: Bearer {token}
+
+**Path Parameters:**
+
+-   id (integer, required): The user ID (must be authenticated user's ID unless you're admin)
+
+**Body Parameters for Volunteer (All Optional):**
+
+-   country (string, max 255)
+-   bio (string, max 1000)
+-   skills (string, max 255)
+-   location (string, max 255)
+-   profile_image (file, image format: jpeg/png/jpg/gif, max 2MB)
+
+**Body Parameters for Organisation (All Optional):**
+
+-   org_name (string, max 255)
+-   org_type (string, max 255)
+-   reg_no (string, max 255, must be unique)
+-   website (string, valid URL format)
+-   country (string, max 255)
+-   city (string, max 255)
+-   focus_area (string, max 255)
+-   logo (file, image format: jpeg/png/jpg/gif, max 2MB)
+
+**Response for Volunteer (Success):**
+
+```
+{
+    "message": "Volunteer updated successfully",
+    "volunteer": {
+        "id": 1,
+        "user_id": 1,
+        "country": "Kenya",
+        "bio": "Passionate about community service",
+        "skills": "Team work, Leadership",
+        "location": "Nairobi",
+        "profile_image": "profile_images/uuid.jpg",
+        "profile_image_url": "http://localhost:8000/storage/profile_images/uuid.jpg",
+        "is_active": true,
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-11-16T10:00:00.000000Z"
+    }
+}
+```
+
+**Response for Organisation (Success):**
+
+```
+{
+    "message": "Organisation updated successfully",
+    "organisation": {
+        "id": 1,
+        "user_id": 1,
+        "org_name": "Red Cross Kenya",
+        "org_type": "NGO",
+        "reg_no": "REG001",
+        "website": "https://redcross.org.ke",
+        "logo": "organisation_logos/uuid.jpg",
+        "logo_url": "http://localhost:8000/storage/organisation_logos/uuid.jpg",
+        "country": "Kenya",
+        "city": "Nairobi",
+        "focus_area": "Humanitarian Aid",
+        "is_active": true,
+        "created_at": "2025-10-20T10:00:00.000000Z",
+        "updated_at": "2025-11-16T10:00:00.000000Z"
+    }
+}
+```
+
+**Response (Unauthorized - Not your own account):**
+
+```
+{
+    "message": "Unauthorized - You can only update your own profile"
+}
+```
+
+**Response (Validation Error):**
+
+```
+{
+    "message": "The given data was invalid.",
+    "errors": {
+        "website": ["The website must be a valid URL"],
+        "profile_image": ["The profile_image must be an image"]
+    }
 }
 ```
 
@@ -595,6 +724,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 **Endpoint:** `POST /send-notification`
 
+**Authorization:** Admin or Organisation role only
+
 **Headers:**
 
 -   Authorization: Bearer {token}
@@ -602,26 +733,45 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 **Body Parameters:**
 
 -   message (string, required): Notification message
--   receiver_id (integer, required): ID of the user to receive the notification
--   channel (string, optional): Notification channel (e.g., email, in_app)
--   sent_at (datetime, optional): When the notification was sent
+-   receiver_id (integer, required): ID of the user to receive the notification (must exist)
+-   channel (string, required): Notification channel. Must be one of: `email`, `in_app`, `sms`
 
-**Response:**
+**Response (Success):**
 
 ```
 {
-    "message": "Notification sent successfully",
+    "message": "message sent successfully",
     "notification": {
         "id": 1,
         "message": "Your application has been approved",
         "sent_at": "2025-10-29T10:00:00.000000Z",
         "is_read": false,
         "read_at": null,
-        "channel": "email",
+        "channel": "in_app",
         "receiver_id": 1,
         "sender_id": 2,
         "created_at": "2025-10-29T10:00:00.000000Z",
         "updated_at": "2025-10-29T10:00:00.000000Z"
+    }
+}
+```
+
+**Response (Unauthorized - Non-admin/org user):**
+
+```
+{
+    "error": "Only admins and organisations can send notifications"
+}
+```
+
+**Response (Validation Error):**
+
+```
+{
+    "message": "The given data was invalid.",
+    "errors": {
+        "channel": ["The channel must be one of: email, in_app, sms"],
+        "receiver_id": ["The selected receiver_id is invalid"]
     }
 }
 ```
@@ -636,23 +786,44 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 -   Authorization: Bearer {token}
 
+**Query Parameters:**
+
+-   page (integer, optional): Page number for pagination (default: 1)
+-   per_page (integer, optional): Records per page (default: 15)
+
 **Response:**
 
 ```
-[
-    {
-        "id": 1,
-        "message": "Your application has been approved",
-        "sent_at": "2025-10-29T10:00:00.000000Z",
-        "is_read": false,
-        "read_at": null,
-        "channel": "email",
-        "receiver_id": 1,
-        "sender_id": 2,
-        "created_at": "2025-10-29T10:00:00.000000Z",
-        "updated_at": "2025-10-29T10:00:00.000000Z"
+{
+    "data": [
+        {
+            "id": 1,
+            "message": "Your application has been approved",
+            "sent_at": "2025-10-29T10:00:00.000000Z",
+            "is_read": false,
+            "read_at": null,
+            "channel": "in_app",
+            "receiver_id": 1,
+            "sender_id": 2,
+            "created_at": "2025-10-29T10:00:00.000000Z",
+            "updated_at": "2025-10-29T10:00:00.000000Z"
+        }
+    ],
+    "links": {
+        "first": "http://api.example.com/my-notifications?page=1",
+        "last": "http://api.example.com/my-notifications?page=1",
+        "prev": null,
+        "next": null
+    },
+    "meta": {
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "per_page": 15,
+        "to": 1,
+        "total": 1
     }
-]
+}
 ```
 
 ---
@@ -677,7 +848,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "read_at": null,
         "channel": "in_app",
         "receiver_id": 1,
-        "sender_id": null,
+        "sender_id": 2,
         "created_at": "2025-10-29T10:00:00.000000Z",
         "updated_at": "2025-10-29T10:00:00.000000Z"
     }
@@ -706,33 +877,20 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 }
 ```
 
----
-
-## Get Unread Notifications
-
-**Endpoint:** `GET /unread-notifications`
-
-**Headers:**
-
--   Authorization: Bearer {token}
-
-**Response:**
+**Response (Not Found):**
 
 ```
-[
-    {
-        "id": 1,
-        "message": "New opportunity available",
-        "sent_at": "2025-10-29T10:00:00.000000Z",
-        "is_read": false,
-        "read_at": null,
-        "channel": "in_app",
-        "receiver_id": 1,
-        "sender_id": null,
-        "created_at": "2025-10-29T10:00:00.000000Z",
-        "updated_at": "2025-10-29T10:00:00.000000Z"
-    }
-]
+{
+    "message": "Notification not found"
+}
+```
+
+**Response (Unauthorized - Not receiver):**
+
+```
+{
+    "message": "Unauthorized"
+}
 ```
 
 ---
@@ -766,6 +924,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "application_deadline": "2025-10-25",
         "cv_required": false,
         "attendance_rate": 75.50,
+        "total_applicants": 5,
+        "organisation_name": "Green Initiative",
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
@@ -806,6 +966,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
     "application_deadline": "2025-10-25",
     "cv_required": false,
     "attendance_rate": 75.50,
+    "total_applicants": 5,
+    "organisation_name": "Green Initiative",
     "created_at": "2025-10-20T10:00:00.000000Z",
     "updated_at": "2025-10-20T10:00:00.000000Z"
 }
@@ -859,6 +1021,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "application_deadline": "2025-10-25",
         "cv_required": false,
         "attendance_rate": 0,
+        "total_applicants": 0,
+        "organisation_name": "Green Initiative",
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
@@ -915,6 +1079,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "application_deadline": "2025-10-25",
         "cv_required": false,
         "attendance_rate": 75.50,
+        "total_applicants": 5,
+        "organisation_name": "Green Initiative",
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
@@ -952,6 +1118,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "application_deadline": "2025-10-25",
         "cv_required": false,
         "attendance_rate": 75.50,
+        "total_applicants": 5,
+        "organisation_name": "Green Initiative",
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
@@ -1017,6 +1185,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "application_deadline": "2025-10-25",
         "cv_required": false,
         "attendance_rate": 75.50,
+        "total_applicants": 5,
+        "organisation_name": "Green Initiative",
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     }
@@ -1173,10 +1343,10 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 **Body Parameters:**
 
 -   opportunity_id (integer, required): The opportunity ID to apply for
--   application_date (date, required): Date of application
+-   application_date (date, required): Date of application (must be before or on the application deadline)
 -   CV (file, optional): PDF/DOC/DOCX file (max 5MB) - Required if the opportunity has `cv_required: true`
 
-**Response:**
+**Response (Success):**
 
 ```
 {
@@ -1185,7 +1355,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "volunteer_id": 1,
         "opportunity_id": 1,
         "application_date": "2025-10-20",
-        "CV_path": "http://localhost:8000/storage/applications/cvs/cv_filename.pdf",
+        "CV_path": "applications/cvs/uuid.pdf",
+        "CV_path_url": "http://localhost:8000/storage/applications/cvs/uuid.pdf",
         "status": "pending",
         "volunteer_name": "John Doe",
         "opportunity_title": "Community Clean-up",
@@ -1199,9 +1370,13 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 **Error Cases:**
 
 -   `400`: If a volunteer has already applied for the opportunity
+-   `400`: If application date is past the opportunity deadline
+-   `400`: If opportunity has already started
+-   `400`: If opportunity has reached maximum applications
 -   `400`: If CV is required by the opportunity but not provided
 -   `400`: If uploaded file is not a valid document (must be pdf, doc, or docx)
 -   `400`: If file size exceeds 5MB
+-   `403`: If user is not a volunteer
 -   `404`: If opportunity not found
 
 **Notes:**
@@ -1210,7 +1385,48 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 -   Maximum file size: 5MB
 -   If the opportunity requires a CV (`cv_required: true`), the `CV` file is mandatory
 -   Each volunteer can only apply once per opportunity
--   CV files are stored securely on the server and accessible via the returned URL
+-   CV files are stored securely on the server
+-   `CV_path` in database is stored as relative path for portability
+-   `CV_path_url` in response is full URL for immediate frontend use
+
+---
+
+## Download CV
+
+**Endpoint:** `GET /download-cv/{applicationId}`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Volunteer who applied or Organisation who posted opportunity)
+
+**Path Parameters:**
+
+-   applicationId (integer, required): The application ID
+
+**Response (Success):**
+
+-   Returns the CV file for download with appropriate content-type
+
+**Response (Unauthorized):**
+
+```
+{
+    "message": "Unauthorized"
+}
+```
+
+**Response (Not Found):**
+
+```
+{
+    "message": "CV file not found"
+}
+```
+
+**Notes:**
+
+-   Only the volunteer who applied or the organisation that posted the opportunity can download the CV
+-   File is returned with original filename preserved
 
 ---
 
@@ -1230,7 +1446,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 -   status (string, required): New status (pending|accepted|rejected)
 
-**Response:**
+**Response (Success):**
 
 ```
 {
@@ -1239,14 +1455,48 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "volunteer_id": 1,
         "opportunity_id": 1,
         "application_date": "2025-10-20",
-        "CV_path": null,
+        "CV_path": "applications/cvs/uuid.pdf",
         "status": "accepted",
+        "volunteer_name": "John Doe",
+        "opportunity_title": "Community Clean-up",
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     },
     "message": "Application Status Updated Successfully"
 }
 ```
+
+**Response (Unauthorized - Not your opportunity):**
+
+```
+{
+    "message": "Unauthorized - This is not your opportunity"
+}
+```
+
+**Response (Unauthorized - Not an organisation):**
+
+```
+{
+    "message": "Unauthorized"
+}
+```
+
+**Response (Not Found):**
+
+```
+{
+    "message": "Application Not Found"
+}
+```
+
+**Notes:**
+
+-   Only organisations that posted the opportunity can update application status
+-   When status is changed to `accepted`, an acceptance email is sent to the volunteer
+-   When status is changed to `rejected`, a rejection email is sent to the volunteer
+-   The `pending` status does not trigger any email notification
+-   Email includes volunteer name, opportunity title, and organisation name
 
 ---
 
@@ -1565,27 +1815,58 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 **Endpoint:** `GET /all-notifications`
 
+**Authorization:** Admin only
+
 **Headers:**
 
--   Authorization: Bearer {token} (Admin only)
+-   Authorization: Bearer {token}
+
+**Query Parameters:**
+
+-   page (integer, optional): Page number for pagination (default: 1)
+-   per_page (integer, optional): Records per page (default: 15)
 
 **Response:**
 
 ```
-[
-    {
-        "id": 1,
-        "message": "New opportunity available",
-        "sent_at": "2025-10-29T10:00:00.000000Z",
-        "is_read": false,
-        "read_at": null,
-        "channel": "in_app",
-        "receiver_id": 1,
-        "sender_id": null,
-        "created_at": "2025-10-29T10:00:00.000000Z",
-        "updated_at": "2025-10-29T10:00:00.000000Z"
+{
+    "data": [
+        {
+            "id": 1,
+            "message": "New opportunity available",
+            "sent_at": "2025-10-29T10:00:00.000000Z",
+            "is_read": false,
+            "read_at": null,
+            "channel": "in_app",
+            "receiver_id": 1,
+            "sender_id": 2,
+            "created_at": "2025-10-29T10:00:00.000000Z",
+            "updated_at": "2025-10-29T10:00:00.000000Z"
+        }
+    ],
+    "links": {
+        "first": "http://api.example.com/all-notifications?page=1",
+        "last": "http://api.example.com/all-notifications?page=1",
+        "prev": null,
+        "next": null
+    },
+    "meta": {
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "per_page": 15,
+        "to": 1,
+        "total": 1
     }
-]
+}
+```
+
+**Response (Unauthorized - Non-admin user):**
+
+```
+{
+    "error": "Only admins can view all notifications"
+}
 ```
 
 ---

@@ -59,7 +59,7 @@ class ReportController extends Controller
         }
         
         $data = $request->validate([
-            'title' => 'sometimes|required|string|max:255',
+            'title' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
         ]);
         

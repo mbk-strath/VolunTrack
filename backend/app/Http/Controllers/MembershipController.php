@@ -70,6 +70,13 @@ class MembershipController extends Controller
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
+
+        // Authorization: User can only update themselves unless they're admin
+        $authenticatedUser = $request->user();
+        if ($authenticatedUser->id !== (int)$id && $authenticatedUser->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized - You can only update your own profile'], 403);
+        }
+
         $type = $user->role;
         $membership = MembershipService::getMembership($user);
 
@@ -79,51 +86,92 @@ class MembershipController extends Controller
                 return response()->json(['message' => 'Organisation not found'], 404);
             }
 
+            // Validate organisation fields
+            $data = $request->validate([
+                'org_name' => 'sometimes|string|max:255',
+                'org_type' => 'sometimes|string|max:255',
+                'reg_no' => 'sometimes|string|max:255|unique:organisations,reg_no,' . $organisation->id,
+                'website' => 'sometimes|string|max:255|url',
+                'country' => 'sometimes|string|max:255',
+                'city' => 'sometimes|string|max:255',
+                'focus_area' => 'sometimes|string|max:255',
+                'logo' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+
             // Handle logo upload
             if ($request->hasFile('logo')) {
-                $request->validate([
-                    'logo' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-                ]);
-
                 // Delete old logo if exists
                 if ($organisation->logo) {
-                    $oldPath = str_replace(asset('storage/'), '', $organisation->logo);
+                    // Extract filename from path (logo is stored as relative path or full URL)
+                    $oldPath = (filter_var($organisation->logo, FILTER_VALIDATE_URL))
+                        ? str_replace(asset('storage/'), '', $organisation->logo)
+                        : $organisation->logo;
                     \Storage::disk('public')->delete($oldPath);
                 }
 
+                // Store new logo and save only relative path
                 $logoPath = $request->file('logo')->store('organisation_logos', 'public');
-                $organisation->logo = asset('storage/' . $logoPath);
+                $data['logo'] = $logoPath; // Store relative path, not full URL
             }
 
-            $organisation->update($request->except('logo'));
-            return response()->json($organisation, 200);
+            // Remove logo key from validation data if we handled it
+            unset($data['logo']);
+            
+            // Update organisation with validated data and logo
+            $organisation->update($data);
+            
+            // Add logo to response if it exists
+            if ($organisation->logo) {
+                $organisation->logo_url = asset('storage/' . $organisation->logo);
+            }
+            
+            return response()->json(['message' => 'Organisation updated successfully', 'organisation' => $organisation], 200);
         }
-        else if ($type == 'volunteer'){
+        else if ($type == 'volunteer') {
             $volunteer = $membership;
             if (!$volunteer) {
                 return response()->json(['message' => 'Volunteer not found'], 404);
             }
 
+            // Validate volunteer fields
+            $data = $request->validate([
+                'country' => 'sometimes|string|max:255',
+                'bio' => 'sometimes|string|max:1000',
+                'skills' => 'sometimes|string|max:255',
+                'location' => 'sometimes|string|max:255',
+                'profile_image' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+
             // Handle profile_image upload
             if ($request->hasFile('profile_image')) {
-                $request->validate([
-                    'profile_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-                ]);
-
                 // Delete old profile_image if exists
                 if ($volunteer->profile_image) {
-                    $oldPath = str_replace(asset('storage/'), '', $volunteer->profile_image);
+                    // Extract filename from path (profile_image is stored as relative path or full URL)
+                    $oldPath = (filter_var($volunteer->profile_image, FILTER_VALIDATE_URL))
+                        ? str_replace(asset('storage/'), '', $volunteer->profile_image)
+                        : $volunteer->profile_image;
                     \Storage::disk('public')->delete($oldPath);
                 }
 
+                // Store new image and save only relative path
                 $profileImagePath = $request->file('profile_image')->store('profile_images', 'public');
-                $volunteer->profile_image = asset('storage/' . $profileImagePath);
+                $data['profile_image'] = $profileImagePath; // Store relative path, not full URL
             }
 
-            $volunteer->update($request->except('profile_image'));
-            return response()->json($volunteer, 200);
+            // Remove profile_image key from validation data if we handled it
+            unset($data['profile_image']);
+            
+            // Update volunteer with validated data and profile_image
+            $volunteer->update($data);
+            
+            // Add profile_image_url to response if it exists
+            if ($volunteer->profile_image) {
+                $volunteer->profile_image_url = asset('storage/' . $volunteer->profile_image);
+            }
+            
+            return response()->json(['message' => 'Volunteer updated successfully', 'volunteer' => $volunteer], 200);
         }
-        else{
+        else {
             return response()->json(['message' => 'Invalid type'], 400);
         }
     }

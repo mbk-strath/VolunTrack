@@ -52,7 +52,17 @@ class Opportunity extends Model
         return $this->hasMany(Gallery::class, 'org_id', 'organisation_id');
     }
 
-    protected $appends = ['attendance_rate'];
+    protected $appends = ['attendance_rate', 'total_applicants', 'organisation_name'];
+
+    public function getTotalApplicantsAttribute()
+    {
+        return $this->applications()->count();
+    }
+
+    public function getOrganisationNameAttribute()
+    {
+        return $this->organisation ? $this->organisation->org_name : null;
+    }
 
     public function getAttendanceRateAttribute()
 {

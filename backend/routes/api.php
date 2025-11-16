@@ -89,6 +89,7 @@ Route::middleware('auth:sanctum', 'role:admin,volunteer')->group(function(){
     //Application Controller
     Route::get('/my-applications', [ApplicationController::class, 'myApplications']);
     Route::post('/apply', [ApplicationController::class, 'apply']);
+    Route::get('/download-cv/{applicationId}', [ApplicationController::class, 'downloadCV']);
     Route::delete('/delete-application/{id}', [ApplicationController::class, 'delete']);
     //Participation Controller
     Route::get('/my-participations', [ParticipationController::class, 'myParticipations']);

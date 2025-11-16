@@ -1343,10 +1343,10 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 **Body Parameters:**
 
 -   opportunity_id (integer, required): The opportunity ID to apply for
--   application_date (date, required): Date of application
+-   application_date (date, required): Date of application (must be before or on the application deadline)
 -   CV (file, optional): PDF/DOC/DOCX file (max 5MB) - Required if the opportunity has `cv_required: true`
 
-**Response:**
+**Response (Success):**
 
 ```
 {
@@ -1355,7 +1355,8 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "volunteer_id": 1,
         "opportunity_id": 1,
         "application_date": "2025-10-20",
-        "CV_path": "http://localhost:8000/storage/applications/cvs/cv_filename.pdf",
+        "CV_path": "applications/cvs/uuid.pdf",
+        "CV_path_url": "http://localhost:8000/storage/applications/cvs/uuid.pdf",
         "status": "pending",
         "volunteer_name": "John Doe",
         "opportunity_title": "Community Clean-up",
@@ -1369,9 +1370,13 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 **Error Cases:**
 
 -   `400`: If a volunteer has already applied for the opportunity
+-   `400`: If application date is past the opportunity deadline
+-   `400`: If opportunity has already started
+-   `400`: If opportunity has reached maximum applications
 -   `400`: If CV is required by the opportunity but not provided
 -   `400`: If uploaded file is not a valid document (must be pdf, doc, or docx)
 -   `400`: If file size exceeds 5MB
+-   `403`: If user is not a volunteer
 -   `404`: If opportunity not found
 
 **Notes:**
@@ -1380,7 +1385,48 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 -   Maximum file size: 5MB
 -   If the opportunity requires a CV (`cv_required: true`), the `CV` file is mandatory
 -   Each volunteer can only apply once per opportunity
--   CV files are stored securely on the server and accessible via the returned URL
+-   CV files are stored securely on the server
+-   `CV_path` in database is stored as relative path for portability
+-   `CV_path_url` in response is full URL for immediate frontend use
+
+---
+
+## Download CV
+
+**Endpoint:** `GET /download-cv/{applicationId}`
+
+**Headers:**
+
+-   Authorization: Bearer {token} (Volunteer who applied or Organisation who posted opportunity)
+
+**Path Parameters:**
+
+-   applicationId (integer, required): The application ID
+
+**Response (Success):**
+
+-   Returns the CV file for download with appropriate content-type
+
+**Response (Unauthorized):**
+
+```
+{
+    "message": "Unauthorized"
+}
+```
+
+**Response (Not Found):**
+
+```
+{
+    "message": "CV file not found"
+}
+```
+
+**Notes:**
+
+-   Only the volunteer who applied or the organisation that posted the opportunity can download the CV
+-   File is returned with original filename preserved
 
 ---
 
@@ -1400,7 +1446,7 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 -   status (string, required): New status (pending|accepted|rejected)
 
-**Response:**
+**Response (Success):**
 
 ```
 {
@@ -1409,14 +1455,48 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
         "volunteer_id": 1,
         "opportunity_id": 1,
         "application_date": "2025-10-20",
-        "CV_path": null,
+        "CV_path": "applications/cvs/uuid.pdf",
         "status": "accepted",
+        "volunteer_name": "John Doe",
+        "opportunity_title": "Community Clean-up",
         "created_at": "2025-10-20T10:00:00.000000Z",
         "updated_at": "2025-10-20T10:00:00.000000Z"
     },
     "message": "Application Status Updated Successfully"
 }
 ```
+
+**Response (Unauthorized - Not your opportunity):**
+
+```
+{
+    "message": "Unauthorized - This is not your opportunity"
+}
+```
+
+**Response (Unauthorized - Not an organisation):**
+
+```
+{
+    "message": "Unauthorized"
+}
+```
+
+**Response (Not Found):**
+
+```
+{
+    "message": "Application Not Found"
+}
+```
+
+**Notes:**
+
+-   Only organisations that posted the opportunity can update application status
+-   When status is changed to `accepted`, an acceptance email is sent to the volunteer
+-   When status is changed to `rejected`, a rejection email is sent to the volunteer
+-   The `pending` status does not trigger any email notification
+-   Email includes volunteer name, opportunity title, and organisation name
 
 ---
 

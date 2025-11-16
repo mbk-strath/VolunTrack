@@ -106,7 +106,7 @@ const DashboardOrg = () => {
       {/* Bar Chart */}
       <div className="chart-org">
         <h2 className="chart-title mb-8">
-          Total Volunteer Hours by Opportunity
+          Total Applications Based on Opportunity
         </h2>
 
         {loading ? (

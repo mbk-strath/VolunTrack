@@ -2,34 +2,35 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 function OtherDetailsPage() {
-  const contactFields = ["country", "bio", "skills", "location"];
+  // Volunteer fields only (no city, no profile_image)
+  const volunteerFields = ["country", "location", "bio", "skills"];
 
-  const [contactData, setContactData] = useState(
-    contactFields.reduce((acc, field) => ({ ...acc, [field]: "" }), {})
+  const [formDataState, setFormDataState] = useState(
+    volunteerFields.reduce((acc, field) => ({ ...acc, [field]: "" }), {})
   );
+
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
   // Prefill from localStorage
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user")) || {};
-    setContactData((prev) => ({
+
+    setFormDataState((prev) => ({
       ...prev,
-      ...contactFields.reduce(
+      ...volunteerFields.reduce(
         (acc, key) => ({ ...acc, [key]: storedUser[key] || "" }),
         {}
       ),
     }));
   }, []);
 
-  // Handle change
-  const handleContactChange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setContactData((prev) => ({ ...prev, [name]: value }));
+    setFormDataState((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Submit form data using PATCH /update/{id}/
-  const handleContactSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
@@ -39,15 +40,18 @@ function OtherDetailsPage() {
       const userId = storedUser?.id;
       const token = localStorage.getItem("token");
 
-      // Prepare multipart/form-data
-      const formData = new FormData();
-      contactFields.forEach((key) => {
-        if (contactData[key]) formData.append(key, contactData[key]);
+      const sendData = new FormData();
+
+      // Add volunteer fields
+      volunteerFields.forEach((key) => {
+        if (formDataState[key] !== "") {
+          sendData.append(key, formDataState[key]);
+        }
       });
 
       const res = await axios.patch(
         `http://localhost:8000/api/update/${userId}/`,
-        formData,
+        sendData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -56,15 +60,20 @@ function OtherDetailsPage() {
         }
       );
 
-      const updatedUser = res.data.user || res.data;
+      const updated = res.data;
+
+      // Save to local storage
       localStorage.setItem(
         "user",
-        JSON.stringify({ ...storedUser, ...updatedUser })
+        JSON.stringify({ ...storedUser, ...updated })
       );
-      setContactData((prev) => ({ ...prev, ...updatedUser }));
-      setMessage(res.data.message || "Profile updated successfully!");
+
+      // Update UI
+      setFormDataState((prev) => ({ ...prev, ...updated }));
+
+      setMessage("Profile updated successfully!");
     } catch (err) {
-      console.error("Contact update error:", err);
+      console.error("Update error:", err);
       setMessage(err.response?.data?.message || "Failed to update profile.");
     } finally {
       setLoading(false);
@@ -72,32 +81,32 @@ function OtherDetailsPage() {
   };
 
   return (
-    <div className="settings-card-other ">
-      <h2 className="prof-other-title">Additional Information</h2>
+    <div className="settings-card-other">
+      <h2 className="prof-other-title">Volunteer Additional Information</h2>
 
-      <form className="form-column" onSubmit={handleContactSubmit}>
-        {contactFields.map((field) => (
+      <form className="form-column" onSubmit={handleSubmit}>
+        {volunteerFields.map((field) => (
           <label key={field}>
             {field.charAt(0).toUpperCase() + field.slice(1)}
             {field === "bio" ? (
               <textarea
                 name={field}
                 placeholder={`Enter your ${field}`}
-                value={contactData[field] || ""}
-                onChange={handleContactChange}
+                value={formDataState[field] || ""}
+                onChange={handleChange}
               />
             ) : (
               <input
                 name={field}
                 placeholder={`Enter your ${field}`}
-                value={contactData[field] || ""}
-                onChange={handleContactChange}
+                value={formDataState[field] || ""}
+                onChange={handleChange}
               />
             )}
           </label>
         ))}
 
-        <button type="submit" className="save-other" disabled={loading}>
+        <button type="submit" className="save" disabled={loading}>
           {loading ? "Saving..." : "Save Changes"}
         </button>
       </form>

@@ -63,16 +63,20 @@ function ProfilePage() {
         }
       );
 
-      const updatedUser = res.data.user || res.data;
+      // The API returns the updated user object directly
+      const updatedUser = res.data;
+
+      // Merge & save to localStorage
+      const newData = { ...storedUser, ...updatedUser };
+      localStorage.setItem("user", JSON.stringify(newData));
+
+      // Update state
       setUser((prev) => ({ ...prev, ...updatedUser }));
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ ...storedUser, ...updatedUser })
-      );
 
       showAlert("Profile updated successfully!", "success");
     } catch (err) {
       console.error("Profile update error:", err);
+
       showAlert(
         err.response?.data?.message || "Failed to update profile. Try again.",
         "error"

@@ -157,7 +157,6 @@
 @media screen and (max-width: 1024px) {
   .homeVolPage {
     margin-top: 15%;
-    
   }
 
   .hours,
@@ -174,7 +173,6 @@
 }
 
 @media screen and (max-width: 840px) {
-
   .section2 {
     flex-direction: column;
     align-items: center;
@@ -187,4 +185,12 @@
   .checkSystem {
     width: 95%;
   }
+}
+
+.no-acc {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
 }

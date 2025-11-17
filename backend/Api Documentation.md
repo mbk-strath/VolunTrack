@@ -566,15 +566,34 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 
 ```
 {
-	"total_volunteers": 5
+	"total_volunteers": 5,
+	"volunteers": [
+		{
+			"id": 1,
+			"user_id": 2,
+			"country": "Kenya",
+			"bio": "Passionate volunteer",
+			"skills": "Teaching, Mentoring",
+			"location": "Nairobi",
+			"profile_image": "profile_images/...",
+			"is_active": true,
+			"created_at": "2025-11-17T10:30:00.000000Z",
+			"updated_at": "2025-11-17T10:30:00.000000Z",
+			"total_applications": 3,
+			"total_hours": 20,
+			"total_completed_opportunities": 1
+		},
+		...
+	]
 }
 ```
 
 **Notes:**
 
--   For organisations: Returns count of unique volunteers who have applied to their opportunities
--   For admins: Returns total count of volunteers who have applied to any opportunity
--   Only counts volunteers with active applications
+-   For organisations: Returns count and list of unique volunteers who have applied to their opportunities
+-   For admins: Returns total count and list of volunteers who have applied to any opportunity
+-   Only includes volunteers with active applications
+-   The `volunteers` array includes computed fields: `total_applications`, `total_hours`, `total_completed_opportunities`
 
 ---
 
@@ -1200,30 +1219,6 @@ This API uses Laravel Sanctum for authentication. All protected endpoints requir
 -   Returns an empty array if no opportunities are currently ongoing
 
 ---
-
-## Total Attendance Rate
-
-**Endpoint:** `GET /total-volunteers`
-
-**Headers:**
-
--   Authorization: Bearer {token} (Organisation or Admin only)
-
-**Response:**
-
-```
-{
-    "attendance_rate": 75.50
-}
-```
-
-**Notes:**
-
--   Calculates the overall attendance rate across all opportunities for an organisation
--   Formula: `(Total Hours Attended) / (Expected Total Hours) * 100`
--   Expected Total Hours = `num_volunteers_needed * (opportunity duration in hours)`
--   Total Hours Attended = Sum of all participation hours (check_out - check_in)
--   Rounded to 2 decimal places
 
 ---
 

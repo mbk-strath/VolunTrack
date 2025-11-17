@@ -234,10 +234,11 @@ class MembershipController extends Controller
             ->pluck('volunteer_id')
             ->unique()
             ->toArray();
+        $volunteerObjs = Volunteer::whereIn('id', $myParticipants)->get();
 
         $totalVolunteers = empty($myParticipants)
             ? 0
             : Volunteer::whereIn('id', $myParticipants)->count();
-        return response()->json(['total_volunteers' => $totalVolunteers], 200);
+        return response()->json(['total_volunteers' => $totalVolunteers, 'volunteers' => $volunteerObjs], 200);
     }
 }

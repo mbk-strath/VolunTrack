@@ -11,8 +11,7 @@ class MembershipService
     {
         if ($user->role === 'organisation') {
             $organisation = Organisation::where('user_id', $user->id)->first();
-            $organisation->total_volunteers = $organisation->uniqueVolunteerCount();
-            $organisation->opportunities = $organisation->opportunities()->count();
+            // The total_volunteers and opportunities_count are now computed dynamically via accessors
             return $organisation;
         } elseif ($user->role === 'volunteer') {
             return Volunteer::where('user_id', $user->id)->first();

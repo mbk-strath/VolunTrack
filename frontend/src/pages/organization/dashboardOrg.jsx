@@ -14,6 +14,7 @@ const DashboardOrg = () => {
   const [chartData, setChartData] = useState([]);
   const [totalVolunteers, setTotalVolunteers] = useState(0);
   const [attendanceRate, setAttendanceRate] = useState(0);
+  const [totalApplications, setTotalApplications] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -31,30 +32,20 @@ const DashboardOrg = () => {
 
         const opportunities = oppRes.data;
 
-        const dataWithHours = await Promise.all(
-          opportunities.map(async (opp) => {
-            try {
-              const participationRes = await axios.get(
-                `http://localhost:8000/api/opportunity-participations/${opp.id}`,
-                { headers: { Authorization: `Bearer ${token}` } }
-              );
-
-              const totalHours = participationRes.data.reduce(
-                (sum, participation) => sum + (participation.total_hours || 0),
-                0
-              );
-
-              return {
-                name: `ID: ${opp.id}`,
-                hours: totalHours,
-              };
-            } catch {
-              return { name: `ID: ${opp.id}`, hours: 0 };
-            }
-          })
+        // ➕ Calculate total applications from all opportunities
+        const totalApps = opportunities.reduce(
+          (sum, opp) => sum + (opp.total_applicants || 0),
+          0
         );
+        setTotalApplications(totalApps);
 
-        setChartData(dataWithHours);
+        // 📊 Prepare chart data (Applicants per Opportunity)
+        const dataWithApplicants = opportunities.map((opp) => ({
+          name: `ID: ${opp.id}`,
+          applicants: opp.total_applicants || 0,
+        }));
+
+        setChartData(dataWithApplicants);
       } catch (err) {
         console.error("Error fetching chart data:", err);
         setError("Failed to load chart data.");
@@ -99,15 +90,13 @@ const DashboardOrg = () => {
 
         <div className="summary-card">
           <h3>Total Applications</h3>
-          <p>1</p>
+          <p>{totalApplications}</p>
         </div>
       </div>
 
       {/* Bar Chart */}
       <div className="chart-org">
-        <h2 className="chart-title mb-8">
-          Total Applications Based on Opportunity
-        </h2>
+        <h2 className="chart-title mb-8">Applicants per Opportunity</h2>
 
         {loading ? (
           <div className="loading-message">
@@ -129,9 +118,13 @@ const DashboardOrg = () => {
               />
               <YAxis
                 stroke="#9ca3af"
-                label={{ value: "Hours", angle: -90, position: "insideLeft" }}
+                label={{
+                  value: "Applicants",
+                  angle: -90,
+                  position: "insideLeft",
+                }}
               />
-              <Bar dataKey="hours" fill="#6366f1" radius={[8, 8, 0, 0]} />
+              <Bar dataKey="applicants" fill="#6366f1" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         )}

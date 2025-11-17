@@ -19,11 +19,10 @@ const SettingsOrg = () => {
     "org_type",
     "city",
     "address",
-    "reg_number",
+    "reg_number", // Note: your controller validates 'reg_no', not 'reg_number'
     "focus_area",
     "logo",
   ];
-  const contactFields = ["name", "email", "phone", "role"];
 
   // --- State ---
   const [profileData, setProfileData] = useState(
@@ -32,14 +31,14 @@ const SettingsOrg = () => {
       {}
     )
   );
-  const [contactData, setContactData] = useState(
-    contactFields.reduce((acc, field) => ({ ...acc, [field]: "" }), {})
-  );
+
   const [avatarPreview, setAvatarPreview] = useState(null);
+
+  const storedUser = JSON.parse(localStorage.getItem("user")) || {};
+  const token = localStorage.getItem("token");
 
   // --- Prefill from localStorage ---
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user")) || {};
     setProfileData({
       ...profileData,
       ...userFields.reduce(
@@ -51,14 +50,7 @@ const SettingsOrg = () => {
         {}
       ),
     });
-    setContactData({
-      ...contactData,
-      ...contactFields.reduce(
-        (acc, key) => ({ ...acc, [key]: storedUser[key] || "" }),
-        {}
-      ),
-    });
-    setAvatarPreview(storedUser.logo || "");
+    setAvatarPreview(storedUser.logo_url || storedUser.logo || ""); // Use logo_url if available
   }, []);
 
   // --- Handlers ---
@@ -72,22 +64,13 @@ const SettingsOrg = () => {
     }
   };
 
-  const handleContactChange = (e) => {
-    const { name, value } = e.target;
-    setContactData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  // --- Profile Form Submit ---
+  // --- Profile Form Submit (organization info) ---
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
 
     try {
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-      const userId = storedUser?.id;
-      const token = localStorage.getItem("token");
-
       const formData = new FormData();
       orgFields.forEach((key) => {
         if (profileData[key] !== null && profileData[key] !== "") {
@@ -95,8 +78,12 @@ const SettingsOrg = () => {
         }
       });
 
-      const res = await axios.patch(
-        `http://localhost:8000/api/update/${userId}`,
+      // --- CHANGE 1: Add this line for method spoofing ---
+      formData.append("_method", "PUT");
+
+      // --- CHANGE 2: Use axios.post instead of axios.patch/put ---
+      const res = await axios.post(
+        `http://localhost:8000/api/update/${storedUser.id}`,
         formData,
         {
           headers: {
@@ -106,10 +93,18 @@ const SettingsOrg = () => {
         }
       );
 
-      const updatedUser = { ...storedUser, ...res.data };
+      // --- CHANGE 3: Update localStorage and state from the nested 'organisation' object ---
+      const updatedOrg = res.data.organisation || {};
+      const updatedUser = { ...storedUser, ...updatedOrg };
       localStorage.setItem("user", JSON.stringify(updatedUser));
+
       setProfileData((prev) => ({ ...prev, ...updatedUser }));
-      setAvatarPreview(updatedUser.logo || avatarPreview);
+
+      // --- CHANGE 4: Use the 'logo_url' from the response for the preview ---
+      if (updatedOrg.logo_url) {
+        setAvatarPreview(updatedOrg.logo_url);
+      }
+
       setMessage("Profile updated successfully!");
     } catch (err) {
       console.error("Profile update error:", err);
@@ -119,42 +114,53 @@ const SettingsOrg = () => {
     }
   };
 
-  // --- Contact Form Submit using Update Membership API ---
+  // --- Contacts Tab handlers using update-user API ---
+  const handleContactChange = (e) => {
+    const { name, value } = e.target;
+    setProfileData((prev) => ({ ...prev, [name]: value }));
+  };
+
   const handleContactSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
 
     try {
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-      const userId = storedUser?.id;
-      const token = localStorage.getItem("token");
+      const payload = {
+        name: profileData.name,
+        email: profileData.email,
+        phone: profileData.phone,
+        gender: profileData.gender,
+      };
 
-      const formData = new FormData();
-      contactFields.forEach((key) => {
-        if (contactData[key] !== null && contactData[key] !== "") {
-          formData.append(key, contactData[key]);
-        }
-      });
-
-      const res = await axios.patch(
-        `http://localhost:8000/api/update/${userId}`,
-        formData,
+      const res = await axios.put(
+        `http://localhost:8000/api/update-user/${storedUser.id}`,
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         }
       );
 
-      const updatedUser = { ...storedUser, ...res.data };
+      const updatedUser = res.data.user;
       localStorage.setItem("user", JSON.stringify(updatedUser));
-      setContactData((prev) => ({ ...prev, ...updatedUser }));
+
+      setProfileData((prev) => ({
+        ...prev,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        phone: updatedUser.phone,
+        gender: updatedUser.gender,
+      }));
+
       setMessage("Contact details updated successfully!");
     } catch (err) {
       console.error("Contact update error:", err);
-      setMessage(err.response?.data?.message || "Failed to update contacts.");
+      setMessage(
+        err.response?.data?.message || "Failed to update contact details"
+      );
     } finally {
       setLoading(false);
     }
@@ -251,15 +257,30 @@ const SettingsOrg = () => {
           <div className="settings-card-org cont-org">
             <h2 className="prof-org-title">Contact Person Details</h2>
             <form className="form-column" onSubmit={handleContactSubmit}>
-              {contactFields.map((field) => (
+              {["name", "email", "phone", "gender"].map((field) => (
                 <label key={field}>
                   {field.charAt(0).toUpperCase() + field.slice(1)}
-                  <input
-                    name={field}
-                    placeholder={`Enter ${field}`}
-                    value={contactData[field] || ""}
-                    onChange={handleContactChange}
-                  />
+                  {field === "gender" ? (
+                    <select
+                      name={field}
+                      value={profileData[field] || ""}
+                      onChange={handleContactChange}
+                    >
+                      <option value="">Select gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                      <option value="Prefer not to say">
+                        Prefer not to say
+                      </option>
+                    </select>
+                  ) : (
+                    <input
+                      name={field}
+                      value={profileData[field] || ""}
+                      onChange={handleContactChange}
+                    />
+                  )}
                 </label>
               ))}
 

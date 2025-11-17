@@ -5,6 +5,7 @@ import axios from "axios";
 
 function ProfilePage() {
   const [user, setUser] = useState({
+    id: "",
     name: "",
     email: "",
     phone: "",
@@ -14,69 +15,70 @@ function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState({ message: "", type: "" });
 
+  // Load user from localStorage on first render
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = JSON.parse(localStorage.getItem("user"));
     if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
       setUser({
-        name: parsedUser.name || "",
-        email: parsedUser.email || "",
-        phone: parsedUser.phone || "",
-        gender: parsedUser.gender || "",
+        id: storedUser.id,
+        name: storedUser.name || "",
+        email: storedUser.email || "",
+        phone: storedUser.phone || "",
+        gender: storedUser.gender || "",
       });
     }
   }, []);
 
+  // Form handler
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUser((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Alerts
   const showAlert = (message, type = "success") => {
     setAlert({ message, type });
-    setTimeout(() => setAlert({ message: "", type: "" }), 3000);
+    setTimeout(() => setAlert({ message: "", type: "" }), 2500);
   };
 
+  // Submit update
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-      const userId = storedUser?.id;
       const token = localStorage.getItem("token");
 
-      const formData = new FormData();
-      formData.append("name", user.name);
-      formData.append("email", user.email);
-      formData.append("phone", user.phone);
-      formData.append("gender", user.gender);
+      const payload = {
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        gender: user.gender,
+      };
 
-      const res = await axios.patch(
-        `http://localhost:8000/api/update-user/${userId}`,
-        formData,
+      const res = await axios.put(
+        `http://localhost:8000/api/update-user/${user.id}`,
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         }
       );
 
-      // The API returns the updated user object directly
-      const updatedUser = res.data;
+      // Backend returns: { message, user }
+      const updatedUser = res.data.user;
 
-      // Merge & save to localStorage
-      const newData = { ...storedUser, ...updatedUser };
-      localStorage.setItem("user", JSON.stringify(newData));
+      // Save fresh updated user to localStorage
+      localStorage.setItem("user", JSON.stringify(updatedUser));
 
-      // Update state
-      setUser((prev) => ({ ...prev, ...updatedUser }));
+      // Update UI
+      setUser(updatedUser);
 
       showAlert("Profile updated successfully!", "success");
     } catch (err) {
-      console.error("Profile update error:", err);
-
+      console.error("Update error:", err);
       showAlert(
         err.response?.data?.message || "Failed to update profile. Try again.",
         "error"
@@ -127,21 +129,19 @@ function ProfilePage() {
           <input
             type="tel"
             name="phone"
-            value={user.phone || ""}
+            value={user.phone}
             onChange={handleChange}
           />
         </label>
 
         <label>
           Gender
-          <select
-            name="gender"
-            value={user.gender || ""}
-            onChange={handleChange}
-          >
-            <option value="">Select...</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
+          <select name="gender" value={user.gender} onChange={handleChange}>
+            <option value="">Select…</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+            <option value="Prefer not to say">Prefer not to say</option>
           </select>
         </label>
 

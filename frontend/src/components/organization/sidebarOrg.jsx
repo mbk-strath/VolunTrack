@@ -47,16 +47,6 @@ function SidebarOrg() {
       </NavLink>
 
       <NavLink
-        to="/dashboard/organization/messages"
-        className={({ isActive }) =>
-          isActive ? "sideElementsOrg active" : "sideElementsOrg"
-        }
-      >
-        <TiMessages className="dash-icon-org" />
-        <p>Messages</p>
-      </NavLink>
-
-      <NavLink
         to="/dashboard/organization/history"
         className={({ isActive }) =>
           isActive ? "sideElementsOrg active" : "sideElementsOrg"

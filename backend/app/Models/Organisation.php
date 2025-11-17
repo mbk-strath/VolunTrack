@@ -22,6 +22,21 @@ class Organisation extends Model
         'focus_area',
     ];
 
+    // Computed attributes - these will be included in JSON responses but not stored in DB
+    protected $appends = ['total_volunteers', 'opportunities_count'];
+
+    // Accessor for total_volunteers - makes it read-only
+    public function getTotalVolunteersAttribute()
+    {
+        return $this->uniqueVolunteerCount();
+    }
+
+    // Accessor for opportunities_count - makes it read-only
+    public function getOpportunitiesCountAttribute()
+    {
+        return $this->opportunities()->count();
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

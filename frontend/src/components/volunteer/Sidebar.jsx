@@ -46,16 +46,6 @@ function Sidebar() {
       </NavLink>
 
       <NavLink
-        to="/dashboard/volunteer/messages"
-        className={({ isActive }) =>
-          isActive ? "sideElements active" : "sideElements"
-        }
-      >
-        <TiMessages className="dash-icon" />
-        <p>Messages</p>
-      </NavLink>
-
-      <NavLink
         to="/dashboard/volunteer/history"
         className={({ isActive }) =>
           isActive ? "sideElements active" : "sideElements"

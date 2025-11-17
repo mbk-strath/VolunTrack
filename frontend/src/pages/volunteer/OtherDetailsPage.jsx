@@ -1,33 +1,32 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function OtherDetailsPage() {
-  // Volunteer fields only (no city, no profile_image)
+const OtherDetailsPage = () => {
   const volunteerFields = ["country", "location", "bio", "skills"];
-
-  const [formDataState, setFormDataState] = useState(
+  const [formData, setFormData] = useState(
     volunteerFields.reduce((acc, field) => ({ ...acc, [field]: "" }), {})
   );
-
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // Prefill from localStorage
+  // Prefill form with stored user data
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user")) || {};
-
-    setFormDataState((prev) => ({
-      ...prev,
-      ...volunteerFields.reduce(
-        (acc, key) => ({ ...acc, [key]: storedUser[key] || "" }),
+    if (storedUser.volunteer) {
+      const prefill = volunteerFields.reduce(
+        (acc, field) => ({
+          ...acc,
+          [field]: storedUser.volunteer[field] || "",
+        }),
         {}
-      ),
-    }));
+      );
+      setFormData(prefill);
+    }
   }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormDataState((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -36,22 +35,22 @@ function OtherDetailsPage() {
     setMessage("");
 
     try {
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-      const userId = storedUser?.id;
+      const storedUser = JSON.parse(localStorage.getItem("user")) || {};
+      const userId = storedUser.id;
       const token = localStorage.getItem("token");
 
-      const sendData = new FormData();
-
-      // Add volunteer fields
+      const payload = new FormData();
       volunteerFields.forEach((key) => {
-        if (formDataState[key] !== "") {
-          sendData.append(key, formDataState[key]);
-        }
+        if (formData[key] !== "") payload.append(key, formData[key]);
       });
 
-      const res = await axios.patch(
+      // --- CHANGE 1: Add this line ---
+      payload.append("_method", "PUT");
+
+      // --- CHANGE 2: Use axios.post instead of axios.put ---
+      const res = await axios.post(
         `http://localhost:8000/api/update/${userId}/`,
-        sendData,
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -60,17 +59,14 @@ function OtherDetailsPage() {
         }
       );
 
-      const updated = res.data;
+      // Extract updated volunteer from nested response
+      const updatedVolunteer = res.data.volunteer || {};
 
-      // Save to local storage
-      localStorage.setItem(
-        "user",
-        JSON.stringify({ ...storedUser, ...updated })
-      );
+      // Merge into localStorage
+      const mergedUser = { ...storedUser, volunteer: { ...updatedVolunteer } };
+      localStorage.setItem("user", JSON.stringify(mergedUser));
 
-      // Update UI
-      setFormDataState((prev) => ({ ...prev, ...updated }));
-
+      setFormData((prev) => ({ ...prev, ...updatedVolunteer }));
       setMessage("Profile updated successfully!");
     } catch (err) {
       console.error("Update error:", err);
@@ -83,7 +79,6 @@ function OtherDetailsPage() {
   return (
     <div className="settings-card-other">
       <h2 className="prof-other-title">Volunteer Additional Information</h2>
-
       <form className="form-column" onSubmit={handleSubmit}>
         {volunteerFields.map((field) => (
           <label key={field}>
@@ -92,21 +87,21 @@ function OtherDetailsPage() {
               <textarea
                 name={field}
                 placeholder={`Enter your ${field}`}
-                value={formDataState[field] || ""}
+                value={formData[field]}
                 onChange={handleChange}
               />
             ) : (
               <input
                 name={field}
                 placeholder={`Enter your ${field}`}
-                value={formDataState[field] || ""}
+                value={formData[field]}
                 onChange={handleChange}
               />
             )}
           </label>
         ))}
 
-        <button type="submit" className="save" disabled={loading}>
+        <button type="submit" disabled={loading} className="save">
           {loading ? "Saving..." : "Save Changes"}
         </button>
       </form>
@@ -114,6 +109,6 @@ function OtherDetailsPage() {
       {message && <p className="update-message-other">{message}</p>}
     </div>
   );
-}
+};
 
 export default OtherDetailsPage;

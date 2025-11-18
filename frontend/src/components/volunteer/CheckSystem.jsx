@@ -118,6 +118,14 @@ function CheckSystem({ participation }) {
   const isCheckInTimeReached = isStartTimeValid && time >= startTimeObject;
   const isCheckOutTimeReached = isEndTimeValid && time >= endTimeObject;
 
+  // Debug time comparison
+  console.log("Time comparison debug:", {
+    currentTime: time,
+    startTimeObject,
+    isCheckInTimeReached,
+    timeComparison: `${time} >= ${startTimeObject}`,
+  });
+
   const officialCheckInTime = isStartTimeValid
     ? startTimeObject.toLocaleTimeString([], {
         hour: "2-digit",

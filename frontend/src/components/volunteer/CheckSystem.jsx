@@ -115,7 +115,8 @@ function CheckSystem({ participation }) {
   const isStartTimeValid = !isNaN(startTimeObject);
   const isEndTimeValid = !isNaN(endTimeObject);
 
-  const isCheckInAllowed = isStartTimeValid && time >= startTimeObject;
+  const isCheckInTimeReached = isStartTimeValid && time >= startTimeObject;
+  const isCheckOutTimeReached = isEndTimeValid && time >= endTimeObject;
 
   const officialCheckInTime = isStartTimeValid
     ? startTimeObject.toLocaleTimeString([], {
@@ -141,7 +142,7 @@ function CheckSystem({ participation }) {
   const handleCheckIn = async () => {
     if (checkInTime) return;
 
-    if (!isCheckInAllowed) {
+    if (!isCheckInTimeReached) {
       setMessage("It's not time to check in yet.");
       return;
     }
@@ -270,7 +271,9 @@ function CheckSystem({ participation }) {
         <button
           className="check-in"
           onClick={handleCheckIn}
-          disabled={loading || status !== "Not checked in" || !isCheckInAllowed}
+          disabled={
+            loading || status !== "Not checked in" || !isCheckInTimeReached
+          }
         >
           {loading && status === "Not checked in"
             ? "Checking in..."
@@ -280,7 +283,7 @@ function CheckSystem({ participation }) {
         <button
           className="check-out"
           onClick={handleCheckOut}
-          disabled={loading || status !== "Checked in" || !isCheckInAllowed}
+          disabled={loading || status !== "Checked in"}
         >
           {loading && status === "Checked in" ? "Checking out..." : "Check Out"}
         </button>
@@ -288,7 +291,7 @@ function CheckSystem({ participation }) {
 
       {message && <p className="message">{message}</p>}
 
-      {!isCheckInAllowed && status === "Not checked in" && (
+      {!isCheckInTimeReached && status === "Not checked in" && (
         <p className="message">
           {isStartTimeValid
             ? `Check-in will be available at ${officialCheckInTime}.`

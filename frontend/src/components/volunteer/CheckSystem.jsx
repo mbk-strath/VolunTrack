@@ -302,7 +302,7 @@ function CheckSystem({ participation }) {
       {!isCheckInTimeReached && status === "Not checked in" && (
         <p className="message">
           {isStartTimeValid
-            ? `Check-in will be available at ${officialCheckInTime}.`
+            ? `⏰ This opportunity starts on ${startTimeObject.toLocaleDateString()} at ${officialCheckInTime}. Check-in will be available at that time.`
             : "Check-in time is not set."}
         </p>
       )}

@@ -17,7 +17,7 @@ class Participation extends Model
         'total_hours'
     ];
 
-    protected $appends = ['volunteer_name', 'opportunity_title'];
+    protected $appends = ['volunteer_name', 'opportunity_title', 'opportunity_start_date', 'opportunity_start_time', 'opportunity_end_date', 'opportunity_end_time'];
     
     public function getVolunteerNameAttribute()
     {
@@ -30,5 +30,29 @@ class Participation extends Model
     {
         $opportunity = Opportunity::find($this->opportunity_id);
         return $opportunity ? $opportunity->title : null;
+    }
+
+    public function getOpportunityStartDateAttribute()
+    {
+        $opportunity = Opportunity::find($this->opportunity_id);
+        return $opportunity ? $opportunity->start_date : null;
+    }
+
+    public function getOpportunityStartTimeAttribute()
+    {
+        $opportunity = Opportunity::find($this->opportunity_id);
+        return $opportunity ? $opportunity->start_time : null;
+    }
+
+    public function getOpportunityEndDateAttribute()
+    {
+        $opportunity = Opportunity::find($this->opportunity_id);
+        return $opportunity ? $opportunity->end_date : null;
+    }
+
+    public function getOpportunityEndTimeAttribute()
+    {
+        $opportunity = Opportunity::find($this->opportunity_id);
+        return $opportunity ? $opportunity->end_time : null;
     }
 }

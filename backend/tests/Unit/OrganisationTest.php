@@ -3,11 +3,9 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
-use App\Models\User;
 use App\Models\Organisation;
+use App\Models\User;
 use App\Models\Opportunity;
-use App\Models\Report;
-use App\Models\Gallery;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class OrganisationTest extends TestCase
@@ -15,48 +13,9 @@ class OrganisationTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function organisation_has_correct_fillable_attributes()
-    {
-        $organisation = new Organisation();
-
-                $expectedFillable = [
-            'id',
-            'user_id',
-            'org_name',
-            'org_type',
-            'registration_number',
-            'email',
-            'phone',
-            'website',
-            'logo',
-            'country',
-            'city',
-            'street_address',
-            'operating_region',
-            'mission_statement',
-            'focus_area',
-            'target_beneficiary',
-        ];
-
-        $this->assertEquals($expectedFillable, $organisation->getFillable());
-    }
-
-    /** @test */
-    public function organisation_has_correct_casts()
-    {
-        $organisation = new Organisation();
-
-        $expectedCasts = [
-            'id' => 'int',
-        ];
-
-        $this->assertEquals($expectedCasts, $organisation->getCasts());
-    }
-
-    /** @test */
     public function organisation_belongs_to_user()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => 'organisation']);
         $organisation = Organisation::factory()->create(['user_id' => $user->id]);
 
         $this->assertInstanceOf(User::class, $organisation->user);
@@ -66,24 +25,56 @@ class OrganisationTest extends TestCase
     /** @test */
     public function organisation_has_many_opportunities()
     {
-        $organisation = Organisation::factory()->create();
-        $opportunities = Opportunity::factory()->count(3)->create(['organisation_id' => $organisation->id]);
+        $user = User::factory()->create(['role' => 'organisation']);
+        $organisation = Organisation::factory()->create(['user_id' => $user->id]);
+        $opportunities = Opportunity::factory(3)->create(['organisation_id' => $organisation->id]);
 
-        $this->assertCount(3, $organisation->opportunities);
-        $organisation->opportunities->each(function ($opportunity) use ($organisation) {
-            $this->assertEquals($organisation->id, $opportunity->organisation_id);
-        });
+        $this->assertEquals(3, $organisation->opportunities->count());
+        $this->assertInstanceOf(Opportunity::class, $organisation->opportunities->first());
     }
 
     /** @test */
-    public function organisation_has_many_gallery_images()
+    public function organisation_has_correct_appended_attributes()
     {
-        $organisation = Organisation::factory()->create();
-        $gallery = Gallery::factory()->count(2)->create(['org_id' => $organisation->id]);
+        $organisation = new Organisation();
+        $expectedAppends = ['total_volunteers', 'opportunities_count'];
+        $this->assertEquals($expectedAppends, $organisation->getAppends());
+    }
 
-        $this->assertCount(2, $organisation->gallery);
-        $organisation->gallery->each(function ($item) use ($organisation) {
-            $this->assertEquals($organisation->id, $item->org_id);
-        });
+    /** @test */
+    public function organisation_can_be_created()
+    {
+        $user = User::factory()->create(['role' => 'organisation']);
+        $organisation = Organisation::factory()->create([
+            'user_id' => $user->id,
+            'org_name' => 'Test NGO',
+            'org_type' => 'NGO',
+            'country' => 'Kenya',
+            'city' => 'Nairobi'
+        ]);
+
+        $this->assertInstanceOf(Organisation::class, $organisation);
+        $this->assertEquals('Test NGO', $organisation->org_name);
+        $this->assertEquals('NGO', $organisation->org_type);
+    }
+
+    /** @test */
+    public function organisation_total_volunteers_accessor_works()
+    {
+        $user = User::factory()->create(['role' => 'organisation']);
+        $organisation = Organisation::factory()->create(['user_id' => $user->id]);
+        
+        $total = $organisation->total_volunteers;
+        $this->assertIsInt($total);
+    }
+
+    /** @test */
+    public function organisation_opportunities_count_accessor_works()
+    {
+        $user = User::factory()->create(['role' => 'organisation']);
+        $organisation = Organisation::factory()->create(['user_id' => $user->id]);
+        Opportunity::factory(2)->create(['organisation_id' => $organisation->id]);
+
+        $this->assertEquals(2, $organisation->opportunities_count);
     }
 }

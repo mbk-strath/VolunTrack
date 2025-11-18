@@ -29,7 +29,7 @@ class UserFactory extends Factory
             'gender' => $this->faker->randomElement(['male', 'female', 'other']),
             'phone' => $this->faker->phoneNumber(),
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => Hash::make('password'),
             'role' => $this->faker->randomElement(['admin', 'organisation', 'volunteer']),
             'is_active' => true,
             'is_verified' => $this->faker->boolean(70),

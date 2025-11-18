@@ -27,6 +27,8 @@ class OpportunityFactory extends Factory
         $startDate = $this->faker->dateTimeBetween('now', '+30 days');
         $endDate = $this->faker->dateTimeBetween($startDate, $startDate->format('Y-m-d H:i:s') . ' +8 hours');
         $deadline = $this->faker->dateTimeBetween('now', $startDate);
+        $startTime = $this->faker->time('H:i');
+        $endTime = $this->faker->time('H:i');
 
         return [
             'organisation_id' => \App\Models\Organisation::factory(),
@@ -36,6 +38,8 @@ class OpportunityFactory extends Factory
             'num_volunteers_needed' => $this->faker->numberBetween(5, 50),
             'start_date' => $startDate->format('Y-m-d'),
             'end_date' => $endDate->format('Y-m-d'),
+            'start_time' => $startTime,
+            'end_time' => $endTime,
             'schedule' => $this->faker->randomElement(['full-time', 'part-time', 'weekends', 'flexible']),
             'benefits' => $this->faker->optional(0.7)->sentence(),
             'application_deadline' => $deadline->format('Y-m-d'),

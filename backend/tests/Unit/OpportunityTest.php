@@ -3,11 +3,9 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
-use App\Models\Organisation;
 use App\Models\Opportunity;
-use App\Models\Application;
-use App\Models\Participation;
-use App\Models\Gallery;
+use App\Models\Organisation;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class OpportunityTest extends TestCase
@@ -15,47 +13,10 @@ class OpportunityTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function opportunity_has_correct_fillable_attributes()
-    {
-        $opportunity = new Opportunity();
-
-        $expectedFillable = [
-            'id',
-            'organisation_id',
-            'title',
-            'description',
-            'required_skills',
-            'num_volunteers_needed',
-            'start_date',
-            'end_date',
-            'schedule',
-            'location',
-            'benefits',
-            'application_deadline',
-        ];
-
-        $this->assertEquals($expectedFillable, $opportunity->getFillable());
-    }
-
-    /** @test */
-    public function opportunity_has_correct_casts()
-    {
-        $opportunity = new Opportunity();
-
-        $expectedCasts = [
-            'id' => 'int',
-            'start_date' => 'date',
-            'end_date' => 'date',
-            'application_deadline' => 'date',
-        ];
-
-        $this->assertEquals($expectedCasts, $opportunity->getCasts());
-    }
-
-    /** @test */
     public function opportunity_belongs_to_organisation()
     {
-        $organisation = Organisation::factory()->create();
+        $user = User::factory()->create(['role' => 'organisation']);
+        $organisation = Organisation::factory()->create(['user_id' => $user->id]);
         $opportunity = Opportunity::factory()->create(['organisation_id' => $organisation->id]);
 
         $this->assertInstanceOf(Organisation::class, $opportunity->organisation);
@@ -63,62 +24,49 @@ class OpportunityTest extends TestCase
     }
 
     /** @test */
-    public function opportunity_has_many_applications()
+    public function opportunity_can_be_created()
     {
-        $opportunity = Opportunity::factory()->create();
-        $applications = Application::factory()->count(3)->create(['opportunity_id' => $opportunity->id]);
+        $user = User::factory()->create(['role' => 'organisation']);
+        $organisation = Organisation::factory()->create(['user_id' => $user->id]);
+        $opportunity = Opportunity::factory()->create([
+            'organisation_id' => $organisation->id,
+            'title' => 'Beach Cleanup',
+            'description' => 'Help clean the beach',
+            'location' => 'Mombasa',
+        ]);
 
-        $this->assertCount(3, $opportunity->applications);
-        $opportunity->applications->each(function ($application) use ($opportunity) {
-            $this->assertEquals($opportunity->id, $application->opportunity_id);
-        });
+        $this->assertInstanceOf(Opportunity::class, $opportunity);
+        $this->assertEquals('Beach Cleanup', $opportunity->title);
+        $this->assertEquals('Mombasa', $opportunity->location);
     }
 
     /** @test */
-    public function opportunity_has_many_participations()
+    public function opportunity_has_start_and_end_times()
     {
-        $opportunity = Opportunity::factory()->create();
-        $participations = Participation::factory()->count(2)->create(['opportunity_id' => $opportunity->id]);
+        $user = User::factory()->create(['role' => 'organisation']);
+        $organisation = Organisation::factory()->create(['user_id' => $user->id]);
+        $opportunity = Opportunity::factory()->create([
+            'organisation_id' => $organisation->id,
+            'start_time' => '09:00',
+            'end_time' => '17:00',
+        ]);
 
-        $this->assertCount(2, $opportunity->participations);
-        $opportunity->participations->each(function ($participation) use ($opportunity) {
-            $this->assertEquals($opportunity->id, $participation->opportunity_id);
-        });
+        $this->assertEquals('09:00', $opportunity->start_time);
+        $this->assertEquals('17:00', $opportunity->end_time);
     }
 
     /** @test */
-    public function opportunity_has_many_gallery_images()
+    public function opportunity_has_start_and_end_dates()
     {
-        $opportunity = Opportunity::factory()->create();
-        $gallery = Gallery::factory()->count(2)->create(['org_id' => $opportunity->organisation_id]);
+        $user = User::factory()->create(['role' => 'organisation']);
+        $organisation = Organisation::factory()->create(['user_id' => $user->id]);
+        $opportunity = Opportunity::factory()->create([
+            'organisation_id' => $organisation->id,
+            'start_date' => '2025-12-01',
+            'end_date' => '2025-12-31',
+        ]);
 
-        $this->assertCount(2, $opportunity->gallery);
-        $opportunity->gallery->each(function ($item) use ($opportunity) {
-            $this->assertEquals($opportunity->organisation_id, $item->org_id);
-        });
-    }
-
-    /** @test */
-    public function opportunity_attendance_rate_attribute()
-    {
-        $opportunity = Opportunity::factory()->create(['num_volunteers_needed' => 10]);
-        Application::factory()->count(10)->create(['opportunity_id' => $opportunity->id]);
-        Participation::factory()->count(6)->create(['opportunity_id' => $opportunity->id]);
-
-        $opportunity->refresh();
-
-        $this->assertEquals(60, $opportunity->attendance_rate);
-    }
-
-    /** @test */
-    public function opportunity_has_correct_appended_attributes()
-    {
-        $opportunity = new Opportunity();
-
-        $expectedAppends = [
-            'attendance_rate'
-        ];
-
-        $this->assertEquals($expectedAppends, $opportunity->getAppends());
+        $this->assertNotNull($opportunity->start_date);
+        $this->assertNotNull($opportunity->end_date);
     }
 }

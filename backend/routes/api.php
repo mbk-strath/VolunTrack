@@ -78,8 +78,7 @@ Route::middleware('auth:sanctum', 'role:admin,organisation')->group(function(){
     Route::put('/update-application/{id}', [ApplicationController::class, 'updateStatus']);
     //Participation Controller
     Route::get('/opportunity-participations/{id}', [ParticipationController::class, 'oppParticipations']);
-    Route::post('/add-participation', [ParticipationController::class, 'create']);
-    Route::put('/update-participation/{id}', [ParticipationController::class, 'update']);
+    
     Route::delete('/delete-participation/{id}', [ParticipationController::class, 'delete']);
     //Evidence Controller
     Route::get('/organisation-evidences/{id}', [EvidenceController::class, 'getByOrganisation']);
@@ -133,6 +132,9 @@ Route::middleware('auth:sanctum', 'role:admin,organisation,volunteer')->group(fu
 
     //Logout Route
     Route::post('/logout', [\App\Http\Controllers\UserController::class, 'logout']);
+
+    Route::post('/add-participation', [ParticipationController::class, 'create']);
+    Route::put('/update-participation/{id}', [ParticipationController::class, 'update']);
     
 });
 

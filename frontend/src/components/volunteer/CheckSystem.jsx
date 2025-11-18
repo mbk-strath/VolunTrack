@@ -23,10 +23,16 @@ function CheckSystem({ participation }) {
 
   const token = localStorage.getItem("token");
 
+  // Debug: log what we're receiving
+  useEffect(() => {
+    console.log("Participation data received:", participation);
+  }, [participation]);
+
   // Helper function to format times consistently
   const formatTime = (dateString) => {
     if (!dateString) return "N/A";
     const date = new Date(dateString);
+    if (isNaN(date)) return "N/A";
     return date.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
@@ -34,16 +40,77 @@ function CheckSystem({ participation }) {
     });
   };
 
+  // Helper to parse time strings robustly
+  const parseTimeString = (timeStr) => {
+    if (!timeStr) return null;
+    // Handle formats like "09:00", "09:00:00", "9:00"
+    const parts = timeStr.split(":");
+    if (parts.length >= 2) {
+      return `${parts[0].padStart(2, "0")}:${parts[1].padStart(2, "0")}`;
+    }
+    return timeStr;
+  };
+
   // --- FIXED DATE LOGIC ---
 
-  // 🔥 FIX: Add ":00" so we get HH:MM:SS (required for JS Date)
-  const startTimeObject = new Date(
-    `${participation.opportunity_start_date}T${participation.opportunity_start_time}:00`
-  );
+  // Get opportunity times - handle undefined/null gracefully
+  const oppStartDate = participation?.opportunity_start_date || null;
+  const oppStartTime =
+    parseTimeString(participation?.opportunity_start_time) || null;
+  const oppEndDate = participation?.opportunity_end_date || null;
+  const oppEndTime =
+    parseTimeString(participation?.opportunity_end_time) || null;
 
-  const endTimeObject = new Date(
-    `${participation.opportunity_end_date}T${participation.opportunity_end_time}:00`
-  );
+  console.log("Parsed opportunity times:", {
+    oppStartDate,
+    oppStartTime,
+    oppEndDate,
+    oppEndTime,
+  });
+
+  // 🔥 FIX: Add ":00" so we get HH:MM:SS (required for JS Date)
+  // Handle date format - if it's ISO (YYYY-MM-DD), use it directly; if it's a date object, convert it
+  const formatDateForParsing = (dateVal) => {
+    if (!dateVal) return null;
+    if (typeof dateVal === "string" && dateVal.includes("T")) {
+      // Already ISO format, extract just the date part
+      return dateVal.split("T")[0];
+    }
+    if (typeof dateVal === "string") {
+      return dateVal; // Assume it's already YYYY-MM-DD
+    }
+    // If it's a Date object or other type, convert to string
+    return new Date(dateVal).toISOString().split("T")[0];
+  };
+
+  const startDate = formatDateForParsing(oppStartDate);
+  const endDate = formatDateForParsing(oppEndDate);
+
+  console.log("Formatted dates:", {
+    startDate,
+    oppStartTime,
+    endDate,
+    oppEndTime,
+    constructedStartUrl: `${startDate}T${oppStartTime}:00`,
+    constructedEndUrl: `${endDate}T${oppEndTime}:00`,
+  });
+
+  const startTimeObject =
+    startDate && oppStartTime
+      ? new Date(`${startDate}T${oppStartTime}:00`)
+      : new Date("Invalid");
+
+  const endTimeObject =
+    endDate && oppEndTime
+      ? new Date(`${endDate}T${oppEndTime}:00`)
+      : new Date("Invalid");
+
+  console.log("Time objects:", {
+    startTimeObject,
+    endTimeObject,
+    isStartTimeValid: !isNaN(startTimeObject),
+    isEndTimeValid: !isNaN(endTimeObject),
+  });
 
   const isStartTimeValid = !isNaN(startTimeObject);
   const isEndTimeValid = !isNaN(endTimeObject);

@@ -41,6 +41,9 @@ function HomePage() {
         const applications = resApps.data?.applications || [];
         const allOpportunities = resOps.data || []; // Your API response structure
 
+        console.log("Raw applications:", applications);
+        console.log("Raw opportunities:", allOpportunities);
+
         setTotalApplications(applications.length);
 
         // 2. Filter for accepted applications
@@ -56,9 +59,12 @@ function HomePage() {
               (op) => op.id === app.opportunity_id
             );
 
+            console.log(`App ${app.id}:`, app);
+            console.log(`Opportunity ${app.opportunity_id}:`, opportunity);
+
             // 4. Create a new object with all the data CheckSystem needs
             if (opportunity) {
-              return {
+              const combined = {
                 ...app, // This has check_in, check_out, volunteer_id, etc.
 
                 // This is the NEW data that fixes "Invalid Date"
@@ -68,6 +74,8 @@ function HomePage() {
                 opportunity_end_date: opportunity.end_date,
                 opportunity_end_time: opportunity.end_time,
               };
+              console.log("Combined data:", combined);
+              return combined;
             }
             // Log an error if the opportunity isn't found
             console.error(

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 //Databases
 use App\Models\User;
 use App\Models\Organisation;
+use App\Models\Opportunity;
+use App\Models\Application;
 use App\Models\Volunteer;
 use App\Models\OtpCode;
 

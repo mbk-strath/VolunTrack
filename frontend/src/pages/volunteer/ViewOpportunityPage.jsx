@@ -108,7 +108,7 @@ function ViewOpportunityPage() {
         <OpportunityCard
           key={opp.id}
           title={opp.title}
-          name={opp.location || "Unnamed Organization"}
+          name={opp.organisation_name || "Unnamed Organization"}
           img={Facebook}
           startdate={opp.start_date}
           enddate={opp.end_date}

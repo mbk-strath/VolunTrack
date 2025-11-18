@@ -107,8 +107,9 @@ const OpportunityFormOverlay = ({ onClose, prefillData = null }) => {
       benefits: formData.benefits,
       application_deadline: formData.deadline,
       location: formData.location,
-      start_time: formData.start_time,
-      end_time: formData.end_time,
+      start_time: formData.start_time + ":00",
+      end_time: formData.end_time + ":00",
+
       cv_required: formData.cvRequired,
     };
 

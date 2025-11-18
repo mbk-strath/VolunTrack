@@ -78,6 +78,29 @@ class ParticipationController extends Controller
         return response()->json(['message' => 'Participation created successfully', 'participation' => $participation], 200);
     }
 
+    public function update(Request $request, $id){
+        $participation = Participation::find($id);
+        if(!$participation){
+            return response()->json(['message' => 'Participation not found'], 404);
+        }
+
+        $data = $request->validate([
+            'check_out' => 'required|date',
+        ]);
+
+        // Calculate total_hours if check_in exists
+        if ($participation->check_in) {
+            $ci = Carbon::parse($participation->check_in);
+            $co = Carbon::parse($data['check_out']);
+
+            // precise fractional hours, rounded to 2 decimals
+            $data['total_hours'] = round($co->diffInSeconds($ci) / 3600, 2);
+        }
+
+        $participation->update($data);
+        return response()->json(['message' => 'Check-out recorded successfully', 'participation' => $participation], 200);
+    }
+
     public function delete($id){
         $participation = Participation::find($id);
         if(!$participation){

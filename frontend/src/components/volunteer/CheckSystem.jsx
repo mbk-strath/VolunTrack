@@ -23,6 +23,17 @@ function CheckSystem({ participation }) {
 
   const token = localStorage.getItem("token");
 
+  // Helper function to format times consistently
+  const formatTime = (dateString) => {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    return date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  };
+
   // --- FIXED DATE LOGIC ---
 
   // 🔥 FIX: Add ":00" so we get HH:MM:SS (required for JS Date)
@@ -68,23 +79,77 @@ function CheckSystem({ participation }) {
       return;
     }
 
-    const now = new Date().toISOString().slice(0, 19);
     setLoading(true);
+    setMessage("");
 
-    setCheckInTime(now);
-    setStatus("Checked in");
-    setLoading(false);
+    try {
+      const now = new Date().toISOString().slice(0, 19);
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/add-participation`,
+        {
+          volunteer_id: participation.volunteer_id,
+          opportunity_id: participation.opportunity_id,
+          check_in: now,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.participation) {
+        setCheckInTime(response.data.participation.check_in);
+        setStatus("Checked in");
+        setMessage("✅ Checked in successfully!");
+      }
+    } catch (error) {
+      console.error("Check-in error:", error);
+      setMessage(
+        `❌ Check-in failed: ${error.response?.data?.message || error.message}`
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCheckOut = async () => {
     if (!checkInTime || checkOutTime) return;
 
-    const now = new Date().toISOString().slice(0, 19);
     setLoading(true);
+    setMessage("");
 
-    setCheckOutTime(now);
-    setStatus("Checked out");
-    setLoading(false);
+    try {
+      const now = new Date().toISOString().slice(0, 19);
+
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_BASE_URL}/update-participation/${
+          participation.id
+        }`,
+        {
+          check_out: now,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.participation) {
+        setCheckOutTime(response.data.participation.check_out);
+        setStatus("Checked out");
+        setMessage("✅ Checked out successfully!");
+      }
+    } catch (error) {
+      console.error("Check-out error:", error);
+      setMessage(
+        `❌ Check-out failed: ${error.response?.data?.message || error.message}`
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -109,9 +174,7 @@ function CheckSystem({ participation }) {
           {checkInTime && (
             <div className="time">
               <p className="title">Your Check-In:</p>
-              <p className="exact">
-                {new Date(checkInTime).toLocaleTimeString()}
-              </p>
+              <p className="exact">{formatTime(checkInTime)}</p>
             </div>
           )}
         </div>
@@ -130,9 +193,7 @@ function CheckSystem({ participation }) {
           {checkOutTime && (
             <div className="time">
               <p className="title">Your Check-Out:</p>
-              <p className="exact">
-                {new Date(checkOutTime).toLocaleTimeString()}
-              </p>
+              <p className="exact">{formatTime(checkOutTime)}</p>
             </div>
           )}
         </div>

@@ -9,6 +9,7 @@ import {
 } from "recharts";
 import axios from "axios";
 import "../../styles/organization/dashboardOrg.css";
+import MyApplicantsTable from "../../components/organization/MyApplicantsTable";
 
 const DashboardOrg = () => {
   const [chartData, setChartData] = useState([]);
@@ -41,7 +42,7 @@ const DashboardOrg = () => {
 
         // 📊 Prepare chart data (Applicants per Opportunity)
         const dataWithApplicants = opportunities.map((opp) => ({
-          name: `ID: ${opp.id}`,
+          name: ` ${opp.title}`,
           applicants: opp.total_applicants || 0,
         }));
 
@@ -128,6 +129,9 @@ const DashboardOrg = () => {
             </BarChart>
           </ResponsiveContainer>
         )}
+      </div>
+      <div className="data-table">
+        <MyApplicantsTable />
       </div>
     </div>
   );

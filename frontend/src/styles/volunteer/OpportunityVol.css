@@ -39,15 +39,15 @@
 .detail-Container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 10px;
 }
 
 .org-details {
-  width: 90%;
+  width: 100%;
 }
 
 .view {
-  width: 90%;
+  width: 100%;
   padding: 10px;
   border: 2px solid #e09c6d;
   background: transparent;

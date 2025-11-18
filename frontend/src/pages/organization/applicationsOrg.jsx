@@ -85,7 +85,7 @@ const ApplicationsOrg = () => {
       }
 
       // 1️⃣ Update application status in backend
-      const response = await axios.patch(
+      const response = await axios.put(
         `http://localhost:8000/api/update-application/${applicationId}`,
         { status },
         { headers: { Authorization: `Bearer ${token}` } }
